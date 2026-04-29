@@ -192,13 +192,16 @@ def convert(src_path, dst_path=None):
                 w.add_tensor(f'blk.{i}.attn_norm.{suf}', t.data, raw_dtype=t.tensor_type)
                 converted += 1
 
-        # attention Q/K/V/O → dequantize → store as F32 (Q2_Q GGUF type has offset issues)
+        # attention Q/K/V/O → dequantize → Q2_Q
         for part in ['attn_q', 'attn_k', 'attn_v', 'attn_output']:
             t = tensors.get(f'blk.{i}.{part}.weight')
             if not t:
                 continue
+            ne = [int(x) for x in t.shape]
             deq = dequantize(t)
-            w.add_tensor(f'blk.{i}.{part}.weight', deq.astype(np.float32))
+            packed = quantize_to_q2q(deq)
+            w.add_tensor(f'blk.{i}.{part}.weight', packed,
+                         raw_shape=(ne[1], ne[0]), raw_dtype=GGMLQuantizationType.Q2_Q)
             converted += 1
 
         for suf in ['weight', 'bias']:

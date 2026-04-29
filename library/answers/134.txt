@@ -1,18 +1,31 @@
-def sum_for(lst):
-    total = 0
-    for x in lst:
-        total += x
-    return total
+```python
+def fibonacci(n):
+    """
+    Calculates the nth Fibonacci number iteratively.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    if n <= 1:
+        return n
 
-def sum_while(lst):
-    total = 0
-    i = 0
-    while i < len(lst):
-        total += lst[i]
-        i += 1
-    return total
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
 
-def sum_recursive(lst):
-    if not lst:
-        return 0
-    return lst[0] + sum_recursive(lst[1:])
+if __name__ == '__main__':
+    # Example Usage:
+    test_number = 10
+    result = fibonacci(test_number)
+    print(f"The Fibonacci number at position {test_number} is: {result}")
+
+    test_number_2 = 0
+    result_2 = fibonacci(test_number_2)
+    print(f"The Fibonacci number at position {test_number_2} is: {result_2}")
+
+    test_number_3 = 1
+    result_3 = fibonacci(test_number_3)
+    print(f"The Fibonacci number at position {test_number_3} is: {result_3}")
+```

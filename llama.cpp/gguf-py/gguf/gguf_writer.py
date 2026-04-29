@@ -330,6 +330,7 @@ class GGUFWriter:
     def add_tensor_info(
         self, name: str, tensor_shape: Sequence[int], tensor_dtype: np.dtype,
         tensor_nbytes: int, raw_dtype: GGMLQuantizationType | None = None,
+        *, raw_shape: Sequence[int] | None = None,
     ) -> None:
         if self.state is not WriterState.NO_FILE:
             raise ValueError(f'Expected output file to be not yet opened, got {self.state}')
@@ -356,7 +357,7 @@ class GGUFWriter:
                 raise ValueError("Only F16, F32, F64, I8, I16, I32, I64 tensors are supported for now")
         else:
             dtype = raw_dtype
-            if tensor_dtype == np.uint8:
+            if tensor_dtype == np.uint8 and raw_shape is None:
                 tensor_shape = quant_shape_from_byte_shape(tensor_shape, raw_dtype)
 
         # make sure there is at least one tensor before splitting
@@ -389,7 +390,7 @@ class GGUFWriter:
             self.temp_file = fp
 
         shape: Sequence[int] = raw_shape if raw_shape is not None else tensor.shape
-        self.add_tensor_info(name, shape, tensor.dtype, tensor.nbytes, raw_dtype=raw_dtype)
+        self.add_tensor_info(name, shape, tensor.dtype, tensor.nbytes, raw_dtype=raw_dtype, raw_shape=raw_shape)
 
         if self.temp_file is None:
             self.tensors[-1][name].tensor = tensor
