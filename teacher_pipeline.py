@@ -167,9 +167,8 @@ class QuaternaryLLM(nn.Module):
         w.add_uint32("quaternary_nn.full_attention_interval", 1)
         w.add_array("quaternary_nn.rope.dimension_sections", [d_head, 0, 0, 0])
         w.add_uint32("quaternary_nn.rope.dimension_count", d_head)
-        w.add_string("tokenizer.ggml.model", "byte")
+        w.add_string("tokenizer.ggml.model", "gpt2")
         w.add_token_list([bytes([i]) for i in range(vocab)])
-        w.add_string("tokenizer.ggml.pre", "byte")
 
         # Export attention and FFN weights as Q2_Q packed format.
         # The GGML_OP_MUL_MAT_Q2_Q kernel unpacks them during matmul.
