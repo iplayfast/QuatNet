@@ -1,14 +1,26 @@
-def vigenere(text, key, encrypt=True):
-    result = []
-    key = key.lower()
-    ki = 0
-    for c in text:
-        if c.isalpha():
-            shift = ord(key[ki % len(key)]) - ord('a')
-            if not encrypt: shift = -shift
-            base = ord('A') if c.isupper() else ord('a')
-            result.append(chr((ord(c) - base + shift) % 26 + base))
-            ki += 1
-        else:
-            result.append(c)
-    return ''.join(result)
+```python
+def fibonacci(n):
+    """
+    Calculates the nth Fibonacci number using an iterative approach.
+    Returns 0 if n is negative.
+    """
+    if n < 0:
+        return 0
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+if __name__ == '__main__':
+    # Example usage:
+    print(f"Fibonacci(0): {fibonacci(0)}")
+    print(f"Fibonacci(1): {fibonacci(1)}")
+    print(f"Fibonacci(6): {fibonacci(6)}")
+    print(f"Fibonacci(10): {fibonacci(10)}")
+    print(f"Fibonacci(-5): {fibonacci(-5)}")
+```

@@ -104,6 +104,8 @@ After 1.2 million training steps, the model achieves:
 
 Q2_Q convergence continues to increase with training; the regularization pressure (λ = 0.5) is actively pulling weights toward their quaternary targets with each LR reset cycle.
 
+![Training Metrics](images/training_log.png)
+
 ## 7. Dependencies
 
 - Python 3.10+
