@@ -1,0 +1,7 @@
+import re
+
+def grep(pattern, filename):
+    with open(filename) as f:
+        for line in f:
+            if re.search(pattern, line):
+                print(line, end='')

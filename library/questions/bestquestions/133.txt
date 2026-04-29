@@ -1,0 +1,1 @@
+Write a function that implements a Skip List with insert, search, and delete.

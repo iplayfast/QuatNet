@@ -1,0 +1,10 @@
+def levenshtein_opt(a, b):
+    if len(a) < len(b): a, b = b, a
+    n = len(b)
+    prev = list(range(n + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i] + [0] * n
+        for j, cb in enumerate(b, 1):
+            cur[j] = prev[j - 1] if ca == cb else 1 + min(prev[j], cur[j - 1], prev[j - 1])
+        prev = cur
+    return prev[-1]

@@ -1,0 +1,11 @@
+import os, time
+
+def watch_file(path, callback, interval=0.5):
+    mtime = os.path.getmtime(path) if os.path.exists(path) else 0
+    while True:
+        time.sleep(interval)
+        if os.path.exists(path):
+            new_mtime = os.path.getmtime(path)
+            if new_mtime != mtime:
+                mtime = new_mtime
+                callback(path)

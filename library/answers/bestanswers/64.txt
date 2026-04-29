@@ -1,0 +1,60 @@
+import random
+
+SIZE = 5
+SHIPS = [5, 4, 3, 3, 2]
+
+def make_board():
+    return [['~'] * SIZE for _ in range(SIZE)]
+
+def place_ships():
+    board = make_board()
+    for size in SHIPS:
+        placed = False
+        while not placed:
+            r = random.randint(0, SIZE - 1)
+            c = random.randint(0, SIZE - 1)
+            horiz = random.choice([True, False])
+            if horiz and c + size <= SIZE:
+                cells = [(r, c + i) for i in range(size)]
+            elif not horiz and r + size <= SIZE:
+                cells = [(r + i, c) for i in range(size)]
+            else:
+                continue
+            if all(board[r][c] == '~' for r, c in cells):
+                for r, c in cells:
+                    board[r][c] = 'S'
+                placed = True
+    return board
+
+def print_board(board, hide=True):
+    for row in board:
+        cells = ['~' if hide and c == 'S' else c for c in row]
+        print(' '.join(cells))
+
+def play():
+    board = place_ships()
+    guesses = set()
+    hits_needed = sum(SHIPS)
+    hits = 0
+    while hits < hits_needed:
+        print()
+        print_board(board)
+        try:
+            r = int(input("Row (0-4): "))
+            c = int(input("Col (0-4): "))
+        except:
+            break
+        if (r, c) in guesses:
+            print("Already guessed")
+            continue
+        guesses.add((r, c))
+        if board[r][c] == 'S':
+            print("Hit!")
+            board[r][c] = 'X'
+            hits += 1
+        else:
+            print("Miss!")
+            board[r][c] = 'O'
+    print("You sank all ships!")
+
+# play()

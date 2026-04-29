@@ -1,0 +1,7 @@
+def xor_swap(a, b):
+    a ^= b
+    b ^= a
+    a ^= b
+    return a, b
+
+# Limitations: requires integers, fails if a and b refer to same memory location (a ^= b makes it 0)

@@ -1,0 +1,1 @@
+Write a function that applies another function to every element of a list, then uses it to print the first 20 perfect squares.

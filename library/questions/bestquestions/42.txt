@@ -1,0 +1,1 @@
+Write a function that splits a list at a given index, returning two lists.

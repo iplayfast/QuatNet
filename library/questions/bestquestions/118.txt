@@ -1,0 +1,1 @@
+Write a program that implements a simple text adventure game engine with rooms, items, and commands.

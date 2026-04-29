@@ -1,0 +1,24 @@
+import heapq
+
+def astar(grid, start, end):
+    rows, cols = len(grid), len(grid[0])
+    def h(a, b): return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    pq = [(0, start)]
+    came_from = {}
+    g_score = {start: 0}
+    while pq:
+        _, cur = heapq.heappop(pq)
+        if cur == end:
+            path = []
+            while cur in came_from: path.append(cur); cur = came_from[cur]
+            return [start] + path[::-1]
+        for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:
+            nr, nc = cur[0] + dr, cur[1] + dc
+            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != 1:
+                nb = (nr, nc)
+                tg = g_score[cur] + 1
+                if tg < g_score.get(nb, float('inf')):
+                    came_from[nb] = cur
+                    g_score[nb] = tg
+                    heapq.heappush(pq, (tg + h(nb, end), nb))
+    return None

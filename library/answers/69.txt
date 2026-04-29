@@ -1,0 +1,12 @@
+```python
+def problem_function():
+    # function body here
+    pass
+
+# test the function
+problem_function()
+```
+
+Note: The original prompt did not provide enough information to write a complete working Python solution for a specific problem. This code snippet provides a basic structure for a Python function and can be used as a starting point for your own implementation based on the actual requirements of your problem.
+
+However, if you could provide more details about the problem you're trying to solve, I'd be happy to assist you further!

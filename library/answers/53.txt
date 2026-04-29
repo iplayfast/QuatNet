@@ -1,0 +1,10 @@
+```python
+def func():
+    result = "Function executed successfully"
+    print("Hello")
+    return result
+
+
+result = func()
+print(result)
+```

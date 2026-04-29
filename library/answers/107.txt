@@ -1,0 +1,11 @@
+Here is your Python function:
+
+```python
+def my_function():
+    return "Hello, world!"
+```
+You can call this function like so:
+```python
+print(my_function())
+# Output: Hello, world!
+```

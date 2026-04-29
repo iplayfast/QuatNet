@@ -1,0 +1,10 @@
+*.gguf
+*.csv
+*.png
+__pycache__/
+.venv/
+*.pyc
+run_model.out
+quaternary_nn/build/
+llama.cpp/
+graphify-out/

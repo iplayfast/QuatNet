@@ -1,0 +1,48 @@
+def longest_palindromic_substring(s):
+    """Return the longest palindrome substring using expand-around-center (O(n^2) time, O(1) space)."""
+    if not s:
+        return ""
+    start, end = 0, 0
+    for i in range(len(s)):
+        l1 = expand(s, i, i)       # odd length
+        l2 = expand(s, i, i + 1)   # even length
+        l = max(l1, l2)
+        if l > end - start:
+            start = i - (l - 1) // 2
+            end = i + l // 2
+    return s[start:end + 1]
+
+def expand(s, left, right):
+    while left >= 0 and right < len(s) and s[left] == s[right]:
+        left -= 1
+        right += 1
+    return right - left - 1
+
+# Manacher's algorithm: O(n) time
+def longest_palindrome_manacher(s):
+    """O(n) algorithm for longest palindromic substring."""
+    if not s:
+        return ""
+    # Transform: insert '|' between chars and at ends
+    t = '|' + '|'.join(s) + '|'
+    n = len(t)
+    p = [0] * n
+    center = right = 0
+    for i in range(n):
+        if i < right:
+            mirror = 2 * center - i
+            p[i] = min(right - i, p[mirror])
+        # Expand
+        while i - p[i] - 1 >= 0 and i + p[i] + 1 < n and t[i - p[i] - 1] == t[i + p[i] + 1]:
+            p[i] += 1
+        # Update center and right bound
+        if i + p[i] > right:
+            center, right = i, i + p[i]
+    # Find max
+    max_len, center_idx = max((p[i], i) for i in range(n))
+    start = (center_idx - max_len) // 2
+    return s[start:start + max_len]
+
+# Example usage:
+# print(longest_palindromic_substring("babad"))  # "bab" or "aba"
+# print(longest_palindrome_manacher("babad"))     # "aba"

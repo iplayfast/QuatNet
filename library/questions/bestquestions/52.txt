@@ -1,0 +1,1 @@
+Write a class that implements a dynamic array (similar to Python's list) with amortized O(1) append.

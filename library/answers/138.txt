@@ -1,0 +1,10 @@
+import json, sys
+
+def pretty_json(filename, indent=2):
+    with open(filename) as f:
+        try:
+            data = json.load(f)
+            print(json.dumps(data, indent=indent))
+        except json.JSONDecodeError as e:
+            print(f'Invalid JSON: {e}', file=sys.stderr)
+            sys.exit(1)

@@ -1,0 +1,14 @@
+def primes():
+    yield 2
+    sieve = {}
+    n = 3
+    while True:
+        p = sieve.pop(n, None)
+        if p is None:
+            yield n
+            sieve[n * n] = n
+        else:
+            m = n + p * 2
+            while m in sieve: m += p * 2
+            sieve[m] = p
+        n += 2

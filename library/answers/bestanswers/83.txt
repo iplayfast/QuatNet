@@ -1,0 +1,6 @@
+def power_set(s):
+    lst = list(s)
+    result = []
+    for i in range(1 << len(lst)):
+        result.append({lst[j] for j in range(len(lst)) if i & (1 << j)})
+    return result

@@ -1,0 +1,5 @@
+def solve_problem():
+    # Solution goes here
+    pass
+
+solve_problem()

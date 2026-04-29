@@ -1,0 +1,63 @@
+```python
+def calculate_area_and_perimeter(length, width):
+    """
+    Calculate the area and perimeter of a rectangle.
+
+    Args:
+        length (float): The length of the rectangle
+        width (float): The width of the rectangle
+
+    Returns:
+        tuple: (area, perimeter)
+    """
+    area = length * width
+    perimeter = 2 * (length + width)
+    return area, perimeter
+
+def validate_positive_numbers(numbers):
+    """
+    Validate if all numbers in a list are positive.
+
+    Args:
+        numbers (list): List of numbers to validate
+
+    Returns:
+        bool: True if all numbers are positive, False otherwise
+    """
+    return all(num > 0 for num in numbers)
+
+def remove_duplicates(items):
+    """
+    Remove duplicates from a list while preserving order.
+
+    Args:
+        items (list): List of items to deduplicate
+
+    Returns:
+        list: List with duplicates removed
+    """
+    seen = set()
+    result = []
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
+
+def find_max_occurrence(numbers):
+    """
+    Find the number that appears most frequently in a list.
+
+    Args:
+        numbers (list): List of numbers
+
+    Returns:
+        int: Number with highest frequency (or None if empty)
+    """
+    if not numbers:
+        return None
+    frequency = {}
+    for num in numbers:
+        frequency[num] = frequency.get(num, 0) + 1
+    return max(frequency, key=frequency.get)
+```

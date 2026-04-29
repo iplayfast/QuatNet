@@ -1,0 +1,20 @@
+```python
+def add_two_numbers():
+    a = input("Enter first number: ")
+    b = input("Enter second number: ")
+    return int(a) + int(b)
+
+def print_output():
+    print("Hello from Python!")
+
+# Call the function
+# add_two_numbers()
+# print_output()
+
+# Uncomment for testing
+# add_two_numbers()
+# print_output()
+
+# Test
+# print(f"{add_two_numbers()} is {add_two_numbers()}")
+```

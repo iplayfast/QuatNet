@@ -1,0 +1,7 @@
+def most_frequent(lst):
+    if not lst:
+        return None
+    freq = {}
+    for x in lst:
+        freq[x] = freq.get(x, 0) + 1
+    return max(freq, key=freq.get)

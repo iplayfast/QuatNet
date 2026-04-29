@@ -1,0 +1,76 @@
+#include "QuaternaryNN.hpp"
+#include "GGUFHelper.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+
+using namespace Quaternary;
+
+void print_usage(const char* prog) {
+    std::cerr << "Usage: " << prog << " [train|infer] <model.gguf> [lr]" << std::endl;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 3) {
+        print_usage(argv[0]);
+        return 1;
+    }
+
+    std::string mode = argv[1];
+    std::string model_path = argv[2];
+    float lr = (argc == 4) ? std::stof(argv[3]) : 0.001f;
+
+    LifetimeNN model;
+
+    // Try to load existing model
+    if (GGUFHelper::load(model_path, model)) {
+        std::cerr << "[INIT] Loaded existing model: " << model_path 
+                  << " (Heads: " << model.num_heads 
+                  << ", Vector Size: " << model.vector_size << ")" << std::endl;
+    } else {
+        std::cerr << "[INIT] Creating new model: " << model_path << std::endl;
+    }
+
+    if (GGUFHelper::load(model_path, model)) {
+        std::cerr << "[INIT] Loaded bias: " << model.bias << std::endl;
+    }
+    if (mode == "train") {
+        float input, target;
+        long long count = 0;
+        std::cerr << "[TRAIN] Starting training loop (LR: " << lr << ")..." << std::endl;
+        
+        while (std::cin >> input >> target) {
+            model.train_step(input, target, lr);
+            count++;
+
+            if (count % 1000 == 0) {
+                std::cerr << "\r[TRAIN] Samples: " << count 
+                          << " | MSE: " << std::fixed << std::setprecision(6) << model.running_mse 
+                          << " | Heads: " << model.num_heads 
+                          << " | V-Size: " << model.vector_size << "    " << std::flush;
+            }
+
+            // Periodic save
+            if (count % 10000 == 0) {
+                GGUFHelper::save(model_path, model);
+            }
+        }
+        
+        // Final save
+        GGUFHelper::save(model_path, model);
+        std::cerr << "\n[TRAIN] Training complete. Model saved." << std::endl;
+
+    } else if (mode == "infer") {
+        float input;
+        while (std::cin >> input) {
+            float output = model.forward(input);
+            std::cout << output << std::endl;
+        }
+    } else {
+        print_usage(argv[0]);
+        return 1;
+    }
+
+    return 0;
+}

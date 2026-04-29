@@ -1,0 +1,7 @@
+```python
+def solve_problem():
+    # Your implementation here
+    pass
+
+solve_problem()
+```

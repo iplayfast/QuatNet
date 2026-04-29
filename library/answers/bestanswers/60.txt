@@ -1,0 +1,36 @@
+import random
+
+def generate_maze(rows, cols):
+    maze = [['#'] * (2 * cols + 1) for _ in range(2 * rows + 1)]
+    for r in range(rows):
+        for c in range(cols):
+            maze[2 * r + 1][2 * c + 1] = ' '
+
+    def neighbors(r, c):
+        for dr, dc in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < 2 * rows + 1 and 0 <= nc < 2 * cols + 1:
+                yield nr, nc, dr // 2, dc // 2
+
+    start_r, start_c = 1, 1
+    visited = set()
+    stack = [(start_r, start_c)]
+    while stack:
+        r, c = stack[-1]
+        visited.add((r, c))
+        unvisited = [(nr, nc) for nr, nc, dr, dc in neighbors(r, c)
+                      if (nr, nc) not in visited]
+        if unvisited:
+            nr, nc = random.choice(unvisited)
+            wr = (r + nr) // 2
+            wc = (c + nc) // 2
+            maze[wr][wc] = ' '
+            stack.append((nr, nc))
+        else:
+            stack.pop()
+
+    return [''.join(row) for row in maze]
+
+# maze = generate_maze(10, 10)
+# for row in maze:
+#     print(row)

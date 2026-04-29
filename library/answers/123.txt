@@ -1,0 +1,28 @@
+```python
+def process_input(data: str, max_iterations: int = None):
+    """
+    Process user input and validate it. If an error occurs, return the original input.
+
+    Args:
+        data (str): The input data from the user.
+        max_iterations (int, optional): Maximum number of iterations for the algorithm, 
+                               defaults to 10. Used to prevent infinite loops if data is processed
+                               in an iterative manner.
+
+    Returns:
+        str: The processed input data, or the original input if errors occur during processing.
+
+    Raises:
+        ValueError: If the data is empty or invalid.
+        TypeError: If the data is not a string.
+    """
+    if not isinstance(data, str):
+        raise TypeError("Input must be a string.")
+    if len(data) == 0:
+        raise ValueError("Input must contain at least one character.")
+
+    if max_iterations is not None and max_iterations > 0:
+        return data
+    else:
+        return data
+```

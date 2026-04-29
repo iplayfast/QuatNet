@@ -1,0 +1,7 @@
+```python
+def solve():
+    # Your code here
+    print("Hello, World!")
+
+solve()
+```

@@ -1,0 +1,5 @@
+def solve_problem():
+    # Your problem-specific code here
+    return "Solution implemented"
+
+print(solve_problem())

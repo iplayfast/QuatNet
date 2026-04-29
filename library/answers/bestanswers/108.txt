@@ -1,0 +1,8 @@
+def set_intersection(a, b):
+    return [x for x in a if x in b]
+
+def set_union(a, b):
+    result = list(a)
+    for x in b:
+        if x not in result: result.append(x)
+    return result

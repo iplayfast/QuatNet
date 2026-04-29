@@ -1,0 +1,12 @@
+def matmul(A, B):
+    m, k = len(A), len(A[0])
+    n = len(B[0])
+    C = [[0.0] * n for _ in range(m)]
+    BT = list(zip(*B))
+    for i in range(m):
+        for j in range(n):
+            s = 0.0
+            for t in range(k):
+                s += A[i][t] * BT[j][t]
+            C[i][j] = s
+    return C

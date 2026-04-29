@@ -1,0 +1,6 @@
+import math
+
+def hausdorff_distance(A, B):
+    def min_dist(p, pts):
+        return min(math.hypot(p[0]-q[0], p[1]-q[1]) for q in pts)
+    return max(max(min_dist(p, B) for p in A), max(min_dist(q, A) for q in B))

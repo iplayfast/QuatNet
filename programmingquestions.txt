@@ -1,0 +1,150 @@
+Write a program that prints "Hello World" to the screen.
+Write a program that asks the user for their name and prints a greeting with their name.
+Write a program that asks for a name and prints a special greeting if the name is Alice or Bob, otherwise prints a generic greeting.
+Write a program that asks for a number n and prints the sum of the numbers from 1 to n.
+Write a program that asks for a number n and prints the sum of all multiples of 3 or 5 from 1 to n.
+Write a program that asks for a number n and computes either the sum or the product of 1 to n based on user choice.
+Write a program that prints a 12x12 multiplication table.
+Write a program that prints all prime numbers up to a limit entered by the user.
+Write a number guessing game where the computer picks a random number and the user guesses until correct, with hints for too high/too low.
+Write a program that prints the next 20 leap years starting from the current year.
+Write a program that computes pi by approximating 4 * (1 - 1/3 + 1/5 - 1/7 + 1/9 - ...) for a million terms.
+Write a function that returns the largest element in a list.
+Write a function that reverses a list in place without creating a copy.
+Write a function that checks whether a given value exists in a list.
+Write a function that returns the elements at odd indices in a list.
+Write a function that returns the running total (cumulative sum) of a list.
+Write a function that checks if a string is a palindrome.
+Write a function that computes the sum of a list using a for-loop, another using a while-loop, and another using recursion.
+Write a function that applies another function to every element of a list, then uses it to print the first 20 perfect squares.
+Write a function that concatenates two lists into one.
+Write a function that interleaves two lists, e.g. [a,b,c] and [1,2,3] becomes [a,1,b,2,c,3].
+Write a function that merges two sorted lists into a single sorted list efficiently.
+Write a function that rotates a list by k positions to the left using only O(1) extra space.
+Write a function that generates the first 100 Fibonacci numbers.
+Write a function that converts a number to a list of its digits, e.g. 2342 becomes [2,3,4,2].
+Write functions for addition, subtraction, and multiplication of numbers represented as digit lists (big integer arithmetic).
+Write a function that converts a list of digits from one base to another, e.g. [2,1,0] in base 3 becomes [2,1] in base 10.
+Write a function that generates all permutations of a list.
+Write a function that computes the n-th Fibonacci number using recursion with memoization.
+Implement binary search on a sorted list. Return the index of the target or -1 if not found.
+Implement selection sort.
+Implement insertion sort.
+Implement merge sort.
+Implement quicksort.
+Write a function that finds the most frequent element in a list.
+Write a function that flattens a nested list structure, e.g. [1,[2,[3,4]],5] becomes [1,2,3,4,5].
+Write a function that groups a list into sublists of size n, e.g. [1,2,3,4,5] with n=2 becomes [[1,2],[3,4],[5]].
+Write a function that splits a list at a given index, returning two lists.
+Write a function that removes duplicate elements from a list while preserving order.
+Write a function that finds all pairs of numbers in a list that sum to a given target.
+Write a program that translates English text to Pig Latin and back.
+Write a program that finds all ways to insert +, -, or nothing between the digits 1 through 9 so the result equals 100.
+Write a function that computes the edit distance (Levenshtein distance) between two strings.
+Write a function that finds the longest common subsequence of two strings.
+Write a function that finds the longest palindromic substring efficiently.
+Write a function that multiplies two matrices, optimized for cache performance.
+Write a function that generates all valid combinations of n pairs of parentheses.
+Write a function that implements a simple text-based progress bar.
+Write a class that implements a dynamic array (similar to Python's list) with amortized O(1) append.
+Write a class that implements a singly linked list with insert, delete, and search operations.
+Write a class that implements a binary search tree with insert, search, and delete.
+Write a class that implements a min-heap with push and pop operations.
+Write a function that performs a depth-first search on a graph represented as an adjacency list.
+Write a function that performs a breadth-first search on a graph represented as an adjacency list.
+Write a function that finds the shortest path between two nodes in an unweighted graph using BFS.
+Write a function that detects if a graph contains a cycle.
+Write a program that generates random mazes using depth-first search backtracking.
+Write a function that solves a maze using breadth-first search, returning the shortest path.
+Write a program that plays Rock-Paper-Scissors against a human, adapting to their patterns.
+Write a program that plays Hangman, choosing letters that eliminate the most possible words.
+Write a text-based Battleship game against a simple AI opponent.
+Write a function that implements a basic rate limiter (e.g. max N requests per minute).
+Write a function that computes the union area of overlapping 2D rectangles.
+Write a function that evaluates a mathematical expression string like "3+5*2" respecting operator precedence.
+Write a program that simulates a bouncing ball inside a rectangular window.
+Write a program that generates and displays a multiplication quiz with random numbers.
+Write a program that reads a text file, counts word frequencies, and displays the top 10 most common words.
+Write a function that implements a simple LRU cache with a fixed capacity.
+69: Write a function that tokenizes a string into words, handling punctuation and whitespace correctly.
+70: Write a program that reads a CSV file and prints the min, max, mean, and median of a specified column.
+71: Write a function that implements the Fisher-Yates shuffle algorithm.
+72: Write a function that implements run-length encoding and decoding of a string.
+73: Write a function that finds the k-th smallest element in an unsorted array in O(n) average time (quickselect).
+74: Write a class that implements a trie (prefix tree) with insert, search, and startsWith operations.
+75: Write a function that finds all anagrams of a word from a given dictionary list.
+76: Write a function that implements the Sieve of Eratosthenes as a generator yielding primes lazily.
+77: Write a function that computes the integer square root of a number using binary search.
+78: Write a function that converts a Roman numeral string to an integer.
+79: Write a function that implements base64 encoding and decoding.
+80: Write a function that implements a Bloom filter with add and contains operations.
+81: Write a program that scrapes all links from a given URL using only the standard library.
+82: Write a function that computes the Damerau-Levenshtein distance between two strings.
+83: Write a function that finds all subsets of a given set (power set).
+84: Write a function that implements a simple pub/sub event bus with subscribe, unsubscribe, and emit.
+85: Write a function that implements the Vigenère cipher for encrypting and decrypting text.
+86: Write a function that simulates a simple calculator with memory (M+, M-, MR, MC) via a REPL loop.
+87: Write a function that computes nCr (combinations) and nPr (permutations) efficiently.
+88: Write a program that implements a simple REPL for a stack-based (Forth-like) language.
+89: Write a function that finds the longest increasing subsequence in an array.
+90: Write a function that implements a simple JSON parser without using the json module.
+91: Write a function that implements the A* pathfinding algorithm on a 2D grid.
+92: Write a function that computes the convex hull of a set of 2D points using the Graham scan.
+93: Write a class that implements a thread-safe bounded queue (producer-consumer) using threading primitives.
+94: Write a program that implements a simple HTTP server that serves static files from a directory.
+95: Write a function that computes the edit distance between two strings allowing only insert and delete (longest common subsequence distance).
+96: Write a function that validates a string of parentheses, brackets, and braces is balanced.
+97: Write a function that implements a simple fuzzy string matcher (like fzf's algorithm).
+98: Write a function that computes the Mandelbrot set for a given region of the complex plane.
+99: Write a program that reads from stdin and writes to stdout with a configurable line buffer (linewise or charwise).
+100: Write a function that implements the XOR swap trick correctly and explains its limitations.
+101: Write a function that implements a lock-free ring buffer for single-producer single-consumer.
+102: Write a program that plays Tic-Tac-Toe against a minimax AI opponent.
+103: Write a function that converts a floating point number to its IEEE 754 binary representation.
+104: Write a function that implements a simple grep utility matching a regex pattern line by line.
+105: Write a function that implements the Floyd-Warshall all-pairs shortest path algorithm.
+106: Write a function that finds the strongly connected components of a directed graph using Tarjan's algorithm.
+107: Write a function that implements the Knuth-Morris-Pratt (KMP) substring search algorithm.
+108: Write a function that computes the intersection and union of two sets without using the set data type.
+109: Write a function that implements a simple version of git diff (Myers diff algorithm).
+110: Write a program that implements a command-line stopwatch with lap timing.
+111: Write a function that serializes an object to a Python-like repr string and deserializes it back.
+112: Write a function that computes all possible ways to make change for a given amount using given coin denominations.
+113: Write a function that implements a simple test runner that discovers and runs functions named test_* and reports results.
+114: Write a program that implements a simple HTTP load tester that measures response times and percentiles.
+115: Write a function that computes the Levenshtein distance with the Wagner-Fischer optimization (O(min(m,n)) space).
+116: Write a function that implements the Reservoir sampling algorithm (select k random items from a stream).
+117: Write a function that computes the determinant of a matrix using Gaussian elimination.
+118: Write a program that implements a simple text adventure game engine with rooms, items, and commands.
+119: Write a function that finds the median of two sorted arrays in O(log(min(m,n))) time.
+120: Write a function that implements the Catmull-Rom spline interpolation between points.
+121: Write a program that detects faces in an image using the Viola-Jones sliding window approach (simplified).
+122: Write a function that implements a basic spell-checker using a dictionary and edit distance.
+123: Write a function that generates all possible binary trees with n nodes.
+124: Write a program that reads a JSON file, pretty-prints it with configurable indentation, and validates it.
+125: Write a function that implements the Burrows-Wheeler transform for text compression preprocessing.
+126: Write a program that simulates the Game of Life (Conway's cellular automaton) with a toroidal grid.
+127: Write a function that computes the shortest common supersequence of two strings.
+128: Write a function that implements a Count-Min Sketch probabilistic data structure.
+129: Write a program that implements a simple load balancer that distributes requests to backend workers using round-robin.
+130: Write a function that finds all articulation points (cut vertices) in an undirected graph.
+131: Write a function that computes the Hausdorff distance between two sets of 2D points.
+132: Write a program that implements a simple key-value store with persistence to disk and basic crash recovery.
+133: Write a function that implements a Skip List with insert, search, and delete.
+134: Write a function that computes all topological orderings of a directed acyclic graph.
+135: Write a program that implements a command-line progress spinner with elapsed time.
+136: Write a function that implements an exponential backoff retry wrapper for flaky operations.
+137: Write a function that implements the Winnowing algorithm for document fingerprinting (plagiarism detection).
+138: Write a function that uses the Trabb Pardo-Knuth algorithm to evaluate a function over an 11-element input.
+139: Write a function that implements the Boyer-Moore majority vote algorithm to find elements appearing more than n/2 times.
+140: Write a program that sends a notification when a watched file or directory changes (like inotify in pure Python).
+141: Write a function that implements the discrete Fourier transform (DFT) naively.
+142: Write a function that computes the edit distance between two strings with affine gap penalties.
+143: Write a program that implements a simple bitmap image renderer (PBM/PPM format).
+144: Write a function that implements the BK-tree data structure for fuzzy string matching.
+145: Write a function that computes the Stirling numbers of the first and second kind.
+146: Write a function that implements the HalfEdge mesh data structure for polygonal meshes.
+147: Write a program that implements a simple database index using a B-tree with insert and search.
+148: Write a function that finds the maximum subarray sum (Kadane's algorithm).
+149: Write a function that implements the simplex algorithm for linear programming (2D case).
+150: Write a program that implements a simple DNS resolver that queries authoritative nameservers.

@@ -1,0 +1,16 @@
+```python
+def process_string(data):
+    if isinstance(data, str):
+        return data.lower()
+    else:
+        raise TypeError("Input must be a string")
+
+def main():
+    input_data = "hello  world!"
+    result = process_string(input_data)
+    print(result)
+    print(type(result))
+
+if __name__ == "__main__":
+    main()
+```

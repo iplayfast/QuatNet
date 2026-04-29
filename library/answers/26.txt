@@ -1,0 +1,20 @@
+```python
+import json
+
+def parse_data(data):
+    """Parse a JSON string to dictionary."""
+    try:
+        return json.loads(data)
+    except Exception:
+        return None
+
+def format_input(data):
+    """Format and validate input."""
+    if data is None:
+        raise ValueError("Input is None")
+    
+    if not isinstance(data, dict):
+        raise TypeError("Input must be a dictionary")
+    
+    return data
+```

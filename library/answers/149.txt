@@ -1,0 +1,13 @@
+```python
+def solve():
+    import sys
+    input = sys.stdin.read().strip()
+    
+    if ',' in input:
+        # Input is comma-separated list of strings
+        values = input.split(',')
+        print(values)
+    else:
+        # Input is a single string
+        print([input])
+```

@@ -1,0 +1,1 @@
+Write a function that implements the Sieve of Eratosthenes as a generator yielding primes lazily.

@@ -1,0 +1,20 @@
+```python
+def main():
+    # Test cases
+    test_cases = [
+        {"input": "Hello", "output": 5},
+        {"input": "World", "output": 5},
+        {"input": "", "output": 0},
+        {"input": "a", "output": 1}
+    ]
+
+    for test_case in test_cases:
+        count = count_vowels(test_case["input"])
+        assert count == test_case["output"], f"Test case {test_case['input']} failed"
+
+def count_vowels(string):
+    return sum(1 for char in string.lower() if char in 'aeiou')
+
+if __name__ == "__main__":
+    main()
+```

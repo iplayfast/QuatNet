@@ -1,0 +1,7 @@
+def serialize(obj):
+    return repr(obj)
+
+def deserialize(s):
+    return eval(s)
+
+# Note: Only safe for basic types. Use ast.literal_eval for untrusted input.

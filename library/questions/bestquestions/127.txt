@@ -1,0 +1,1 @@
+Write a function that computes the shortest common supersequence of two strings.

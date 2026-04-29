@@ -1,0 +1,7 @@
+```python
+def sample_function():
+    """
+    This is a sample function that does nothing.
+    """
+    pass
+```

@@ -1,0 +1,15 @@
+from collections import Counter
+
+def top_words(filename, n=10):
+    with open(filename) as f:
+        text = f.read().lower()
+    words = text.split()
+    cleaned = []
+    for w in words:
+        clean = ''.join(c for c in w if c.isalpha() or c == "'")
+        if clean:
+            cleaned.append(clean)
+    return Counter(cleaned).most_common(n)
+
+# for word, count in top_words("sample.txt"):
+#     print(f"{word}: {count}")

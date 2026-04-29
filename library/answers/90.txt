@@ -1,0 +1,29 @@
+```python
+def fibonacci(n):
+    """
+    Calculates the Nth Fibonacci number iteratively.
+    Returns 0 if n is negative.
+    """
+    if n < 0:
+        return 0
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+if __name__ == '__main__':
+    # Example usage: Calculate the 10th Fibonacci number (F10)
+    n_test = 10
+    result = fibonacci(n_test)
+    print(f"The {n_test}th Fibonacci number is: {result}")
+
+    # Another test case
+    n_test = 1
+    result = fibonacci(n_test)
+    print(f"The {n_test}th Fibonacci number is: {result}")
+```

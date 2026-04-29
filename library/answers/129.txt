@@ -1,0 +1,7 @@
+```python
+def solve_problem():
+    return None
+
+result = solve_problem()
+print(result)
+```

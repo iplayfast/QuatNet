@@ -1,0 +1,10 @@
+Here is a simple Python function:
+
+```python
+def greet(name):
+    return f'Hello, {name}!'
+
+print(greet('User'))
+```
+
+This program defines a `greet` function which takes a name as an input and returns a greeting message for that name. Then it tests this function by calling it with the string "User" as an argument.

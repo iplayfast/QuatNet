@@ -1,0 +1,43 @@
+```python
+def calculate_fibonacci(n: int) -> int:
+    """
+    Calculates the nth Fibonacci number using an iterative approach.
+    The sequence starts with 0 and 1 (F(0)=0, F(1)=1).
+    """
+    if not isinstance(n, int) or n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    
+    a, b = 0, 1
+    
+    # We already handled n=0 and n=1, so we iterate n-1 times
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+        
+    return b
+
+if __name__ == "__main__":
+    # Test cases
+    
+    # F(0) = 0
+    print(f"The 0th Fibonacci number is: {calculate_fibonacci(0)}")
+    
+    # F(1) = 1
+    print(f"The 1st Fibonacci number is: {calculate_fibonacci(1)}")
+    
+    # F(5) = 5
+    print(f"The 5th Fibonacci number is: {calculate_fibonacci(5)}")
+    
+    # F(10) = 55
+    print(f"The 10th Fibonacci number is: {calculate_fibonacci(10)}")
+    
+    # Example of error handling (uncomment to test)
+    # try:
+    #     calculate_fibonacci(-1)
+    # except ValueError as e:
+    #     print(f"Error caught: {e}")
+```

@@ -1,0 +1,1 @@
+Write a function that implements the Knuth-Morris-Pratt (KMP) substring search algorithm.

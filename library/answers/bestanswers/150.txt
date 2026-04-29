@@ -1,0 +1,30 @@
+import socket, struct, random
+
+def dns_query(domain, server='8.8.8.8'):
+    tid = random.randint(0, 65535)
+    header = struct.pack('>HHHHHH', tid, 0x0100, 1, 0, 0, 0)
+    qname = b''.join(bytes([len(p)]) + p.encode() for p in domain.split('.')) + b'\x00'
+    question = qname + struct.pack('>HH', 1, 1)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.settimeout(5)
+    sock.sendto(header + question, (server, 53))
+    data, _ = sock.recvfrom(512)
+    sock.close()
+    ans_start = len(header) + len(question)
+    _, _, _, ancount = struct.unpack('>HHHH', data[:12])
+    offset = ans_start
+    results = []
+    for _ in range(ancount):
+        if data[offset] & 0xC0: offset += 2
+        else:
+            while data[offset]: offset += 1
+            offset += 1
+        _, _, rdlength = struct.unpack('>HHH', data[offset:offset + 6])
+        offset += 6
+        if rdlength == 4:
+            ip = '.'.join(str(b) for b in data[offset:offset + 4])
+            results.append(ip)
+        offset += rdlength
+    return results
+
+# print(dns_query('example.com'))

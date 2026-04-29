@@ -1,0 +1,67 @@
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, val):
+        def _insert(node, val):
+            if not node:
+                return TreeNode(val)
+            if val < node.val:
+                node.left = _insert(node.left, val)
+            elif val > node.val:
+                node.right = _insert(node.right, val)
+            return node
+        self.root = _insert(self.root, val)
+
+    def search(self, val):
+        curr = self.root
+        while curr:
+            if val == curr.val:
+                return curr
+            elif val < curr.val:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return None
+
+    def delete(self, val):
+        def _min_node(node):
+            while node.left:
+                node = node.left
+            return node
+
+        def _delete(node, val):
+            if not node:
+                return None
+            if val < node.val:
+                node.left = _delete(node.left, val)
+            elif val > node.val:
+                node.right = _delete(node.right, val)
+            else:
+                if not node.left:
+                    return node.right
+                if not node.right:
+                    return node.left
+                successor = _min_node(node.right)
+                node.val = successor.val
+                node.right = _delete(node.right, successor.val)
+            return node
+
+        self.root = _delete(self.root, val)
+
+    def inorder(self):
+        result = []
+        def _dfs(node):
+            if not node:
+                return
+            _dfs(node.left)
+            result.append(node.val)
+            _dfs(node.right)
+        _dfs(self.root)
+        return result

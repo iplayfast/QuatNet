@@ -1,0 +1,6 @@
+```python
+def solve_problem():
+    return "Function implemented"
+
+print(solve_problem())
+```

@@ -1,0 +1,5 @@
+```python
+def solve():
+    # Your code here
+    return "Hello, World!"
+```

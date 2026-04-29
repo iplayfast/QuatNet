@@ -1,0 +1,8 @@
+```python
+def sample_function():
+    return "This is a sample function."
+
+# Example usage
+if __name__ == "__main__":
+    print(sample_function())
+```

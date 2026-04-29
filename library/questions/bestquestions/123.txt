@@ -1,0 +1,1 @@
+Write a function that generates all possible binary trees with n nodes.

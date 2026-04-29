@@ -1,0 +1,1 @@
+Write a program that detects faces in an image using the Viola-Jones sliding window approach (simplified).

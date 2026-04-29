@@ -1,0 +1,8 @@
+Here's your Python function:
+
+```python
+def my_function():
+    print("Hello, world!")
+```
+
+I have created a simple Python function that prints "Hello, world!" when called. Remember to use this function responsibly and within the bounds of applicable laws and ethical guidelines.

@@ -1,0 +1,10 @@
+def isqrt(n):
+    if n < 2: return n
+    lo, hi = 1, n // 2
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        sq = mid * mid
+        if sq == n: return mid
+        elif sq < n: lo = mid + 1
+        else: hi = mid - 1
+    return hi

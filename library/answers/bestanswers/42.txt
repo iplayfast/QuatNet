@@ -1,0 +1,2 @@
+def split_at(lst, index):
+    return lst[:index], lst[index:]

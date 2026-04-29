@@ -1,0 +1,26 @@
+```python
+def fibonacci(n):
+    """
+    Calculates the nth number in the Fibonacci sequence.
+    Assumes n >= 0.
+    """
+    if not isinstance(n, int) or n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+if __name__ == '__main__':
+    # Example usage:
+    print(f"F(0): {fibonacci(0)}")
+    print(f"F(1): {fibonacci(1)}")
+    print(f"F(5): {fibonacci(5)}")
+    print(f"F(10): {fibonacci(10)}")
+```

@@ -1,0 +1,12 @@
+import cmath
+
+def dft(x):
+    n = len(x)
+    result = []
+    for k in range(n):
+        s = 0+0j
+        for t in range(n):
+            angle = -2j * cmath.pi * k * t / n
+            s += x[t] * cmath.exp(angle)
+        result.append(s)
+    return result

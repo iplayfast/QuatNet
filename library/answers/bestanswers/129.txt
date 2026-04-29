@@ -1,0 +1,16 @@
+from itertools import cycle
+
+class LoadBalancer:
+    def __init__(self, backends):
+        self.backends = backends
+        self.pool = cycle(range(len(backends)))
+
+    def route(self, request):
+        idx = next(self.pool)
+        return self.backends[idx].handle(request)
+
+class Worker:
+    def __init__(self, name):
+        self.name = name
+    def handle(self, request):
+        return f'{self.name} handled {request}'

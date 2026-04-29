@@ -1,0 +1,13 @@
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val; self.left = left; self.right = right
+
+def all_binary_trees(n):
+    if n == 0: return [None]
+    if n == 1: return [TreeNode()]
+    result = []
+    for i in range(n):
+        for left in all_binary_trees(i):
+            for right in all_binary_trees(n - 1 - i):
+                result.append(TreeNode(0, left, right))
+    return result
