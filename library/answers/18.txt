@@ -1,53 +1,9 @@
-```python
-def fibonacci(n: int) -> int:
-    """
-    Calculates the nth Fibonacci number using an iterative approach.
-    The Fibonacci sequence starts with F(0) = 0 and F(1) = 1.
-    
-    Args:
-        n: The index (non-negative integer) of the desired Fibonacci number.
-
-    Returns:
-        The nth Fibonacci number.
-        
-    Raises:
-        ValueError: If n is negative.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-        
-    if n < 0:
-        raise ValueError("Fibonacci index must be a non-negative integer.")
-    
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
-    
-    a, b = 0, 1
-    # We already handled n=0 and n=1, so we iterate n-1 times
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-        
-    return b
-
-if __name__ == '__main__':
-    # Test cases
-    print(f"F(0): {fibonacci(0)}")
-    print(f"F(1): {fibonacci(1)}")
-    print(f"F(2): {fibonacci(2)}")
-    print(f"F(6): {fibonacci(6)}")
-    print(f"F(10): {fibonacci(10)}")
-    print(f"F(15): {fibonacci(15)}")
-
-    # Example of handling invalid input
-    try:
-        fibonacci(-1)
-    except ValueError as e:
-        print(f"\nError caught (Negative Input): {e}")
-        
-    try:
-        fibonacci(5.5)
-    except TypeError as e:
-        print(f"Error caught (Type Input): {e}")
-```
+def majority_element(arr):
+    candidate, count = None, 0
+    for x in arr:
+        if count == 0: candidate, count = x, 1
+        elif x == candidate: count += 1
+        else: count -= 1
+    if arr.count(candidate) > len(arr) // 2:
+        return candidate
+    return None

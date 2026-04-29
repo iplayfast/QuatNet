@@ -1,1 +1,1 @@
-Implement selection sort.
+Write a function that implements a simple version of git diff (Myers diff algorithm).

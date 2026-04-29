@@ -1,4 +1,11 @@
-def my_function():
-    return 42
+```python
+def example_function():
+    """
+    This is a placeholder function.
+    """
+    return "This is a working Python function."
 
-print(my_function())
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
+```

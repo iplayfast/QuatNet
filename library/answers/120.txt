@@ -1,5 +1,26 @@
-def solve_problem():
-    # Your problem-specific code here
-    return "Solution implemented"
+```python
+def fibonacci(n):
+    """
+    Calculates the nth number in the Fibonacci sequence.
+    Uses an iterative approach for efficiency.
+    """
+    if not isinstance(n, int) or n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
 
-print(solve_problem())
+# Example Usage (optional, but demonstrates functionality):
+if __name__ == "__main__":
+    print(f"The 0th Fibonacci number is: {fibonacci(0)}")
+    print(f"The 1st Fibonacci number is: {fibonacci(1)}")
+    print(f"The 6th Fibonacci number is: {fibonacci(6)}")
+    print(f"The 10th Fibonacci number is: {fibonacci(10)}")
+```

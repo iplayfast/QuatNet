@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that simulates a simple calculator with memory (M+, M-, MR, MC) via a REPL loop.

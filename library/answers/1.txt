@@ -1,13 +1,10 @@
-def merge_sorted(a, b):
-    result = []
-    i = j = 0
-    while i < len(a) and j < len(b):
-        if a[i] <= b[j]:
-            result.append(a[i])
-            i += 1
-        else:
-            result.append(b[j])
-            j += 1
-    result.extend(a[i:])
-    result.extend(b[j:])
-    return result
+from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fib_memo(n):
+    if n < 2:
+        return n
+    return fib_memo(n - 1) + fib_memo(n - 2)
+
+def nth_fibonacci(n):
+    return fib_memo(n)

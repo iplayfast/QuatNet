@@ -1,10 +1,8 @@
 ```python
-def func():
-    result = "Function executed successfully"
-    print("Hello")
-    return result
+def example_function():
+    return "This is an example function."
 
-
-result = func()
-print(result)
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
 ```

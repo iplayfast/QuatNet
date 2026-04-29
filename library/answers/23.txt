@@ -1,7 +1,58 @@
 ```python
-def solve_problem():
-    # Your code goes here
-    pass
+from typing import List, Union
 
-solve_problem()
+def find_max_in_list(data: List[Union[int, float]]) -> Union[int, float]:
+    """
+    Finds the maximum element in a list of numbers.
+
+    Args:
+        data: A list containing numbers (integers or floats).
+
+    Returns:
+        The maximum number found in the list.
+
+    Raises:
+        ValueError: If the input list is empty or None.
+        TypeError: If the input data is not a list.
+    """
+    if not isinstance(data, list):
+        raise TypeError("Input must be a list.")
+    
+    if not data:
+        raise ValueError("Input list cannot be empty.")
+
+    # Simple check to ensure the list contains comparable types
+    if not all(isinstance(item, (int, float)) for item in data):
+        raise TypeError("All elements in the list must be numbers (int or float).")
+
+    return max(data)
+
+# Example Usage:
+if __name__ == '__main__':
+    # Test Case 1: Standard positive numbers
+    list1 = [10, 5, 20, 15]
+    print(f"Max of {list1}: {find_max_in_list(list1)}") # Expected: 20
+
+    # Test Case 2: Negative numbers and floats
+    list2 = [-5.5, -1.1, -8.0, -2.0]
+    print(f"Max of {list2}: {find_max_in_list(list2)}") # Expected: -1.1
+
+    # Test Case 3: Mixed positive and negative
+    list3 = [0, 100, -100]
+    print(f"Max of {list3}: {find_max_in_list(list3)}") # Expected: 100
+
+    # Test Case 4: Single element
+    list4 = [42]
+    print(f"Max of {list4}: {find_max_in_list(list4)}") # Expected: 42
+
+    # Test Case 5: Handling errors (Uncomment to test)
+    # try:
+    #     find_max_in_list([])
+    # except ValueError as e:
+    #     print(f"Caught expected error: {e}")
+    
+    # try:
+    #     find_max_in_list([1, 2, "three"])
+    # except TypeError as e:
+    #     print(f"Caught expected error: {e}")
 ```

@@ -140,18 +140,11 @@ class QuaternaryLLM(nn.Module):
         return self.output(self.output_norm(x))
 
     def export_gguf(self, path):
-        from gguf import GGUFWriter, GGMLQuantizationType
-        from gguf.quants import Q2_Q
+        from gguf import GGUFWriter
 
         d, vocab = self.d_model, self.vocab_size
         n_layer, n_head, d_ff = self.n_layers, self.n_heads, self.layers[0].ffn.gate.out_features
         d_head = d // n_head
-
-        def q2q(w):
-            arr = w.astype(np.float32).reshape(-1)
-            pad = (32 - len(arr) % 32) % 32
-            if pad: arr = np.pad(arr, (0, pad))
-            return Q2_Q.quantize_blocks(arr.reshape(len(arr) // 32, 32))
 
         w = GGUFWriter(path, "quaternary_nn")
         w.add_uint32("quaternary_nn.context_length", 256)
@@ -170,24 +163,23 @@ class QuaternaryLLM(nn.Module):
         w.add_string("tokenizer.ggml.model", "none")
         w.add_uint32("tokenizer.ggml.tokens", vocab)
 
-        def q2q_tensor(name, arr, raw_shape):
-            w.add_tensor(name, q2q(arr), raw_shape=raw_shape, raw_dtype=GGMLQuantizationType.Q2_Q)
+        def fp32_tensor(name, arr):
+            w.add_tensor(name, arr.astype(np.float32))
 
-        # Embeddings and output projection must stay fp32 (get_rows doesn't support Q2_Q)
-        w.add_tensor("token_embd.weight", self.tok_embd.weight.detach().cpu().numpy().astype(np.float32))
-        w.add_tensor("output_norm.weight", self.output_norm.weight.detach().cpu().numpy().astype(np.float32))
-        w.add_tensor("output.weight", self.output.weight.detach().cpu().numpy().astype(np.float32))
+        fp32_tensor("token_embd.weight", self.tok_embd.weight.detach().cpu().numpy())
+        fp32_tensor("output_norm.weight", self.output_norm.weight.detach().cpu().numpy())
+        fp32_tensor("output.weight", self.output.weight.detach().cpu().numpy())
 
         for i, layer in enumerate(self.layers):
-            w.add_tensor(f"blk.{i}.attn_norm.weight", layer.attn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            q2q_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T, (d, d))
-            w.add_tensor(f"blk.{i}.ffn_norm.weight", layer.ffn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            q2q_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
-            q2q_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32), (d, d_ff))
-            q2q_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
+            fp32_tensor(f"blk.{i}.attn_norm.weight", layer.attn_norm.weight.detach().cpu().numpy())
+            fp32_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T)
+            fp32_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T)
+            fp32_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T)
+            fp32_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T)
+            fp32_tensor(f"blk.{i}.ffn_norm.weight", layer.ffn_norm.weight.detach().cpu().numpy())
+            fp32_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy())
+            fp32_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy())
+            fp32_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy())
 
         w.write_header_to_file()
         w.write_kv_data_to_file()

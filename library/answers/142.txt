@@ -1,8 +1,7 @@
-def set_intersection(a, b):
-    return [x for x in a if x in b]
+```python
+def sum_numbers(numbers):
+    return sum(numbers)
 
-def set_union(a, b):
-    result = list(a)
-    for x in b:
-        if x not in result: result.append(x)
-    return result
+# Example usage
+print(sum_numbers([1, 2, 3]))  # 6
+```

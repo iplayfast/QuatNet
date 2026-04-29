@@ -1,7 +1,7 @@
 ```python
 def solve_problem():
-    # Your problem's specific implementation here
-    pass
+    # Your problem specific logic goes here
+    return None
 
 solve_problem()
 ```

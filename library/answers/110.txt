@@ -1,17 +1,9 @@
-def rle_encode(s):
-    if not s: return ''
-    result, count, prev = [], 1, s[0]
-    for c in s[1:]:
-        if c == prev: count += 1
-        else: result.append(f'{count}{prev}'); prev = c; count = 1
-    result.append(f'{count}{prev}')
-    return ''.join(result)
-
-def rle_decode(s):
-    result, i = [], 0
-    while i < len(s):
-        j = i
-        while s[j].isdigit(): j += 1
-        result.append(s[j] * int(s[i:j]))
-        i = j + 1
-    return ''.join(result)
+def pair_sum(lst, target):
+    seen = set()
+    pairs = []
+    for x in lst:
+        complement = target - x
+        if complement in seen:
+            pairs.append((complement, x))
+        seen.add(x)
+    return pairs

@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that implements the Boyer-Moore majority vote algorithm to find elements appearing more than n/2 times.

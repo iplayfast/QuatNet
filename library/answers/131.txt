@@ -1,4 +1,10 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+def calculator():
+    memory = 0
+    while True:
+        expr = input('> ').strip()
+        if expr == 'exit': break
+        elif expr == 'MC': memory = 0
+        elif expr == 'MR': print(memory)
+        elif expr.startswith('M+'): memory += eval(expr[2:])
+        elif expr.startswith('M-'): memory -= eval(expr[2:])
+        else: print(eval(expr))
