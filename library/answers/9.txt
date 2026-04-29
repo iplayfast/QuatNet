@@ -1,56 +1,8 @@
+Here's a simple Python function that takes two numbers as input and returns their sum:
+
 ```python
-def greet(name: str, greeting_type: str = "hello") -> str:
-    """
-    Generate a personalized greeting message.
-    
-    Args:
-        name (str): The name of the person to greet
-        greeting_type (str): Type of greeting ("hello", "welcome", "goodbye")
-    
-    Returns:
-        str: A formatted greeting message
-    """
-    greetings = {
-        "hello": "Hello, {name}!",
-        "welcome": "Welcome, {name}!",
-        "goodbye": "Goodbye, {name}!"
-    }
-    
-    if greeting_type not in greetings:
-        raise ValueError(f"Invalid greeting_type. Choose from: {list(greetings.keys())}")
-    
-    return greetings[greeting_type].format(name=name)
-
-
-def calculate_stats(numbers: list) -> dict:
-    """
-    Calculate basic statistics for a list of numbers.
-    
-    Args:
-        numbers (list): List of numeric values
-        
-    Returns:
-        dict: Dictionary containing mean, median, min, max, and sum
-    """
-    if not numbers:
-        return {
-            "mean": None,
-            "median": None,
-            "min": None,
-            "max": None,
-            "sum": 0
-        }
-    
-    sorted_nums = sorted(numbers)
-    n = len(sorted_nums)
-    mean = sum(numbers) / n
-    median = sorted_nums[n // 2] if n % 2 == 1 else (sorted_nums[n // 2 - 1] + sorted_nums[n // 2]) / 2
-    
-    return {
-        "mean": mean,
-        "median": median,
-        "min": min(numbers),
-        "max": max(numbers),
-        "sum": sum(numbers)
-    }
+def add_numbers(a, b):
+    return a + b
 ```
+You can call this function by providing it with two numerical inputs like so:
+`result = add_numbers(3, 5)` for example.

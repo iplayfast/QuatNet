@@ -1,13 +1,20 @@
-```python
-def solve():
-    import sys
-    input = sys.stdin.read().strip()
-    
-    if ',' in input:
-        # Input is comma-separated list of strings
-        values = input.split(',')
-        print(values)
-    else:
-        # Input is a single string
-        print([input])
-```
+def expressions_equal_100():
+    results = []
+    operators = ['+', '-', '']
+
+    def dfs(i, expr):
+        if i == 9:
+            try:
+                if eval(expr) == 100:
+                    results.append(expr)
+            except:
+                pass
+            return
+        for op in operators:
+            dfs(i + 1, expr + op + str(i + 1))
+
+    dfs(1, '1')
+    return results
+
+for expr in expressions_equal_100():
+    print(f"{expr} = 100")

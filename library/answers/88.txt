@@ -1,26 +1,11 @@
-import json, os
-
-class KVStore:
-    def __init__(self, path='kvstore.json'):
-        self.path = path
-        self.data = {}
-        if os.path.exists(path):
-            with open(path) as f:
-                try: self.data = json.load(f)
-                except: self.data = {}
-
-    def put(self, key, value):
-        self.data[key] = value
-        self._flush()
-
-    def get(self, key):
-        return self.data.get(key, None)
-
-    def delete(self, key):
-        self.data.pop(key, None)
-        self._flush()
-
-    def _flush(self):
-        tmp = self.path + '.tmp'
-        with open(tmp, 'w') as f: json.dump(self.data, f)
-        os.replace(tmp, self.path)
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1

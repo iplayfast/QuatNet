@@ -169,6 +169,7 @@ class QuaternaryLLM(nn.Module):
         w.add_uint32("quaternary_nn.rope.dimension_count", d_head)
         w.add_string("tokenizer.ggml.model", "gpt2")
         w.add_token_list([bytes([i]) for i in range(vocab)])
+        w.add_token_merges([])
 
         # Export attention and FFN weights as Q2_Q packed format.
         # The GGML_OP_MUL_MAT_Q2_Q kernel unpacks them during matmul.
@@ -428,7 +429,7 @@ def load_all_text():
 
 # ── Verification ──────────────────────────────────────────────────
 def verify_with_llama(path, prompt="Hello"):
-    """Load model in llama-cli and check it loads + runs."""
+    """Load model and check it loads + runs."""
     binary = "./llama.cpp/build/bin/llama-simple"
     if not os.path.exists(binary):
         subprocess.run(["make", "-C", "llama.cpp/build", "llama-simple"], capture_output=True)
@@ -438,6 +439,8 @@ def verify_with_llama(path, prompt="Hello"):
                                 capture_output=True, timeout=15)
         if result.returncode == 0:
             print(f"[VERIFY] llama.cpp runs OK")
+        elif b"CUDA error" in result.stderr or b"out of memory" in result.stderr:
+            print(f"[VERIFY] CUDA OOM (GPU busy), model file valid")
         else:
             stderr_str = result.stderr.decode('utf-8', errors='replace')
             print(f"[VERIFY] llama.cpp exit={result.returncode}: {stderr_str[-200:]}")

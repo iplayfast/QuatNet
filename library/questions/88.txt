@@ -1,1 +1,1 @@
-Write a program that implements a simple key-value store with persistence to disk and basic crash recovery.
+Implement binary search on a sorted list. Return the index of the target or -1 if not found.

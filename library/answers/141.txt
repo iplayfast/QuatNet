@@ -1,43 +1,8 @@
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-class LinkedList:
-    def __init__(self):
-        self.head = None
-
-    def insert(self, val):
-        node = ListNode(val)
-        node.next = self.head
-        self.head = node
-
-    def delete(self, val):
-        curr = self.head
-        prev = None
-        while curr:
-            if curr.val == val:
-                if prev:
-                    prev.next = curr.next
-                else:
-                    self.head = curr.next
-                return True
-            prev = curr
-            curr = curr.next
-        return False
-
-    def search(self, val):
-        curr = self.head
-        while curr:
-            if curr.val == val:
-                return curr
-            curr = curr.next
-        return None
-
-    def to_list(self):
-        result = []
-        curr = self.head
-        while curr:
-            result.append(curr.val)
-            curr = curr.next
-        return result
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)

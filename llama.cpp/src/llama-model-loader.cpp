@@ -1147,6 +1147,14 @@ struct ggml_tensor * llama_model_loader::create_tensor(
             }
         }
 
+        // Q2_Q tensors must use CPU buffer (CUDA doesn't support type 99)
+        if (t_meta->type == GGML_TYPE_Q2_Q) {
+            auto * cpu_dev = ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_CPU);
+            if (cpu_dev) {
+                return ggml_backend_dev_buffer_type(cpu_dev);
+            }
+        }
+
         // select the buffer type for this tensor
         const buft_list_t * buft_list;
         switch (info.layer) {
