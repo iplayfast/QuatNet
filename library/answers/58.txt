@@ -1,10 +1,7 @@
-Here is your python function:
-
 ```python
-def my_function():
-    return "This is a test"
+def solve_problem():
+    # Your problem's specific implementation here
+    pass
 
-my_function()
+solve_problem()
 ```
-
-I have created a simple function named `my_function` which, when called, will return the string `"This is a test"`. This solution provides a working Python function as requested.

@@ -43,19 +43,19 @@ class QuaternaryLinear(nn.Module):
 
     def forward(self, x):
         w = self.weight
-        w_q = torch.where(w > 0.5,  torch.tensor(1.0, device=w.device),
-               torch.where(w > 0.0,  torch.tensor(0.01, device=w.device),
-               torch.where(w > -0.5, torch.tensor(-0.01, device=w.device),
-                                     torch.tensor(-1.0, device=w.device))))
+        w_q = torch.where(w > 0.75, torch.tensor(1.0, device=w.device),
+               torch.where(w > 0.0,  torch.tensor(0.5, device=w.device),
+               torch.where(w > -0.75,torch.tensor(-0.5, device=w.device),
+                                      torch.tensor(-1.0, device=w.device))))
         w_ste = w_q.detach() + w - w.detach()
         return F.linear(x, w_ste, self.bias)
 
     def get_quantized_weight(self):
         w = self.weight.detach()
-        return torch.where(w > 0.5,  torch.tensor(1.0),
-               torch.where(w > 0.0,  torch.tensor(0.01),
-               torch.where(w > -0.5, torch.tensor(-0.01),
-                                     torch.tensor(-1.0)))).cpu().numpy()
+        return torch.where(w > 0.75, torch.tensor(1.0),
+               torch.where(w > 0.0,  torch.tensor(0.5),
+               torch.where(w > -0.75,torch.tensor(-0.5),
+                                      torch.tensor(-1.0)))).cpu().numpy()
 
 
 class RMSNorm(nn.Module):
@@ -583,8 +583,8 @@ if __name__ == "__main__":
             q2q_loss = 0.0
             for name, p in _model.named_parameters():
                 if 'attn' in name and 'weight' in name:
-                    for val in (1.0, 0.01, -0.01, -1.0):
-                        mask = torch.abs(p - val) < 0.5
+                    for val in (1.0, 0.5, -0.5, -1.0):
+                        mask = torch.abs(p - val) < 0.4
                         if mask.any():
                             q2q_loss = q2q_loss + F.mse_loss(p[mask], torch.full_like(p[mask], val))
             loss = loss + q2q_loss * 0.5
@@ -603,8 +603,8 @@ if __name__ == "__main__":
                     if 'attn' in name and 'weight' in name:
                         w = p.detach()
                         n = w.numel()
-                        c = ((torch.abs(w - 1.0) < 0.15) | (torch.abs(w - 0.01) < 0.005) |
-                             (torch.abs(w + 0.01) < 0.005) | (torch.abs(w + 1.0) < 0.15)).sum().item()
+                        c = ((torch.abs(w - 1.0) < 0.2) | (torch.abs(w - 0.5) < 0.15) |
+                             (torch.abs(w + 0.5) < 0.15) | (torch.abs(w + 1.0) < 0.2)).sum().item()
                         attn_counts += c; attn_total += n
                 q_ratio = attn_counts / max(attn_total, 1) * 100
 
