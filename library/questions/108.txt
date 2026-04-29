@@ -1,1 +1,1 @@
-Write a function that groups a list into sublists of size n, e.g. [1,2,3,4,5] with n=2 becomes [[1,2],[3,4],[5]].
+Write a class that implements a singly linked list with insert, delete, and search operations.

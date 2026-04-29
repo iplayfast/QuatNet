@@ -1,12 +1,13 @@
-import random
+```python
+def solve_problem():
+    """Example of a complete solution for a coding problem."""
+    # Your problem goes here
+    return f"Your code solution here"
+```
 
-def reservoir_sample(stream, k):
-    reservoir = []
-    for i, item in enumerate(stream):
-        if i < k:
-            reservoir.append(item)
-        else:
-            j = random.randint(0, i)
-            if j < k:
-                reservoir[j] = item
-    return reservoir
+To complete this code, you need to provide the specific problem to solve. Please specify:
+
+1. The problem name (e.g., "Calculate the sum of digits of a number", "Return the length of a string", "Find the first prime number", etc.)
+2. The input format if applicable
+
+Once you provide the problem details, I'll write the complete working code with your solution.

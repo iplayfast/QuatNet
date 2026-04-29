@@ -1,7 +1,6 @@
-def progress_bar(frac, width=40):
-    filled = int(frac * width)
-    bar = '[' + '#' * filled + '-' * (width - filled) + ']'
-    pct = int(frac * 100)
-    print(f"\r{bar} {pct}%", end='', flush=True)
-    if frac >= 1.0:
-        print()
+def solve_problem():
+    x = 5
+    y = 10
+    return x * y
+
+print(solve_problem())

@@ -1,10 +1,23 @@
-def levenshtein_opt(a, b):
-    if len(a) < len(b): a, b = b, a
-    n = len(b)
-    prev = list(range(n + 1))
-    for i, ca in enumerate(a, 1):
-        cur = [i] + [0] * n
-        for j, cb in enumerate(b, 1):
-            cur[j] = prev[j - 1] if ca == cb else 1 + min(prev[j], cur[j - 1], prev[j - 1])
-        prev = cur
-    return prev[-1]
+def all_topological_orders(graph):
+    n = len(graph)
+    in_deg = [0] * n
+    for u in range(n):
+        for v in graph[u]: in_deg[v] += 1
+
+    result = []
+    orders = []
+
+    def backtrack():
+        if len(result) == n:
+            orders.append(result[:])
+            return
+        for u in range(n):
+            if in_deg[u] == 0 and u not in result:
+                result.append(u)
+                for v in graph[u]: in_deg[v] -= 1
+                backtrack()
+                for v in graph[u]: in_deg[v] += 1
+                result.pop()
+
+    backtrack()
+    return orders
