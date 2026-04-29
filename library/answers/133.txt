@@ -1,13 +1,9 @@
-def solve_problem():
-    x = [1, 2, 3]
-    y = ['a', 'b', 'c']
-    
-    z = [(i, j) for i in range(len(x)) for j in range(len(y))]
-    print(z)
-    result = []
-    for t in z:
-        if x[t[0]] * y[t[1]] > 5:
-            result.append(t)
-    return result
+```python
+def write_python_function():
+    # Just an example of a simple function that adds two numbers
+    def add_numbers(a, b):
+        return a + b
 
-print(solve_problem())
+    return add_numbers
+```
+I've provided an example of a Python function that takes in two numbers and returns their sum. Note that this is just one possible solution, and the actual problem you're trying to solve might be different.

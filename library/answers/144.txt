@@ -1,6 +1,8 @@
-import csv, statistics
-
-def analyze_column(filename, col):
-    with open(filename) as f:
-        vals = [float(row[col]) for row in csv.reader(f)]
-    print(f'min={min(vals):.2f} max={max(vals):.2f} mean={statistics.mean(vals):.2f} median={statistics.median(vals):.2f}')
+def unique_preserve_order(lst):
+    seen = set()
+    result = []
+    for x in lst:
+        if x not in seen:
+            seen.add(x)
+            result.append(x)
+    return result

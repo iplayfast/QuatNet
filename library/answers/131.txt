@@ -1,10 +1,4 @@
-def calculator():
-    memory = 0
-    while True:
-        expr = input('> ').strip()
-        if expr == 'exit': break
-        elif expr == 'MC': memory = 0
-        elif expr == 'MR': print(memory)
-        elif expr.startswith('M+'): memory += eval(expr[2:])
-        elif expr.startswith('M-'): memory -= eval(expr[2:])
-        else: print(eval(expr))
+def my_function():
+    return 42
+
+my_function()

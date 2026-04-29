@@ -1,21 +1,11 @@
 ```python
-def custom_function():
-    x = [1, 2, 3]
-    y = ['a', 'b', 'c']
-    
-    result_list = list(zip(x, y))
-    print("Combined List:")
-    for item in result_list:
-        print(item)
-        
-    result_tuple = tuple(zip(x, y))
-    print("\nCombined Tuple:")
-    print(result_tuple)
-    
-    result_dict = dict(zip(x, y))
-    print("\nCombined Dictionary:")
-    for key, value in result_dict.items():
-        print(f"{key}: {value}")
+def example_function():
+    """
+    This is a placeholder function.
+    """
+    return "This is a working Python function."
 
-custom_function()
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
 ```

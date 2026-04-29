@@ -1,2 +1,41 @@
-def python_function():
-    pass
+import random
+
+with open('/usr/share/dict/words', 'r') as f:
+    words = [w.strip().lower() for w in f if len(w.strip()) > 3]
+if not words:
+    words = ['python', 'hangman', 'computer', 'programming']
+
+word = random.choice(words)
+guessed = set()
+remaining = set(word)
+lives = 6
+
+print("Hangman!")
+while lives > 0 and remaining:
+    display = ''.join(c if c in guessed else '_' for c in word)
+    print(f"Word: {display}  Lives: {lives}")
+
+    best = None
+    best_count = 0
+    for c in 'abcdefghijklmnopqrstuvwxyz':
+        if c in guessed or c in remaining:
+            continue
+        count = sum(1 for w in [word] if c in w)
+        if count > best_count:
+            best_count = count
+            best = c
+    if not best:
+        best = random.choice([c for c in 'abcdefghijklmnopqrstuvwxyz' if c not in guessed])
+
+    guess = best
+    print(f"Computer guesses: {guess}")
+    guessed.add(guess)
+    if guess in remaining:
+        remaining.remove(guess)
+    else:
+        lives -= 1
+
+if not remaining:
+    print(f"Computer won! Word was: {word}")
+else:
+    print(f"Computer lost! Word was: {word}")

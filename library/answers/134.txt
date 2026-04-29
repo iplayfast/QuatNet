@@ -1,2 +1,2 @@
-def hello():
-    return "hello"
+def my_function():
+    return 42

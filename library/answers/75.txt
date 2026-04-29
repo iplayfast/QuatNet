@@ -1,8 +1,25 @@
-def flatten(nested):
-    result = []
-    for item in nested:
-        if isinstance(item, list):
-            result.extend(flatten(item))
-        else:
-            result.append(item)
-    return result
+def sum_numbers(numbers):
+    """
+    Calculate the sum of all numbers in a list.
+    
+    Args:
+        numbers: A list of numbers to sum
+        
+    Returns:
+        The sum of all numbers in the list
+        
+    Raises:
+        TypeError: If input is not a list or contains non-numeric values
+    """
+    if not isinstance(numbers, list):
+        raise TypeError("Input must be a list")
+    
+    try:
+        return sum(num for num in numbers if isinstance(num, (int, float)))
+    except Exception as e:
+        raise TypeError(f"Invalid input: {str(e)}")
+
+if __name__ == "__main__":
+    print(sum_numbers([1, 2, 3, 4]))  # Output: 10
+    print(sum_numbers([1.5, 2.5, 3]))  # Output: 7.0
+    print(sum_numbers([]))  # Output: 0

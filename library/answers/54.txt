@@ -1,5 +1,21 @@
-```python
-def solve():
-    # Your solution code here
-    pass
-```
+def json_parse(s):
+    s = s.strip()
+    if s[0] == '{':
+        obj = {}
+        inner = s[1:s.rindex('}')].strip()
+        if inner:
+            for pair in inner.split(','):
+                k, v = pair.split(':', 1)
+                obj[json_parse(k.strip())] = json_parse(v.strip())
+        return obj
+    elif s[0] == '[':
+        inner = s[1:s.rindex(']')].strip()
+        return [json_parse(x.strip()) for x in inner.split(',')] if inner else []
+    elif s[0] == '"':
+        return s[1:s.rindex('"')]
+    elif s == 'true': return True
+    elif s == 'false': return False
+    elif s == 'null': return None
+    else:
+        try: return int(s)
+        except: return float(s)

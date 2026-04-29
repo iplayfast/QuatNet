@@ -1,13 +1,8 @@
-```python
-def example_function():
-    """
-    This is a sample function that demonstrates the structure of a Python function.
-    """
-    # Example code inside the function
-    print("This function is working correctly.")
-    return True
-
-# Example usage of the function
-if __name__ == "__main__":
-    example_function()
-```
+def largest(lst):
+    if not lst:
+        return None
+    max_val = lst[0]
+    for x in lst[1:]:
+        if x > max_val:
+            max_val = x
+    return max_val

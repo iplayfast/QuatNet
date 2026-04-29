@@ -1,17 +1,42 @@
-def rle_encode(s):
-    if not s: return ''
-    result, count, prev = [], 1, s[0]
-    for c in s[1:]:
-        if c == prev: count += 1
-        else: result.append(f'{count}{prev}'); prev = c; count = 1
-    result.append(f'{count}{prev}')
-    return ''.join(result)
+```python
+def factorial(n: int) -> int:
+    """
+    Calculates the factorial of a non-negative integer n (n!).
+    
+    :param n: The non-negative integer for which to calculate the factorial.
+    :return: n! (n * (n-1) * ... * 1). Returns 1 if n is 0.
+    :raises ValueError: If n is a negative number.
+    """
+    if not isinstance(n, int):
+        raise TypeError("Input must be an integer.")
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    
+    if n == 0:
+        return 1
+    
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
 
-def rle_decode(s):
-    result, i = [], 0
-    while i < len(s):
-        j = i
-        while s[j].isdigit(): j += 1
-        result.append(s[j] * int(s[i:j]))
-        i = j + 1
-    return ''.join(result)
+if __name__ == '__main__':
+    # Test Case 1: Standard positive number
+    num1 = 5
+    print(f"The factorial of {num1} is: {factorial(num1)}")  # Expected: 120
+
+    # Test Case 2: Base case (0!)
+    num2 = 0
+    print(f"The factorial of {num2} is: {factorial(num2)}")  # Expected: 1
+
+    # Test Case 3: Small number
+    num3 = 3
+    print(f"The factorial of {num3} is: {factorial(num3)}")  # Expected: 6
+
+    # Test Case 4: Handling negative input (Expect ValueError)
+    try:
+        negative_num = -1
+        print(f"The factorial of {negative_num} is: {factorial(negative_num)}")
+    except ValueError as e:
+        print(f"Caught expected error for {negative_num}: {e}")
+```

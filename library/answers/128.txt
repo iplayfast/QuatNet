@@ -1,4 +1,32 @@
-for i in range(1, 13):
-    for j in range(1, 13):
-        print(f"{i * j:4d}", end="")
-    print()
+```python
+from typing import List, Union
+
+def find_max(data: List[Union[int, float]]) -> Union[int, float]:
+    """
+    Finds the maximum value in a list of numbers.
+    Returns an error message if the list is empty.
+    """
+    if not data:
+        raise ValueError("Input list cannot be empty.")
+    
+    return max(data)
+
+if __name__ == '__main__':
+    # Example 1: Basic integers
+    list1 = [10, 5, 20, 8]
+    print(f"The maximum value in {list1} is: {find_max(list1)}")
+    
+    # Example 2: Floats
+    list2 = [3.14, 2.71, 9.99]
+    print(f"The maximum value in {list2} is: {find_max(list2)}")
+    
+    # Example 3: Single element
+    list3 = [42]
+    print(f"The maximum value in {list3} is: {find_max(list3)}")
+    
+    # Example 4: Handling empty list (Uncomment to test the exception)
+    # try:
+    #     find_max([])
+    # except ValueError as e:
+    #     print(f"Error caught: {e}")
+```

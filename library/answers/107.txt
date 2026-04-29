@@ -1,11 +1,8 @@
-Here is your Python function:
-
-```python
-def my_function():
-    return "Hello, world!"
-```
-You can call this function like so:
-```python
-print(my_function())
-# Output: Hello, world!
-```
+def unique_preserve_order(lst):
+    seen = set()
+    result = []
+    for x in lst:
+        if x not in seen:
+            seen.add(x)
+            result.append(x)
+    return result

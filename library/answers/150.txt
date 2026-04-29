@@ -1,18 +1,5 @@
-```python
-def solve_problem():
-    x = int(input("Enter first number: "))
-    y = int(input("Enter second number: "))
-
-    def calculate_result(x, y):
-        if x < y:
-            return x + (y - x)
-        elif x > y:
-            return 2 * x - y
-        else:
-            return x * 2
-
-    result = calculate_result(x, y)
-    print("Result:", result)
-
-solve_problem()
-```
+def contains(lst, value):
+    for x in lst:
+        if x == value:
+            return True
+    return False

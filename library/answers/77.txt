@@ -1,4 +1,2 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+def group(lst, n):
+    return [lst[i:i + n] for i in range(0, len(lst), n)]

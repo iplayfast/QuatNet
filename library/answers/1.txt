@@ -1,10 +1,14 @@
-from functools import lru_cache
-
-@lru_cache(maxsize=None)
-def fib_memo(n):
-    if n < 2:
-        return n
-    return fib_memo(n - 1) + fib_memo(n - 2)
-
-def nth_fibonacci(n):
-    return fib_memo(n)
+def vigenere(text, key, encrypt=True):
+    result = []
+    key = key.lower()
+    ki = 0
+    for c in text:
+        if c.isalpha():
+            shift = ord(key[ki % len(key)]) - ord('a')
+            if not encrypt: shift = -shift
+            base = ord('A') if c.isupper() else ord('a')
+            result.append(chr((ord(c) - base + shift) % 26 + base))
+            ki += 1
+        else:
+            result.append(c)
+    return ''.join(result)

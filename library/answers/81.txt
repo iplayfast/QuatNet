@@ -1,26 +1,19 @@
-import json, os
-
-class KVStore:
-    def __init__(self, path='kvstore.json'):
-        self.path = path
-        self.data = {}
-        if os.path.exists(path):
-            with open(path) as f:
-                try: self.data = json.load(f)
-                except: self.data = {}
-
-    def put(self, key, value):
-        self.data[key] = value
-        self._flush()
-
-    def get(self, key):
-        return self.data.get(key, None)
-
-    def delete(self, key):
-        self.data.pop(key, None)
-        self._flush()
-
-    def _flush(self):
-        tmp = self.path + '.tmp'
-        with open(tmp, 'w') as f: json.dump(self.data, f)
-        os.replace(tmp, self.path)
+def forth_repl():
+    stack = []
+    while True:
+        inp = input('> ').strip()
+        if inp == 'exit': break
+        for tok in inp.split():
+            if tok.isdigit() or (tok[0] == '-' and tok[1:].isdigit()):
+                stack.append(int(tok))
+            elif tok == '+': stack.append(stack.pop() + stack.pop())
+            elif tok == '-': a, b = stack.pop(), stack.pop(); stack.append(b - a)
+            elif tok == '*': stack.append(stack.pop() * stack.pop())
+            elif tok == '/': a, b = stack.pop(), stack.pop(); stack.append(b // a)
+            elif tok == '.': print(stack.pop() if stack else 'empty')
+            elif tok == 'dup': stack.append(stack[-1])
+            elif tok == 'swap': stack[-2], stack[-1] = stack[-1], stack[-2]
+            elif tok == 'drop': stack.pop()
+            elif tok == 'emit': print(chr(stack.pop()), end='')
+            else: print(f'Unknown: {tok}')
+        print(f' ok')

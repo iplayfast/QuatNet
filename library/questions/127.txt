@@ -1,1 +1,1 @@
-Implement quicksort.
+Write a Python function.

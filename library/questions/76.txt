@@ -1,1 +1,1 @@
-Write a function that implements run-length encoding and decoding of a string.
+Write a Python function.

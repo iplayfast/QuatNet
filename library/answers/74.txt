@@ -1,13 +1,29 @@
 ```python
-def solve_problem():
-    """Example of a complete solution for a coding problem."""
-    # Your problem goes here
-    return f"Your code solution here"
+def count_vowels(text):
+    """
+    Counts the number of vowels (a, e, i, o, u) in a given string,
+    case-insensitively.
+
+    Args:
+        text (str): The input string.
+
+    Returns:
+        int: The total count of vowels.
+    """
+    vowels = "aeiouAEIOU"
+    count = 0
+    for char in text:
+        if char in vowels:
+            count += 1
+    return count
+
+# Example Usage
+if __name__ == "__main__":
+    test_string_1 = "Hello World"
+    test_string_2 = "Rhythm"
+    test_string_3 = "Programming is fun"
+
+    print(f"'{test_string_1}' has {count_vowels(test_string_1)} vowels.")
+    print(f"'{test_string_2}' has {count_vowels(test_string_2)} vowels.")
+    print(f"'{test_string_3}' has {count_vowels(test_string_3)} vowels.")
 ```
-
-To complete this code, you need to provide the specific problem to solve. Please specify:
-
-1. The problem name (e.g., "Calculate the sum of digits of a number", "Return the length of a string", "Find the first prime number", etc.)
-2. The input format if applicable
-
-Once you provide the problem details, I'll write the complete working code with your solution.
