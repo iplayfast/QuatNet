@@ -1,11 +1,7 @@
-def digits_to_base(digits, src_base, dst_base):
-    num = 0
-    for d in digits:
-        num = num * src_base + d
-    if num == 0:
-        return [0]
-    result = []
-    while num > 0:
-        result.append(num % dst_base)
-        num //= dst_base
-    return result[::-1]
+```python
+def write_solution():
+    print("This is a test solution")
+
+# Call the function to ensure it's working
+write_solution()
+```

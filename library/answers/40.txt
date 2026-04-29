@@ -1,7 +1,4 @@
 ```python
-def solve_problem(input_data):
-    def add_numbers(a, b):
-        return a + b
-
-    return add_numbers(*input_data)
+def sum_of_elements(elements):
+    return sum(elements)
 ```

@@ -1,2 +1,7 @@
-def my_function():
-    return 42
+```python
+def solve():
+    # Your Python solution goes here
+    print("Hello, World!")
+
+solve()
+```

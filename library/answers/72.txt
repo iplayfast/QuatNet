@@ -1,20 +1,25 @@
-```python
-def add_two_numbers():
-    a = input("Enter first number: ")
-    b = input("Enter second number: ")
-    return int(a) + int(b)
+def stirling_first(n, k):
+    if n == k: return 1
+    if k == 0: return 0
+    return stirling_first(n - 1, k - 1) - (n - 1) * stirling_first(n - 1, k)
 
-def print_output():
-    print("Hello from Python!")
+def stirling_second(n, k):
+    if n == k or k == 1: return 1
+    if k == 0: return 0
+    return stirling_second(n - 1, k - 1) + k * stirling_second(n - 1, k)
 
-# Call the function
-# add_two_numbers()
-# print_output()
+def stirling_first_table(n):
+    dp = [[0] * (n + 1) for _ in range(n + 1)]
+    dp[0][0] = 1
+    for i in range(1, n + 1):
+        for j in range(1, i + 1):
+            dp[i][j] = dp[i - 1][j - 1] - (i - 1) * dp[i - 1][j]
+    return dp
 
-# Uncomment for testing
-# add_two_numbers()
-# print_output()
-
-# Test
-# print(f"{add_two_numbers()} is {add_two_numbers()}")
-```
+def stirling_second_table(n):
+    dp = [[0] * (n + 1) for _ in range(n + 1)]
+    dp[0][0] = 1
+    for i in range(1, n + 1):
+        for j in range(1, i + 1):
+            dp[i][j] = dp[i - 1][j - 1] + j * dp[i - 1][j]
+    return dp

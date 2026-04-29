@@ -1,63 +1,9 @@
-```python
-def calculate_average(numbers):
-    """
-    Calculate the average of a list of numbers.
-    
-    Args:
-        numbers: A list of numeric values
-        
-    Returns:
-        The average value as a float, or None if input is empty
-    """
-    if not numbers:
-        return None
-    return sum(numbers) / len(numbers)
-
-def is_palindrome(s):
-    """
-    Check if a string is a palindrome.
-    
-    Args:
-        s: A string to check
-        
-    Returns:
-        True if palindrome, False otherwise
-    """
-    s = s.lower().replace(" ", "")
-    return s == s[::-1]
-
-def fibonacci(n):
-    """
-    Generate Fibonacci sequence up to n terms.
-    
-    Args:
-        n: Number of Fibonacci terms to generate
-        
-    Returns:
-        List of Fibonacci numbers
-    """
-    if n <= 0:
-        return []
-    elif n == 1:
-        return [0]
-    elif n == 2:
-        return [0, 1]
-    
-    fib = [0, 1]
-    for i in range(2, n):
-        fib.append(fib[i - 1] + fib[i - 2])
-    return fib
-
-def count_vowels(text):
-    """
-    Count the number of vowels in a text string.
-    
-    Args:
-        text: Input string
-        
-    Returns:
-        Number of vowels in the text
-    """
-    vowels = "aeiouAEIOU"
-    return sum(1 for char in text if char in vowels)
-```
+def roman_to_int(s):
+    vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+    total, prev = 0, 0
+    for c in reversed(s):
+        cur = vals[c]
+        if cur < prev: total -= cur
+        else: total += cur
+        prev = cur
+    return total

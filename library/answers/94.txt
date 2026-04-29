@@ -1,10 +1,19 @@
-Here is your Python function:
-
-```python
-def my_function(param1, param2):
-    return param1 + param2
-
-print(my_function(5, 10))
-```
-
-This function takes two arguments, adds them together and returns the result. It also includes an example of how to use this function.
+def tic_tac_toe():
+    board = [' '] * 9
+    def win(p): return any(all(board[i] == p for i in line) for line in [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)])
+    def moves(): return [i for i, c in enumerate(board) if c == ' ']
+    def minimax(is_max):
+        if win('X'): return -1 if not is_max else 1
+        if win('O'): return 1 if not is_max else -1
+        if not moves(): return 0
+        if is_max: return max(minimax(False) for i in moves() or [0])
+        else: return min(minimax(True) for i in moves() or [0])
+    while True:
+        for i in range(0, 9, 3): print('|'.join(board[i:i+3])); print('-----')
+        m = int(input('Move (0-8): '))
+        if board[m] != ' ': continue
+        board[m] = 'X'
+        if win('X'): print('You win!'); break
+        if not moves(): print('Tie!'); break
+        board[max(moves(), key=lambda i: minimax(True))] = 'O'
+        if win('O'): print('AI wins!'); break

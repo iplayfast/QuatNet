@@ -1,27 +1,12 @@
-def articulation_points(graph):
-    n = len(graph)
-    visited = [False] * n
-    disc = [0] * n
-    low = [0] * n
-    parent = [-1] * n
-    ap = [False] * n
-    time = 0
+import hashlib
 
-    def dfs(u):
-        nonlocal time
-        children = 0
-        visited[u] = True
-        disc[u] = low[u] = time; time += 1
-        for v in graph[u]:
-            if not visited[v]:
-                parent[v] = u; children += 1
-                dfs(v)
-                low[u] = min(low[u], low[v])
-                if parent[u] == -1 and children > 1: ap[u] = True
-                if parent[u] != -1 and low[v] >= disc[u]: ap[u] = True
-            elif v != parent[u]:
-                low[u] = min(low[u], disc[v])
-
-    for i in range(n):
-        if not visited[i]: dfs(i)
-    return [i for i in range(n) if ap[i]]
+def winnow(text, k=5, w=10):
+    words = text.split()
+    hashes = [hashlib.md5(' '.join(words[i:i+k]).encode()).hexdigest() for i in range(len(words) - k + 1)]
+    fingerprints = set()
+    for i in range(0, len(hashes) - w + 1):
+        window = hashes[i:i + w]
+        min_hash = min(window)
+        pos = window.index(min_hash)
+        fingerprints.add((i + pos, min_hash))
+    return fingerprints

@@ -1,6 +1,8 @@
-import csv, statistics
+def set_intersection(a, b):
+    return [x for x in a if x in b]
 
-def analyze_column(filename, col):
-    with open(filename) as f:
-        vals = [float(row[col]) for row in csv.reader(f)]
-    print(f'min={min(vals):.2f} max={max(vals):.2f} mean={statistics.mean(vals):.2f} median={statistics.median(vals):.2f}')
+def set_union(a, b):
+    result = list(a)
+    for x in b:
+        if x not in result: result.append(x)
+    return result

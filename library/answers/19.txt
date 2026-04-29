@@ -1,9 +1,17 @@
-def permutations(lst):
-    if len(lst) <= 1:
-        return [lst[:]]
-    result = []
-    for i in range(len(lst)):
-        rest = lst[:i] + lst[i + 1:]
-        for p in permutations(rest):
-            result.append([lst[i]] + p)
-    return result
+import hashlib
+
+class CountMinSketch:
+    def __init__(self, width, depth):
+        self.width = width
+        self.depth = depth
+        self.counts = [[0] * width for _ in range(depth)]
+
+    def _hashes(self, item):
+        return [int(hashlib.md5(f'{item}{i}'.encode()).hexdigest(), 16) % self.width for i in range(self.depth)]
+
+    def add(self, item, count=1):
+        for i, h in enumerate(self._hashes(item)):
+            self.counts[i][h] += count
+
+    def estimate(self, item):
+        return min(self.counts[i][h] for i, h in enumerate(self._hashes(item)))

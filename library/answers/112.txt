@@ -1,8 +1,63 @@
-Here's your Python function:
-
 ```python
-def my_function():
-    print("Hello, world!")
-```
+import math
 
-I have created a simple Python function that prints "Hello, world!" when called. Remember to use this function responsibly and within the bounds of applicable laws and ethical guidelines.
+def calculate_factorial(n: int) -> int:
+    """
+    Calculates the factorial of a non-negative integer n (n!).
+
+    Args:
+        n: The non-negative integer.
+
+    Returns:
+        The factorial of n.
+
+    Raises:
+        ValueError: If n is a negative number.
+        TypeError: If n is not an integer.
+    """
+    if not isinstance(n, int):
+        raise TypeError("Input must be an integer.")
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    
+    # Using the optimized math library function
+    return math.factorial(n)
+
+# Example Usage
+if __name__ == "__main__":
+    # Test Case 1: Positive integer
+    number1 = 7
+    try:
+        result1 = calculate_factorial(number1)
+        print(f"The factorial of {number1} is: {result1}")  # Output: 5040
+    except (ValueError, TypeError) as e:
+        print(f"Error for {number1}: {e}")
+
+    print("-" * 20)
+
+    # Test Case 2: Base case (0!)
+    number2 = 0
+    try:
+        result2 = calculate_factorial(number2)
+        print(f"The factorial of {number2} is: {result2}")  # Output: 1
+    except (ValueError, TypeError) as e:
+        print(f"Error for {number2}: {e}")
+
+    print("-" * 20)
+
+    # Test Case 3: Handling negative input
+    number3 = -5
+    try:
+        calculate_factorial(number3)
+    except ValueError as e:
+        print(f"Attempting {number3}: Caught expected error: {e}")
+
+    print("-" * 20)
+
+    # Test Case 4: Handling wrong type input
+    number4 = 7.5
+    try:
+        calculate_factorial(number4)
+    except TypeError as e:
+        print(f"Attempting {number4}: Caught expected error: {e}")
+```

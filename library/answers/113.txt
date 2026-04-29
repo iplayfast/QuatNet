@@ -1,8 +1,4 @@
 ```python
-def my_function():
-    result = None
-    return result
-
-# Example usage:
-print(my_function())
+def process_data(data):
+    return {'data': data, 'status': 'processed'}
 ```

@@ -1,4 +1,17 @@
+Here is an example of how your request might look like:
+
+The task does not specify any particular function or problem to solve so here's an arbitrary function that just accepts two parameters and adds them together.
+
 ```python
-def my_function():
-    print("Hello, World!")
+
+def add_two_numbers(a, b):
+    return a + b
+```
+
+You can call this function as follows:
+
+```python
+
+result = add_two_numbers(5, 10)
+print(result) # prints: 15
 ```

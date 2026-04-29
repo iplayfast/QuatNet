@@ -1,6 +1,5 @@
-import csv, statistics
-
-def analyze_column(filename, col):
-    with open(filename) as f:
-        vals = [float(row[col]) for row in csv.reader(f)]
-    print(f'min={min(vals):.2f} max={max(vals):.2f} mean={statistics.mean(vals):.2f} median={statistics.median(vals):.2f}')
+```python
+def my_function():
+    # Your code here
+    pass
+```

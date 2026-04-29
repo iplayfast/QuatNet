@@ -1,4 +1,2 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+def solution():
+    return "Hello"

@@ -1,10 +1,7 @@
-import json, sys
+def apply_to_each(f, lst):
+    return [f(x) for x in lst]
 
-def pretty_json(filename, indent=2):
-    with open(filename) as f:
-        try:
-            data = json.load(f)
-            print(json.dumps(data, indent=indent))
-        except json.JSONDecodeError as e:
-            print(f'Invalid JSON: {e}', file=sys.stderr)
-            sys.exit(1)
+# Print first 20 perfect squares
+squares = apply_to_each(lambda x: x * x, range(1, 21))
+for s in squares:
+    print(s)

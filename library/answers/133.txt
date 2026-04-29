@@ -1,9 +1,13 @@
-def selection_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        min_idx = i
-        for j in range(i + 1, n):
-            if arr[j] < arr[min_idx]:
-                min_idx = j
-        arr[i], arr[min_idx] = arr[min_idx], arr[i]
-    return arr
+def solve_problem():
+    x = [1, 2, 3]
+    y = ['a', 'b', 'c']
+    
+    z = [(i, j) for i in range(len(x)) for j in range(len(y))]
+    print(z)
+    result = []
+    for t in z:
+        if x[t[0]] * y[t[1]] > 5:
+            result.append(t)
+    return result
+
+print(solve_problem())

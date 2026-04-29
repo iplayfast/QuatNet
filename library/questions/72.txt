@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that computes the Stirling numbers of the first and second kind.

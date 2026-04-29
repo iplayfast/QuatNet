@@ -1,5 +1,6 @@
-def solve_problem():
-    # Solution goes here
-    pass
+```python
+def python_function():
+    return "This is a Python function"
 
-solve_problem()
+print(python_function())
+```

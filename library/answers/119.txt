@@ -1,13 +1,10 @@
-def determinant(mat):
-    n = len(mat)
-    m = [row[:] for row in mat]
-    det = 1.0
-    for i in range(n):
-        pivot = max(range(i, n), key=lambda r: abs(m[r][i]))
-        if abs(m[pivot][i]) < 1e-12: return 0.0
-        if pivot != i: m[i], m[pivot] = m[pivot], m[i]; det = -det
-        det *= m[i][i]
-        for j in range(i + 1, n):
-            factor = m[j][i] / m[i][i]
-            for k in range(i, n): m[j][k] -= factor * m[i][k]
-    return det
+def save_ppm(filename, pixels, max_val=255):
+    h, w = len(pixels), len(pixels[0])
+    with open(filename, 'wb') as f:
+        f.write(f'P6\n{w} {h}\n{max_val}\n'.encode())
+        for row in pixels:
+            for r, g, b in row:
+                f.write(bytes([r, g, b]))
+
+def create_gradient(w, h):
+    return [[(int(255 * x / w), int(255 * y / h), 128) for x in range(w)] for y in range(h)]

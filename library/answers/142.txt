@@ -1,8 +1,8 @@
-```python
-def sample_function():
-    return "This is a sample function."
+def set_intersection(a, b):
+    return [x for x in a if x in b]
 
-# Example usage
-if __name__ == "__main__":
-    print(sample_function())
-```
+def set_union(a, b):
+    result = list(a)
+    for x in b:
+        if x not in result: result.append(x)
+    return result

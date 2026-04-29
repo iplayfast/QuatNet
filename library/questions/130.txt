@@ -1,1 +1,1 @@
-Write a function that finds all articulation points (cut vertices) in an undirected graph.
+Write a function that implements the Winnowing algorithm for document fingerprinting (plagiarism detection).

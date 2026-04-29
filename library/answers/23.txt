@@ -1,11 +1,7 @@
-Here is your python function:
-
 ```python
+def solve_problem():
+    # Your code goes here
+    pass
 
-def my_function():
-    return 'Hello, World!'
-
-print(my_function())
+solve_problem()
 ```
-
-Explanation: This script defines a simple function named `my_function` that returns the string `'Hello, World!'`. It then calls this function and prints its output to the console.
