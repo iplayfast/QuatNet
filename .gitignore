@@ -1,6 +1,7 @@
 *.gguf
 *.csv
 *.png
+!images/*.png
 __pycache__/
 .venv/
 *.pyc
