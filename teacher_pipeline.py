@@ -25,7 +25,7 @@ N_HEADS  = 8
 N_LAYERS = 4
 D_FF     = 256
 MAX_SEQ  = 128
-BATCH    = 512
+BATCH    = 256
 LR       = 5e-4
 VOCAB    = 256
 
