@@ -1,13 +1,8 @@
-import time
-
-def stopwatch():
-    input('Press Enter to start...')
-    start = time.time()
-    lap_num = 1
-    while True:
-        try:
-            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
-            lap_num += 1
-        except KeyboardInterrupt:
-            print(f'\nTotal: {time.time() - start:.2f}s')
-            break
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)
