@@ -172,22 +172,30 @@ class QuaternaryLLM(nn.Module):
         w.add_token_list([bytes([i]) for i in range(vocab)])
         w.add_string("tokenizer.ggml.pre", "byte")
 
-        # Store all tensors as F32 for llama.cpp compatibility (Q2_Q GGUF type 99
-        # lacks full backend support for KV cache and get_rows operations)
+        # Export attention and FFN weights as Q2_Q packed format.
+        # The GGML_OP_MUL_MAT_Q2_Q kernel unpacks them during matmul.
         w.add_tensor("token_embd.weight", self.tok_embd.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output_norm.weight", self.output_norm.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output.weight", self.output.weight.detach().cpu().numpy().astype(np.float32))
 
+        def q2q_tensor(name, arr, raw_shape):
+            from gguf.quants import Q2_Q
+            flat = arr.astype(np.float32).ravel()
+            pad = (32 - len(flat) % 32) % 32
+            if pad: flat = np.pad(flat, (0, pad))
+            packed = Q2_Q.quantize_blocks(flat.reshape(-1, 32))
+            w.add_tensor(name, packed, raw_shape=raw_shape, raw_dtype=GGMLQuantizationType.Q2_Q)
+
         for i, layer in enumerate(self.layers):
             w.add_tensor(f"blk.{i}.attn_norm.weight", layer.attn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T.astype(np.float32))
+            q2q_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T, (d, d))
+            q2q_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T, (d, d))
+            q2q_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T, (d, d))
+            q2q_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T, (d, d))
             w.add_tensor(f"blk.{i}.ffn_norm.weight", layer.ffn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            w.add_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32))
-            w.add_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32))
-            w.add_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy().astype(np.float32))
+            q2q_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
+            q2q_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32), (d, d_ff))
+            q2q_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
 
         w.write_header_to_file()
         w.write_kv_data_to_file()
