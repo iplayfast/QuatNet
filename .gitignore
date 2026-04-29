@@ -6,5 +6,5 @@ __pycache__/
 *.pyc
 run_model.out
 quaternary_nn/build/
-llama.cpp/
+# llama.cpp is tracked via git subtree, not here
 graphify-out/
