@@ -1,8 +1,3 @@
-def unique_preserve_order(lst):
-    seen = set()
-    result = []
-    for x in lst:
-        if x not in seen:
-            seen.add(x)
-            result.append(x)
-    return result
+n = int(input("Enter a number: "))
+total = sum(x for x in range(1, n + 1) if x % 3 == 0 or x % 5 == 0)
+print(f"Sum of multiples of 3 or 5 up to {n} is {total}")

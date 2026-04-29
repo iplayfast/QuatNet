@@ -1,6 +1,7 @@
-```python
-def my_function():
-    return 'Hello, World!'
-
-print(my_function())
-```
+def concat_lists(a, b):
+    result = []
+    for x in a:
+        result.append(x)
+    for x in b:
+        result.append(x)
+    return result

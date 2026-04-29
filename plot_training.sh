@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Plot training metrics from training_log.csv using matplotlib."""
-import csv, sys
+import csv, sys, os
 import matplotlib.pyplot as plt
 
 log = sys.argv[1] if len(sys.argv) > 1 else "training_log.csv"
@@ -36,7 +36,9 @@ ax.plot(steps, data_bytes)
 ax.set_xlabel("Step"); ax.set_ylabel("Data Size (bytes)"); ax.set_title("Training Data Size"); ax.grid(True)
 
 plt.tight_layout()
-out = log.replace(".csv", ".png")
+os.makedirs("images", exist_ok=True)
+name = os.path.splitext(os.path.basename(log))[0]
+out = os.path.join("images", f"{name}.png")
 plt.savefig(out, dpi=150)
 print(f"Saved {out}")
 plt.show()

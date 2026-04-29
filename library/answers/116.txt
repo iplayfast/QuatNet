@@ -1,14 +1,12 @@
-class EventBus:
-    def __init__(self):
-        self.subs = {}
+import cmath
 
-    def subscribe(self, event, callback):
-        self.subs.setdefault(event, []).append(callback)
-
-    def unsubscribe(self, event, callback):
-        if event in self.subs:
-            self.subs[event] = [cb for cb in self.subs[event] if cb != callback]
-
-    def emit(self, event, *args, **kwargs):
-        for cb in self.subs.get(event, []):
-            cb(*args, **kwargs)
+def dft(x):
+    n = len(x)
+    result = []
+    for k in range(n):
+        s = 0+0j
+        for t in range(n):
+            angle = -2j * cmath.pi * k * t / n
+            s += x[t] * cmath.exp(angle)
+        result.append(s)
+    return result
