@@ -1,7 +1,24 @@
-```python
-def solve_problem():
-    # Implement your logic here
-    return None
+import time
+from collections import deque
 
-print(solve_problem())
-```
+class RateLimiter:
+    def __init__(self, max_requests, window_sec):
+        self.max_reqs = max_requests
+        self.window = window_sec
+        self.timestamps = deque()
+
+    def allow(self):
+        now = time.time()
+        while self.timestamps and self.timestamps[0] < now - self.window:
+            self.timestamps.popleft()
+        if len(self.timestamps) >= self.max_reqs:
+            return False
+        self.timestamps.append(now)
+        return True
+
+# Usage:
+# limiter = RateLimiter(10, 60)  # 10 requests per minute
+# if limiter.allow():
+#     print("Allowed")
+# else:
+#     print("Rate limited")

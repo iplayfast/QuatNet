@@ -1,8 +1,13 @@
 ```python
-def solve_problem():
-    # Function body here
-    return "Function solved"
+def example_function():
+    """
+    This is a sample function that demonstrates the structure of a Python function.
+    """
+    # Example code inside the function
+    print("This function is working correctly.")
+    return True
 
-# Call the function to print its result
-print(solve_problem())
+# Example usage of the function
+if __name__ == "__main__":
+    example_function()
 ```

@@ -1,1 +1,1 @@
-Write a function that checks if a string is a palindrome.
+Write a function that implements a Bloom filter with add and contains operations.

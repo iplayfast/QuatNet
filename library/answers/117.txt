@@ -1,6 +1,2 @@
-```python
-def python_function():
-    return "This is a Python function"
-
-print(python_function())
-```
+def solution():
+    return "succiently no fluff"

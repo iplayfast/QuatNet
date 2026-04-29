@@ -1,22 +1,13 @@
-def rotate_left(arr, k):
-    """Rotate list left by k positions in-place using O(1) extra space."""
-    if not arr:
-        return arr
-    n = len(arr)
-    k %= n
-    if k == 0:
-        return arr
+import time
 
-    def reverse(start, end):
-        while start < end:
-            arr[start], arr[end] = arr[end], arr[start]
-            start += 1
-            end -= 1
-
-    reverse(0, k - 1)
-    reverse(k, n - 1)
-    reverse(0, n - 1)
-    return arr
-
-# Example usage:
-# print(rotate_left([1, 2, 3, 4, 5], 2))  # [3, 4, 5, 1, 2]
+def stopwatch():
+    input('Press Enter to start...')
+    start = time.time()
+    lap_num = 1
+    while True:
+        try:
+            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
+            lap_num += 1
+        except KeyboardInterrupt:
+            print(f'\nTotal: {time.time() - start:.2f}s')
+            break

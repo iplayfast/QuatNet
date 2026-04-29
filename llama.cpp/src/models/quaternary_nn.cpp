@@ -2,10 +2,12 @@
 #include "llama-model.h"
 #include "llama-graph.h"
 
-static ggml_tensor * ensure_f32(ggml_context * ctx, ggml_tensor * t) {
-    if (t && t->type == GGML_TYPE_Q2_Q)
-        return ggml_cast(ctx, t, GGML_TYPE_F32);
-    return t;
+// Use Q2_Q matmul for Q2_Q weight tensors, fallback to standard matmul for F32
+static ggml_tensor * mm_q2q(ggml_context * ctx, ggml_tensor * w, ggml_tensor * x) {
+    if (w && w->type == GGML_TYPE_Q2_Q) {
+        return ggml_mul_mat_q2_q(ctx, w, x);
+    }
+    return ggml_mul_mat(ctx, w, x);
 }
 
 llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, const llm_graph_params & params) :
@@ -26,12 +28,6 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
             const int64_t n_head_i    = hparams.n_head(il);
             const int64_t n_head_kv_i = hparams.n_head_kv(il);
 
-            auto cur_layer = layer;
-            cur_layer.wq = ensure_f32(ctx0, cur_layer.wq);
-            cur_layer.wk = ensure_f32(ctx0, cur_layer.wk);
-            cur_layer.wv = ensure_f32(ctx0, cur_layer.wv);
-            cur_layer.wo = ensure_f32(ctx0, cur_layer.wo);
-
             ggml_tensor * cur = inpL;
 
             if (layer.attn_norm) {
@@ -39,15 +35,17 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
                 cb(cur, "attn_norm", il);
             }
 
-            if (cur_layer.wqkv) {
-                auto [Qcur, Kcur, Vcur] = build_qkv(cur_layer, cur, n_embd_head, n_head_i, n_head_kv_i, il);
-                cur = build_attn(inp_attn, cur_layer.wo, cur_layer.wo_b, nullptr,
-                        Qcur, Kcur, Vcur, nullptr, nullptr, nullptr,
-                        1.0f / sqrtf((float) n_embd_head), il);
-                cb(cur, "attn_out", il);
-            } else if (cur_layer.wq && cur_layer.wo) {
-                auto [Qcur, Kcur, Vcur] = build_qkv(cur_layer, cur, n_embd_head, n_head_i, n_head_kv_i, il);
-                cur = build_attn(inp_attn, cur_layer.wo, cur_layer.wo_b, nullptr,
+            // Q2_Q-aware QKV projection and attention
+            if (layer.wq && layer.wo) {
+                auto wq_cur = mm_q2q(ctx0, layer.wq, cur);
+                auto wk_cur = mm_q2q(ctx0, layer.wk, cur);
+                auto wv_cur = mm_q2q(ctx0, layer.wv, cur);
+
+                auto Qcur = ggml_reshape_3d(ctx0, wq_cur, n_embd_head, n_head_i, cur->ne[1]);
+                auto Kcur = ggml_reshape_3d(ctx0, wk_cur, n_embd_head, n_head_kv_i, cur->ne[1]);
+                auto Vcur = ggml_reshape_3d(ctx0, wv_cur, n_embd_head, n_head_kv_i, cur->ne[1]);
+
+                cur = build_attn(inp_attn, layer.wo, layer.wo_b, nullptr,
                         Qcur, Kcur, Vcur, nullptr, nullptr, nullptr,
                         1.0f / sqrtf((float) n_embd_head), il);
                 cb(cur, "attn_out", il);
@@ -65,11 +63,11 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
                 cur = build_norm(ffn_inp, layer.ffn_norm, layer.ffn_norm_b, LLM_NORM_RMS, il);
                 cb(cur, "ffn_norm", il);
                 if (layer.ffn_gate && layer.ffn_down && layer.ffn_up) {
-                    cur = build_ffn(cur,
-                            layer.ffn_up,   nullptr, nullptr,
-                            layer.ffn_gate, nullptr, nullptr,
-                            layer.ffn_down, nullptr, nullptr,
-                            nullptr, LLM_FFN_SILU, LLM_FFN_PAR, il);
+                    auto tmp = mm_q2q(ctx0, layer.ffn_gate, cur);
+                    tmp = ggml_silu(ctx0, tmp);
+                    auto up = mm_q2q(ctx0, layer.ffn_up, cur);
+                    tmp = ggml_mul(ctx0, tmp, up);
+                    cur = mm_q2q(ctx0, layer.ffn_down, tmp);
                     cb(cur, "ffn_out", il);
                     cur = ggml_add(ctx0, cur, ffn_inp);
                 }
@@ -78,17 +76,6 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
             cb(cur, "l_out", il);
             inpL = cur;
         }
-    } else {
-        ggml_tensor * cur = inpL;
-        for (int il = 0; il < n_layer; ++il) {
-            const auto & layer = model.layers[il];
-            if (!layer.wq) continue;
-            ggml_tensor * head_sum = ggml_sum(ctx0, layer.wq);
-            cb(head_sum, "head_sum", il);
-            cur = ggml_add(ctx0, cur, head_sum);
-        }
-        if (inp_out_ids) cur = ggml_get_rows(ctx0, cur, inp_out_ids);
-        inpL = cur;
     }
 
     ggml_tensor * cur = inpL;
@@ -98,7 +85,7 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
     }
     res->t_embd = cur;
     if (model.output) {
-        cur = build_lora_mm(model.output, cur);
+        cur = mm_q2q(ctx0, model.output, cur);
         cb(cur, "result_output", -1);
     }
     res->t_logits = cur;

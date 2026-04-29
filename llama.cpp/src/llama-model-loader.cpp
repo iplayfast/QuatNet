@@ -930,6 +930,7 @@ static bool weight_buft_supported(const llama_hparams & hparams, ggml_tensor * w
                 op_tensor = ggml_get_rows(ctx, w_test, b);
             } break;
         case GGML_OP_MUL_MAT:
+        case GGML_OP_MUL_MAT_Q2_Q:
             {
                 ggml_tensor * b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, w_test->ne[0], 512, w_test->ne[2], w_test->ne[3]);
                 op_tensor = ggml_mul_mat(ctx, w_test, b);

@@ -1,2 +1,2 @@
-def my_function():\n" +
-    "    pass\n"
+def example_function():
+    print('Hello, world!')

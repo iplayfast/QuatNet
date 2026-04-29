@@ -1,7 +1,9 @@
-def concat_lists(a, b):
-    result = []
-    for x in a:
-        result.append(x)
-    for x in b:
-        result.append(x)
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    result = [start]
+    for neighbor in graph.get(start, []):
+        if neighbor not in visited:
+            result.extend(dfs(graph, neighbor, visited))
     return result

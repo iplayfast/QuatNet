@@ -1,1 +1,1 @@
-Write a function that implements the HalfEdge mesh data structure for polygonal meshes.
+Write a Python function.

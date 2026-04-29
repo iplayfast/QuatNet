@@ -1,37 +1,18 @@
-class HalfEdge:
-    def __init__(self):
-        self.vert = None
-        self.face = None
-        self.next = None
-        self.pair = None
+```python
+def solve_problem():
+    x = int(input("Enter first number: "))
+    y = int(input("Enter second number: "))
 
-class Vertex:
-    def __init__(self, x, y, z):
-        self.x, self.y, self.z = x, y, z
-        self.edge = None  # incident half-edge
+    def calculate_result(x, y):
+        if x < y:
+            return x + (y - x)
+        elif x > y:
+            return 2 * x - y
+        else:
+            return x * 2
 
-class Face:
-    def __init__(self):
-        self.edge = None  # one half-edge of this face
+    result = calculate_result(x, y)
+    print("Result:", result)
 
-def build_mesh(vertices, faces):
-    half_edges = {}
-    for fi, face in enumerate(faces):
-        n = len(face)
-        edges = []
-        for i in range(n):
-            v0, v1 = face[i], face[(i + 1) % n]
-            key = (v0, v1)
-            he = HalfEdge()
-            he.vert = v0
-            edges.append((key, he))
-            half_edges[key] = he
-        for i in range(n):
-            edges[i][1].next = edges[(i + 1) % n][1]
-        # pair edges
-        for key, he in edges:
-            pair_key = (key[1], key[0])
-            if pair_key in half_edges:
-                he.pair = half_edges[pair_key]
-                half_edges[pair_key].pair = he
-    return half_edges
+solve_problem()
+```

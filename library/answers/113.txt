@@ -1,4 +1,6 @@
 ```python
-def process_data(data):
-    return {'data': data, 'status': 'processed'}
+def solve_problem():
+    # Function body goes here
+
+solve_problem()
 ```

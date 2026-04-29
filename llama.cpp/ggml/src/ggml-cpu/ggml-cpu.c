@@ -1441,6 +1441,61 @@ struct mmid_row_mapping {
     int32_t i2;
 };
 
+// Q2_Q matmul: multiply packed quaternary weight matrix by F32 activations
+// src0: packed Q2_Q weights (Q2_Q type, 8 bytes per 32 weights)
+// src1: F32 activations
+// dst:  F32 output
+void ggml_compute_forward_mul_mat_q2_q(
+        const struct ggml_compute_params * params,
+        struct ggml_tensor * dst) {
+    const struct ggml_tensor * src0 = dst->src[0];
+    const struct ggml_tensor * src1 = dst->src[1];
+
+    GGML_ASSERT(src0->type == GGML_TYPE_Q2_Q);
+    GGML_ASSERT(src1->type == GGML_TYPE_F32);
+    GGML_ASSERT(dst->type  == GGML_TYPE_F32);
+
+    const int ith = params->ith;
+    const int nth = params->nth;
+
+    const int64_t M = src0->ne[1];  // rows of weight matrix
+    const int64_t K = src0->ne[0];  // cols of weight matrix (must be multiple of 32)
+    const int64_t N = src1->ne[1];  // batch size
+
+    GGML_ASSERT(K % 32 == 0);
+    GGML_ASSERT(src0->nb[0] == 8);  // 8 bytes per 32 weights
+
+    static const float values[4] = {1.0f, 0.5f, -0.5f, -1.0f};
+
+    const uint8_t * wdata = (const uint8_t *) src0->data;
+    const float   * xdata = (const float   *) src1->data;
+    float         * ydata = (float         *) dst->data;
+
+    const int64_t rows_per_thread = (M + nth - 1) / nth;
+    const int64_t row0 = ith * rows_per_thread;
+    const int64_t row1 = MIN(row0 + rows_per_thread, M);
+
+    for (int64_t row = row0; row < row1; row++) {
+        for (int64_t col = 0; col < N; col++) {
+            float sum = 0.0f;
+            // Each row of packed data: K/4 bytes (4 weights per byte)
+            const uint8_t * packed = wdata + row * (K / 4);
+            const float   * xcol   = xdata + col * K;
+            for (int64_t k = 0; k < K; k += 32) {
+                for (int j = 0; j < 8; j++) {
+                    uint8_t byte = packed[(k / 4) + j];
+                    int base = k + j * 4;
+                    for (int b = 0; b < 4; b++) {
+                        int bits = (byte >> (6 - b * 2)) & 0x03;
+                        sum += values[bits] * xcol[base + b];
+                    }
+                }
+            }
+            ydata[row * N + col] = sum;
+        }
+    }
+}
+
 static void ggml_compute_forward_mul_mat_id_one_chunk(
     struct ggml_tensor * dst,
     const struct ggml_tensor * src0,
@@ -1817,6 +1872,10 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
         case GGML_OP_MUL_MAT:
             {
                 ggml_compute_forward_mul_mat(params, tensor);
+            } break;
+        case GGML_OP_MUL_MAT_Q2_Q:
+            {
+                ggml_compute_forward_mul_mat_q2_q(params, tensor);
             } break;
         case GGML_OP_MUL_MAT_ID:
             {
@@ -2286,6 +2345,7 @@ static int ggml_get_n_tasks(struct ggml_tensor * node, int n_threads) {
         case GGML_OP_GROUP_NORM:
         case GGML_OP_CONCAT:
         case GGML_OP_MUL_MAT:
+        case GGML_OP_MUL_MAT_Q2_Q:
         case GGML_OP_MUL_MAT_ID:
         case GGML_OP_OUT_PROD:
             {
@@ -2802,6 +2862,7 @@ struct ggml_cplan ggml_graph_plan(
                         cur = ggml_type_size(node->type)*n_tasks;
                     } break;
                 case GGML_OP_MUL_MAT:
+                case GGML_OP_MUL_MAT_Q2_Q:
                     {
                         const enum ggml_type vec_dot_type = type_traits_cpu[node->src[0]->type].vec_dot_type;
 

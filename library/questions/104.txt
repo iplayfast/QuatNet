@@ -1,1 +1,1 @@
-Write a function that returns the running total (cumulative sum) of a list.
+Write a function that tokenizes a string into words, handling punctuation and whitespace correctly.
