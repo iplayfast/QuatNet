@@ -718,3 +718,8 @@ struct llm_build_wavtokenizer_dec : public llm_graph_context {
 struct llm_build_xverse : public llm_graph_context {
     llm_build_xverse(const llama_model & model, const llm_graph_params & params);
 };
+
+struct llm_build_quaternary_nn : public llm_graph_context {
+    const llama_model & model;
+    llm_build_quaternary_nn(const llama_model & model, const llm_graph_params & params);
+};
