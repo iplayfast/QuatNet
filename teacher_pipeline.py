@@ -168,7 +168,6 @@ class QuaternaryLLM(nn.Module):
         w.add_array("quaternary_nn.rope.dimension_sections", [d_head, 0, 0, 0])
         w.add_uint32("quaternary_nn.rope.dimension_count", d_head)
         w.add_string("tokenizer.ggml.model", "byte")
-        w.add_uint32("tokenizer.ggml.tokens", vocab)
         w.add_token_list([bytes([i]) for i in range(vocab)])
         w.add_string("tokenizer.ggml.pre", "byte")
 
