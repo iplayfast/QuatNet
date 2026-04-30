@@ -1,7 +1,28 @@
 ```python
-def solve_problem(input_data):
-    def add_numbers(a, b):
-        return a + b
-
-    return add_numbers(*input_data)
+def find_maximum(numbers):
+    """
+    Find and return the maximum value in a list of numbers.
+    
+    Args:
+        numbers (list): List of integers or floats
+    
+    Returns:
+        int or float: The maximum value, or None if list is empty
+    
+    Raises:
+        TypeError: If input is not a list
+    
+    Examples:
+        >>> find_maximum([1, 5, 3, 9, 2])
+        9
+        >>> find_maximum([])
+        None
+    """
+    if not isinstance(numbers, list):
+        raise TypeError("Input must be a list")
+    
+    if len(numbers) == 0:
+        return None
+    
+    return max(numbers)
 ```

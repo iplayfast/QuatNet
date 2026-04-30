@@ -1,11 +1,4 @@
-Sure, here is an example of a Python function:
+def my_function():
+    pass
 
-```python
-def greet(name):
-    return f'Hello, {name}!'
-
-print(greet('AI'))
-```
-
-This function takes in one parameter (`name`) and returns a greeting message including that name.
-When we call the function with 'AI' as argument, it prints: "Hello, AI!"
+my_function()

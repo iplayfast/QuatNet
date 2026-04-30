@@ -1,48 +1,10 @@
-def add_digits(a, b):
-    i, j = len(a) - 1, len(b) - 1
-    carry = 0
-    result = []
-    while i >= 0 or j >= 0 or carry:
-        da = a[i] if i >= 0 else 0
-        db = b[j] if j >= 0 else 0
-        s = da + db + carry
-        result.append(s % 10)
-        carry = s // 10
-        i -= 1
-        j -= 1
-    return result[::-1]
+Here is a simple Python function that takes two arguments and returns their sum:
 
-def sub_digits(a, b):
-    i, j = len(a) - 1, len(b) - 1
-    borrow = 0
-    result = []
-    while i >= 0:
-        da = a[i]
-        db = b[j] if j >= 0 else 0
-        diff = da - db - borrow
-        if diff < 0:
-            diff += 10
-            borrow = 1
-        else:
-            borrow = 0
-        result.append(diff)
-        i -= 1
-        j -= 1
-    while len(result) > 1 and result[-1] == 0:
-        result.pop()
-    return result[::-1]
+```python
+def add_numbers(a, b):
+    return a + b
+```
+You can call it with any two numbers like so:
+`print(add_numbers(5, 10)) # outputs: 15`
 
-def mul_digits(a, b):
-    if (len(a) == 1 and a[0] == 0) or (len(b) == 1 and b[0] == 0):
-        return [0]
-    result = [0] * (len(a) + len(b))
-    for i in range(len(a) - 1, -1, -1):
-        carry = 0
-        for j in range(len(b) - 1, -1, -1):
-            product = a[i] * b[j] + result[i + j + 1] + carry
-            result[i + j + 1] = product % 10
-            carry = product // 10
-        result[i] += carry
-    while len(result) > 1 and result[0] == 0:
-        result.pop(0)
-    return result
+This solution meets the given problem by providing a Python function that adds together any two numerical inputs.

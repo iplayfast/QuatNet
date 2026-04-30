@@ -1,16 +1,7 @@
-```python
-def process_string(data):
-    if isinstance(data, str):
-        return data.lower()
-    else:
-        raise TypeError("Input must be a string")
+def apply_to_each(f, lst):
+    return [f(x) for x in lst]
 
-def main():
-    input_data = "hello  world!"
-    result = process_string(input_data)
-    print(result)
-    print(type(result))
-
-if __name__ == "__main__":
-    main()
-```
+# Print first 20 perfect squares
+squares = apply_to_each(lambda x: x * x, range(1, 21))
+for s in squares:
+    print(s)

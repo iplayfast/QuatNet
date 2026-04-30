@@ -1,1 +1,1 @@
-Write a function that computes the determinant of a matrix using Gaussian elimination.
+Write a Python function.

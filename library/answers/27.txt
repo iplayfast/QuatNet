@@ -1,10 +1,7 @@
-Here is your Python function:
-
 ```python
-def my_function():
-    return "Hello, World!"
-```
+def solve():
+    # Your Python code goes here
+    pass
 
-You can use it like this:
-`print(my_function())`
-This will output `Hello, World!`.
+solve()
+```

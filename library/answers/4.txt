@@ -1,6 +1,7 @@
 ```python
-def solve_problem():
-    return "Function implemented"
-
-print(solve_problem())
+def example_function():
+    """
+    This is an example function that does nothing.
+    """
+    pass
 ```

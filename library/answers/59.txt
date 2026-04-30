@@ -1,2 +1,13 @@
-def my_function():
-    return 42
+import random
+
+target = random.randint(1, 100)
+print("I'm thinking of a number between 1 and 100.")
+while True:
+    guess = int(input("Your guess: "))
+    if guess < target:
+        print("Too low!")
+    elif guess > target:
+        print("Too high!")
+    else:
+        print(f"Correct! The number was {target}.")
+        break

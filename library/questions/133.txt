@@ -1,1 +1,1 @@
-Implement selection sort.
+Write a Python function.

@@ -1,12 +1,13 @@
-import cmath
+```python
+def example_function():
+    """
+    This is a sample function that demonstrates the structure of a Python function.
+    """
+    # Example code inside the function
+    print("This function is working correctly.")
+    return True
 
-def dft(x):
-    n = len(x)
-    result = []
-    for k in range(n):
-        s = 0+0j
-        for t in range(n):
-            angle = -2j * cmath.pi * k * t / n
-            s += x[t] * cmath.exp(angle)
-        result.append(s)
-    return result
+# Example usage of the function
+if __name__ == "__main__":
+    example_function()
+```

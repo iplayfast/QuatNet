@@ -1375,3 +1375,45 @@ class IQ4_XS(__Quant, qtype=GGMLQuantizationType.IQ4_XS):
         qs = np.take_along_axis(kvalues, qs, axis=-1).astype(np.float32).reshape((n_blocks, -1, 32))
 
         return (dl * qs).reshape((n_blocks, -1))
+
+
+class Q2_Q(__Quant, qtype=GGMLQuantizationType.Q2_Q):
+    """2-bit quaternary quantization: 32 weights/block, 4 weights/byte, no scale."""
+
+    block_size = 32
+
+    @classmethod
+    def quantize_blocks(cls, blocks: np.ndarray) -> np.ndarray:
+        n_blocks = blocks.shape[0]
+        m = np.array([0x00, 0x55, 0xAA, 0xFF], dtype=np.uint8)
+        out = np.zeros((n_blocks, cls.block_size // 4), dtype=np.uint8)
+        for i in range(n_blocks):
+            for j in range(cls.block_size // 4):
+                b = blocks[i, j * 4:(j + 1) * 4]
+                packed = np.uint8(0)
+                for k in range(4):
+                    val = b[k]
+                    if val >= 0.75:
+                        bits = np.uint8(0)
+                    elif val >= 0.0:
+                        bits = np.uint8(1)
+                    elif val >= -0.75:
+                        bits = np.uint8(2)
+                    else:
+                        bits = np.uint8(3)
+                    packed |= bits << (6 - k * 2)
+                out[i, j] = packed
+        return out
+
+    @classmethod
+    def dequantize_blocks(cls, blocks: np.ndarray) -> np.ndarray:
+        n_blocks = blocks.shape[0]
+        values = {0: 1.0, 1: 0.5, 2: -0.5, 3: -1.0}
+        out = np.zeros((n_blocks, cls.block_size), dtype=np.float32)
+        for i in range(n_blocks):
+            for j in range(cls.block_size // 4):
+                packed = int(blocks[i, j])
+                for k in range(4):
+                    bits = (packed >> (6 - k * 2)) & 0x03
+                    out[i, j * 4 + k] = values[bits]
+        return out

@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that implements a simple JSON parser without using the json module.

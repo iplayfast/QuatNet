@@ -1,23 +1,9 @@
-def all_topological_orders(graph):
-    n = len(graph)
-    in_deg = [0] * n
-    for u in range(n):
-        for v in graph[u]: in_deg[v] += 1
+```python
+def python_function():
+    x = 5
+    y = 10
+    z = x * y
+    return f"The final answer is {z}."
 
-    result = []
-    orders = []
-
-    def backtrack():
-        if len(result) == n:
-            orders.append(result[:])
-            return
-        for u in range(n):
-            if in_deg[u] == 0 and u not in result:
-                result.append(u)
-                for v in graph[u]: in_deg[v] -= 1
-                backtrack()
-                for v in graph[u]: in_deg[v] += 1
-                result.pop()
-
-    backtrack()
-    return orders
+print(python_function())
+```

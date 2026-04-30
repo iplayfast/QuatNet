@@ -1,13 +1,22 @@
-def determinant(mat):
-    n = len(mat)
-    m = [row[:] for row in mat]
-    det = 1.0
-    for i in range(n):
-        pivot = max(range(i, n), key=lambda r: abs(m[r][i]))
-        if abs(m[pivot][i]) < 1e-12: return 0.0
-        if pivot != i: m[i], m[pivot] = m[pivot], m[i]; det = -det
-        det *= m[i][i]
-        for j in range(i + 1, n):
-            factor = m[j][i] / m[i][i]
-            for k in range(i, n): m[j][k] -= factor * m[i][k]
-    return det
+```python
+def find_maximum(numbers):
+    """
+    Find the maximum value in a list of numbers.
+    Returns None if the list is empty.
+    """
+    if not numbers:
+        return None
+    return max(numbers)
+
+if __name__ == "__main__":
+    test_cases = [
+        [3, 5, 1, 8, 9],
+        [-5, -2, 10, -8],
+        [100],
+        []
+    ]
+    
+    for nums in test_cases:
+        result = find_maximum(nums)
+        print(f"Input: {nums}, Maximum: {result}")
+```

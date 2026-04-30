@@ -1,6 +1,2 @@
-def solve_problem():
-    # Function implementation here
-    pass
-
-# Call the function
-solve_problem()
+def my_function():
+    print("This is a test.")

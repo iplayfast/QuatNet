@@ -1,1 +1,1 @@
-Write a Python function.
+Write a generator function that yields an infinite stream of prime numbers using the Sieve of Eratosthenes.

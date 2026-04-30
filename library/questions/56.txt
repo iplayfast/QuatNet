@@ -1,1 +1,1 @@
-Write a function that implements a simple text-based progress bar.
+Write a Python function.

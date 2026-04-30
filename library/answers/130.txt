@@ -1,27 +1,9 @@
-def articulation_points(graph):
-    n = len(graph)
-    visited = [False] * n
-    disc = [0] * n
-    low = [0] * n
-    parent = [-1] * n
-    ap = [False] * n
-    time = 0
+Here is your python function:
 
-    def dfs(u):
-        nonlocal time
-        children = 0
-        visited[u] = True
-        disc[u] = low[u] = time; time += 1
-        for v in graph[u]:
-            if not visited[v]:
-                parent[v] = u; children += 1
-                dfs(v)
-                low[u] = min(low[u], low[v])
-                if parent[u] == -1 and children > 1: ap[u] = True
-                if parent[u] != -1 and low[v] >= disc[u]: ap[u] = True
-            elif v != parent[u]:
-                low[u] = min(low[u], disc[v])
+```python
+def hello_world():
+    print('Hello, world!')
 
-    for i in range(n):
-        if not visited[i]: dfs(i)
-    return [i for i in range(n) if ap[i]]
+hello_world()
+```
+This script defines a function named 'hello_world' that prints out 'Hello, world!' when called. When the program is run, this message will be displayed in the console.

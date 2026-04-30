@@ -1,42 +1,23 @@
-```python
-def calculate_factorial(n):
-    """
-    Calculates the factorial of a non-negative integer n.
-    Uses an iterative approach.
-    """
-    if not isinstance(n, int) or n < 0:
-        raise ValueError("Input must be a non-negative integer.")
-    
-    if n == 0:
-        return 1
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+from array import array
 
-# Example Usage:
-if __name__ == "__main__":
-    # Test case 1: Positive number
-    num1 = 5
-    try:
-        fact1 = calculate_factorial(num1)
-        print(f"The factorial of {num1} is: {fact1}")
-    except ValueError as e:
-        print(f"Error: {e}")
+def ring_buffer(capacity):
+    buf = [None] * capacity
+    read_pos = 0
+    write_pos = 0
 
-    # Test case 2: Zero
-    num2 = 0
-    try:
-        fact2 = calculate_factorial(num2)
-        print(f"The factorial of {num2} is: {fact2}")
-    except ValueError as e:
-        print(f"Error: {e}")
+    def push(item):
+        nonlocal write_pos
+        nxt = (write_pos + 1) % capacity
+        if nxt == read_pos: return False
+        buf[write_pos] = item
+        write_pos = nxt
+        return True
 
-    # Test case 3: Invalid input (negative)
-    num3 = -3
-    try:
-        calculate_factorial(num3)
-    except ValueError as e:
-        print(f"Handled error for {num3}: {e}")
-```
+    def pop():
+        nonlocal read_pos
+        if read_pos == write_pos: return None
+        item = buf[read_pos]
+        read_pos = (read_pos + 1) % capacity
+        return item
+
+    return push, pop

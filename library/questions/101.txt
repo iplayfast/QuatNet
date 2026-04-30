@@ -1,1 +1,1 @@
-Implement selection sort.
+Write a function that returns the running total (cumulative sum) of a list.

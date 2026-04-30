@@ -1,11 +1,11 @@
-```python
-def process_data(data: list[int]) -> list:
+def digits_to_base(digits, src_base, dst_base):
+    num = 0
+    for d in digits:
+        num = num * src_base + d
+    if num == 0:
+        return [0]
     result = []
-    for item in data:
-        result.append(item * 2)
-    return result
-
-# Example usage
-data = [1, 2, 3, 4, 5]
-print(process_data(data))
-```
+    while num > 0:
+        result.append(num % dst_base)
+        num //= dst_base
+    return result[::-1]

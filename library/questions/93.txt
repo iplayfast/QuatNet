@@ -1,1 +1,1 @@
-Write a program that computes pi by approximating 4 * (1 - 1/3 + 1/5 - 1/7 + 1/9 - ...) for a million terms.
+Write a Python function.

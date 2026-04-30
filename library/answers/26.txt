@@ -1,20 +1,11 @@
-```python
-import json
+import random
 
-def parse_data(data):
-    """Parse a JSON string to dictionary."""
-    try:
-        return json.loads(data)
-    except Exception:
-        return None
-
-def format_input(data):
-    """Format and validate input."""
-    if data is None:
-        raise ValueError("Input is None")
-    
-    if not isinstance(data, dict):
-        raise TypeError("Input must be a dictionary")
-    
-    return data
-```
+def quickselect(arr, k):
+    if len(arr) == 1: return arr[0]
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    if k < len(left): return quickselect(left, k)
+    elif k < len(left) + len(mid): return mid[0]
+    else: return quickselect(right, k - len(left) - len(mid))

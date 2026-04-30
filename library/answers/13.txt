@@ -1,2 +1,5 @@
-def square(x):
-    return x * x
+def contains(lst, value):
+    for x in lst:
+        if x == value:
+            return True
+    return False

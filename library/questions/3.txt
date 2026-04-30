@@ -1,1 +1,1 @@
-Write a function that implements the Boyer-Moore majority vote algorithm to find elements appearing more than n/2 times.
+Write a generator function that yields an infinite stream of prime numbers using the Sieve of Eratosthenes.

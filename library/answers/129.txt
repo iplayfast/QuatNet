@@ -1,7 +1,2 @@
-```python
-def solve_problem():
-    return None
-
-result = solve_problem()
-print(result)
-```
+def hello_world():
+    return "Hello, World!"

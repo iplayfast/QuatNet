@@ -1,7 +1,6 @@
-def progress_bar(frac, width=40):
-    filled = int(frac * width)
-    bar = '[' + '#' * filled + '-' * (width - filled) + ']'
-    pct = int(frac * 100)
-    print(f"\r{bar} {pct}%", end='', flush=True)
-    if frac >= 1.0:
-        print()
+```python
+def my_function():
+    return 'This is a demonstration of an actual Python function.'
+
+my_function()
+```

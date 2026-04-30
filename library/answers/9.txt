@@ -1,4 +1,11 @@
 ```python
-def my_function():
-    print("Hello, World!")
+def example_function():
+    """
+    This is a sample function that demonstrates the structure of a Python function.
+    """
+    print("This is an example function.")
+
+# Example usage
+if __name__ == "__main__":
+    example_function()
 ```

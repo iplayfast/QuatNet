@@ -1,8 +1,2 @@
-```python
 def my_function():
-    result = None
-    return result
-
-# Example usage:
-print(my_function())
-```
+    return 42

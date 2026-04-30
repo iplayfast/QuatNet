@@ -1,17 +1,9 @@
-def rle_encode(s):
-    if not s: return ''
-    result, count, prev = [], 1, s[0]
-    for c in s[1:]:
-        if c == prev: count += 1
-        else: result.append(f'{count}{prev}'); prev = c; count = 1
-    result.append(f'{count}{prev}')
-    return ''.join(result)
+def compute_pi(terms=1_000_000):
+    pi = 0.0
+    sign = 1
+    for i in range(terms):
+        pi += sign / (2 * i + 1)
+        sign = -sign
+    return 4 * pi
 
-def rle_decode(s):
-    result, i = [], 0
-    while i < len(s):
-        j = i
-        while s[j].isdigit(): j += 1
-        result.append(s[j] * int(s[i:j]))
-        i = j + 1
-    return ''.join(result)
+print(f"Pi approximation: {compute_pi()}")

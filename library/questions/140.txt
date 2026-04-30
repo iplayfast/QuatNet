@@ -1,1 +1,1 @@
-Implement quicksort.
+Write a function that finds all pairs of numbers in a list that sum to a given target.

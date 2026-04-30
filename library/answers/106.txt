@@ -1,7 +1,6 @@
-def concat_lists(a, b):
-    result = []
-    for x in a:
-        result.append(x)
-    for x in b:
-        result.append(x)
-    return result
+```python
+def solve_problem():
+    # Function implementation here
+
+solve_problem()
+```

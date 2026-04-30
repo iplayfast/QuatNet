@@ -1,10 +1,10 @@
-```python
-def func():
-    result = "Function executed successfully"
-    print("Hello")
-    return result
+import itertools, time, sys
 
-
-result = func()
-print(result)
-```
+def spinner(duration=10):
+    chars = itertools.cycle('|/-\\')
+    start = time.time()
+    while time.time() - start < duration:
+        sys.stdout.write(f'\r{next(chars)} {time.time() - start:.1f}s')
+        sys.stdout.flush()
+        time.sleep(0.1)
+    print()

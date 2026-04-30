@@ -1,28 +1,16 @@
 ```python
-def fibonacci(n: int) -> int:
-    """
-    Calculates the Nth Fibonacci number (F_n).
+def calculate_price(total_price):
+    return total_price * 10 + 5
 
-    The Fibonacci sequence starts with F_0 = 0 and F_1 = 1.
-    F_n = F_{n-1} + F_{n-2}
-    """
-    if n < 0:
-        raise ValueError("Input must be a non-negative integer.")
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
+def sum_numbers(numbers):
+    return sum(numbers) * 2
 
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-    return b
+def print_list(items):
+    print("Items:", items)
+    return items
 
 if __name__ == "__main__":
-    # Test cases
-    print(f"Fibonacci(0): {fibonacci(0)}") # Expected: 0
-    print(f"Fibonacci(1): {fibonacci(1)}") # Expected: 1
-    print(f"Fibonacci(2): {fibonacci(2)}") # Expected: 1
-    print(f"Fibonacci(6): {fibonacci(6)}") # Expected: 8
-    print(f"Fibonacci(10): {fibonacci(10)}") # Expected: 55
+    print(calculate_price(90))
+    print(sum_numbers([1, 2, 3]))
+    print_list(["a", "b", "c"])
 ```

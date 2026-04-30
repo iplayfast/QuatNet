@@ -1,10 +1,18 @@
-Here is a simple Python function:
+def sum_for(lst):
+    total = 0
+    for x in lst:
+        total += x
+    return total
 
-```python
-def greet(name):
-    return f'Hello, {name}!'
+def sum_while(lst):
+    total = 0
+    i = 0
+    while i < len(lst):
+        total += lst[i]
+        i += 1
+    return total
 
-print(greet('User'))
-```
-
-This program defines a `greet` function which takes a name as an input and returns a greeting message for that name. Then it tests this function by calling it with the string "User" as an argument.
+def sum_recursive(lst):
+    if not lst:
+        return 0
+    return lst[0] + sum_recursive(lst[1:])

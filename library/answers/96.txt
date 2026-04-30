@@ -1,10 +1,11 @@
-import json, sys
+Sure, here's a Python function that returns the length of a string:
 
-def pretty_json(filename, indent=2):
-    with open(filename) as f:
-        try:
-            data = json.load(f)
-            print(json.dumps(data, indent=indent))
-        except json.JSONDecodeError as e:
-            print(f'Invalid JSON: {e}', file=sys.stderr)
-            sys.exit(1)
+```python
+def str_len(s):
+    return len(s)
+```
+
+You can call it with any string like so:
+```python
+print(str_len("Hello, World!"))  # Outputs: 13
+```

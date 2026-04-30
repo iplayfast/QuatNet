@@ -1,10 +1,10 @@
-Here's an example of a simple Python function:
+Here is a simple example:
 
 ```python
 def greet(name):
-    return f'Hello, {name}!'
+    return f'Hello, {name}'
 
-greet('User')
+print(greet('User'))
 ```
 
-This `greet` function takes in one parameter, `name`, and returns a greeting message with that name. For example, when you run the last line, it will print 'Hello, User!'
+This creates a function `greet` which takes a string input `name`, and returns a greeting with that name. When called with the argument 'User', it prints "Hello, User".

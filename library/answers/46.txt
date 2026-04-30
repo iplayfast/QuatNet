@@ -1,12 +1,12 @@
-def bwt_encode(s):
-    s = s + '\0'
-    rotations = [s[i:] + s[:i] for i in range(len(s))]
-    rotations.sort()
-    return ''.join(r[-1] for r in rotations)
+import random
 
-def bwt_decode(s):
-    n = len(s)
-    table = [''] * n
-    for _ in range(n):
-        table = sorted(s[i] + table[i] for i in range(n))
-    return [r for r in table if r.endswith('\0')][0][:-1]
+def reservoir_sample(stream, k):
+    reservoir = []
+    for i, item in enumerate(stream):
+        if i < k:
+            reservoir.append(item)
+        else:
+            j = random.randint(0, i)
+            if j < k:
+                reservoir[j] = item
+    return reservoir

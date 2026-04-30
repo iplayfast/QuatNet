@@ -174,13 +174,14 @@ def convert(src_path, dst_path=None):
     tensors = {t.name: t for t in r.tensors}
     converted = 0
 
-    # Global tensors (keep original quantization)
+    # Global tensors — dequantize to fp32 for clean size computation
     for src_name in ['token_embd.weight', 'output_norm.weight', 'output.weight',
                      'output_norm.bias', 'output.bias']:
         t = tensors.get(src_name)
         if not t:
             continue
-        w.add_tensor(src_name, t.data, raw_dtype=t.tensor_type)
+        deq = dequantize(t)
+        w.add_tensor(src_name, deq.astype(np.float32))
         converted += 1
 
     # Per-layer tensors
@@ -196,7 +197,7 @@ def convert(src_path, dst_path=None):
             t = tensors.get(f'blk.{i}.{part}.weight')
             if not t:
                 continue
-            ne = list(t.shape)
+            ne = [int(x) for x in t.shape]
             deq = dequantize(t)
             packed = quantize_to_q2q(deq)
             w.add_tensor(f'blk.{i}.{part}.weight', packed,
@@ -209,11 +210,12 @@ def convert(src_path, dst_path=None):
                 w.add_tensor(f'blk.{i}.ffn_norm.{suf}', t.data, raw_dtype=t.tensor_type)
                 converted += 1
 
-        # FFN (keep original quantization)
+        # FFN weights — dequantize to fp32
         for part in ['ffn_gate', 'ffn_down', 'ffn_up']:
             t = tensors.get(f'blk.{i}.{part}.weight')
             if t:
-                w.add_tensor(f'blk.{i}.{part}.weight', t.data, raw_dtype=t.tensor_type)
+                deq = dequantize(t)
+                w.add_tensor(f'blk.{i}.{part}.weight', deq.astype(np.float32))
                 converted += 1
 
     print(f"  Converted {converted} tensors")

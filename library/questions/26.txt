@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that finds the k-th smallest element in an unsorted array in O(n) average time (quickselect).

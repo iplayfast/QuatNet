@@ -1,7 +1,9 @@
-```python
-def my_function():
-    result = 0
-    return result
+import bisect
 
-print(my_function())
-```
+def lis(arr):
+    tails = []
+    for x in arr:
+        i = bisect.bisect_left(tails, x)
+        if i == len(tails): tails.append(x)
+        else: tails[i] = x
+    return len(tails)

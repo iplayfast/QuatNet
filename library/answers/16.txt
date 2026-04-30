@@ -1,2 +1,5 @@
-def my_function():\n" +
-    "    pass\n"
+```python
+def my_function():
+    # Your code here
+    return result
+```

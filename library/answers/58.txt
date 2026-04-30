@@ -1,10 +1,39 @@
-Here is your python function:
-
 ```python
-def my_function():
-    return "This is a test"
+def factorial(n: int) -> int:
+    """
+    Calculates the factorial of a non-negative integer n.
 
-my_function()
+    Args:
+        n: The integer for which to calculate the factorial.
+
+    Returns:
+        The factorial of n (n!).
+    
+    Raises:
+        ValueError: If n is negative.
+    """
+    if not isinstance(n, int):
+        raise TypeError("Input must be an integer.")
+        
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    
+    if n == 0:
+        return 1
+    
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+if __name__ == '__main__':
+    # Example Usage
+    print(f"Factorial of 5: {factorial(5)}")
+    print(f"Factorial of 0: {factorial(0)}")
+    
+    # Example of error handling
+    try:
+        print(factorial(-1))
+    except ValueError as e:
+        print(f"Error caught: {e}")
 ```
-
-I have created a simple function named `my_function` which, when called, will return the string `"This is a test"`. This solution provides a working Python function as requested.

@@ -1,2 +1,28 @@
-def func():
-    return "Hello"
+```python
+def solve_problem():
+    # Function to calculate area of circle
+    def circle_area(radius):
+        return 3.14 * radius ** 2
+
+    # Function to calculate perimeter of rectangle
+    def rectangle_perimeter(length, width):
+        return 2 * (length + width)
+
+    # Function to find the number of elements in a list
+    def count_elements(lst):
+        return len(lst)
+
+    # Function to check if an element exists in a list
+    def element_exists(lst, elem):
+        return elem in lst
+
+    # Test cases for each function
+    print("Test Cases:")
+    print(f"Circle Area: {circle_area(5)}")
+    print(f"Rectangle Perimeter: {rectangle_perimeter(10, 20)}")
+    print(f"List Elements Count: {count_elements([1, 2, 3])}")
+    print(f"Element Existence: {element_exists([1, 2, 3], 3)}")
+
+# Call the main function
+solve_problem()
+```

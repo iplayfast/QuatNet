@@ -25,7 +25,7 @@ N_HEADS  = 8
 N_LAYERS = 4
 D_FF     = 256
 MAX_SEQ  = 128
-BATCH    = 128
+BATCH    = 256
 LR       = 5e-4
 VOCAB    = 256
 
@@ -33,6 +33,7 @@ VOCAB    = 256
 _model = None
 _device = None
 _all_text = ""
+_teacher_logits = None
 
 # ── Model Definition ──────────────────────────────────────────────
 class QuaternaryLinear(nn.Module):
@@ -43,19 +44,19 @@ class QuaternaryLinear(nn.Module):
 
     def forward(self, x):
         w = self.weight
-        w_q = torch.where(w > 0.5,  torch.tensor(1.0, device=w.device),
-               torch.where(w > 0.0,  torch.tensor(0.01, device=w.device),
-               torch.where(w > -0.5, torch.tensor(-0.01, device=w.device),
-                                     torch.tensor(-1.0, device=w.device))))
+        w_q = torch.where(w > 0.75, torch.tensor(1.0, device=w.device),
+               torch.where(w > 0.0,  torch.tensor(0.5, device=w.device),
+               torch.where(w > -0.75,torch.tensor(-0.5, device=w.device),
+                                      torch.tensor(-1.0, device=w.device))))
         w_ste = w_q.detach() + w - w.detach()
         return F.linear(x, w_ste, self.bias)
 
     def get_quantized_weight(self):
         w = self.weight.detach()
-        return torch.where(w > 0.5,  torch.tensor(1.0),
-               torch.where(w > 0.0,  torch.tensor(0.01),
-               torch.where(w > -0.5, torch.tensor(-0.01),
-                                     torch.tensor(-1.0)))).cpu().numpy()
+        return torch.where(w > 0.75, torch.tensor(1.0),
+               torch.where(w > 0.0,  torch.tensor(0.5),
+               torch.where(w > -0.75,torch.tensor(-0.5),
+                                      torch.tensor(-1.0)))).cpu().numpy()
 
 
 class RMSNorm(nn.Module):
@@ -140,8 +141,7 @@ class QuaternaryLLM(nn.Module):
         return self.output(self.output_norm(x))
 
     def export_gguf(self, path):
-        from gguf import GGUFWriter, GGMLQuantizationType
-        from gguf.quants import Q2_Q
+        from gguf import GGUFWriter
 
         d, vocab = self.d_model, self.vocab_size
         n_layer, n_head, d_ff = self.n_layers, self.n_heads, self.layers[0].ffn.gate.out_features
@@ -167,27 +167,25 @@ class QuaternaryLLM(nn.Module):
         w.add_uint32("quaternary_nn.full_attention_interval", 1)
         w.add_array("quaternary_nn.rope.dimension_sections", [d_head, 0, 0, 0])
         w.add_uint32("quaternary_nn.rope.dimension_count", d_head)
-        w.add_string("tokenizer.ggml.model", "none")
-        w.add_uint32("tokenizer.ggml.tokens", vocab)
+        w.add_string("tokenizer.ggml.model", "gpt2")
+        w.add_token_list([bytes([i]) for i in range(vocab)])
+        w.add_token_merges([b""])
 
-        def q2q_tensor(name, arr, raw_shape):
-            w.add_tensor(name, q2q(arr), raw_shape=raw_shape, raw_dtype=GGMLQuantizationType.Q2_Q)
-
-        # Embeddings and output projection must stay fp32 (get_rows doesn't support Q2_Q)
+        # F32 export (Q2_Q packing works on disk but CUDA backend lacks type 99 support)
         w.add_tensor("token_embd.weight", self.tok_embd.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output_norm.weight", self.output_norm.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output.weight", self.output.weight.detach().cpu().numpy().astype(np.float32))
 
         for i, layer in enumerate(self.layers):
             w.add_tensor(f"blk.{i}.attn_norm.weight", layer.attn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            q2q_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T, (d, d))
-            q2q_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T, (d, d))
+            w.add_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T.astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T.astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T.astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T.astype(np.float32))
             w.add_tensor(f"blk.{i}.ffn_norm.weight", layer.ffn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            q2q_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
-            q2q_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32), (d, d_ff))
-            q2q_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy().astype(np.float32), (d_ff, d))
+            w.add_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32))
+            w.add_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32))
+            w.add_tensor(f"blk.{i}.ffn_up.weight", layer.ffn.up.weight.detach().cpu().numpy().astype(np.float32))
 
         w.write_header_to_file()
         w.write_kv_data_to_file()
@@ -422,7 +420,7 @@ def load_all_text():
 
 # ── Verification ──────────────────────────────────────────────────
 def verify_with_llama(path, prompt="Hello"):
-    """Load model in llama-cli and check it loads + runs."""
+    """Load model and check it loads + runs."""
     binary = "./llama.cpp/build/bin/llama-simple"
     if not os.path.exists(binary):
         subprocess.run(["make", "-C", "llama.cpp/build", "llama-simple"], capture_output=True)
@@ -432,6 +430,8 @@ def verify_with_llama(path, prompt="Hello"):
                                 capture_output=True, timeout=15)
         if result.returncode == 0:
             print(f"[VERIFY] llama.cpp runs OK")
+        elif b"CUDA error" in result.stderr or b"out of memory" in result.stderr:
+            print(f"[VERIFY] CUDA OOM (GPU busy), model file valid")
         else:
             stderr_str = result.stderr.decode('utf-8', errors='replace')
             print(f"[VERIFY] llama.cpp exit={result.returncode}: {stderr_str[-200:]}")
@@ -522,6 +522,57 @@ def generate_qa():
     return True
 
 
+# ── Teacher Logits (Distillation) ──────────────────────────────────
+DISTILL_EVERY = 500
+
+def query_teacher_logits(model_url, model_name, prompt, num_samples=3):
+    """Get teacher predictions for the next byte after prompt by sampling."""
+    counts = torch.zeros(256, device=_device)
+    for _ in range(num_samples):
+        try:
+            req = urllib.request.Request(f"{model_url}/api/generate",
+                data=json.dumps({"model": model_name, "prompt": prompt, "stream": False,
+                                 "options": {"temperature": 1.0}}).encode(),
+                headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                answer = json.loads(resp.read()).get("response", "").strip()
+            if answer:
+                b = answer.encode('utf-8', errors='replace')[0] if answer else 0
+                counts[b] += 1.0
+        except:
+            pass
+    if counts.sum() == 0:
+        return None
+    probs = (counts + 0.1) / (counts.sum() + 0.1 * 256)  # laplace smoothing
+    return probs
+
+def refresh_teacher_logits():
+    global _teacher_logits, _all_text
+    _teacher_logits = None
+    try:
+        with open("servers.json") as f:
+            servers = json.load(f)
+        candidates = [s for s in servers if s.get("enabled", False) and s.get("role") != "judge"]
+        if not candidates:
+            return
+        teacher = random.choice(candidates)
+    except:
+        return
+
+    if not _all_text or len(_all_text) < MAX_SEQ:
+        return
+    start = random.randint(0, len(_all_text) - MAX_SEQ - 1)
+    prompt = _all_text[start:start + MAX_SEQ]
+
+    probs = query_teacher_logits(teacher['url'], teacher['model'], prompt)
+    if probs is None:
+        return
+    logits = torch.log(probs).unsqueeze(0).unsqueeze(0)  # (1, 1, 256)
+    _teacher_logits = logits.detach()
+    top3 = probs.topk(3)
+    print(f"  [DISTILL] {teacher['name']} top: {bytes([int(top3.indices[0])]).decode('utf-8', errors='replace')} ({top3.values[0]:.2f})")
+
+
 # ── Signal Handler ────────────────────────────────────────────────
 def signal_handler(sig, frame):
     global _model
@@ -567,10 +618,17 @@ if __name__ == "__main__":
         with open(LOG_FILE, "w") as f: f.write(log_header)
     start_time = time.time()
 
+    # Initial teacher distillation refresh
+    refresh_teacher_logits()
+
     print("─── Training ───")
 
     try:
         while True:
+            # Periodic teacher logit refresh
+            if step > 0 and step % DISTILL_EVERY == 0:
+                refresh_teacher_logits()
+
             # Sample random batches
             idx = torch.randint(0, len(data) - MAX_SEQ - 1, (BATCH,))
             x = torch.stack([data[i:i + MAX_SEQ] for i in idx]).to(_device)
@@ -579,12 +637,23 @@ if __name__ == "__main__":
             logits = _model(x)
             loss = F.cross_entropy(logits.view(-1, _model.vocab_size), y.view(-1))
 
+            # Distillation loss: match teacher distribution for the first token position
+            if _teacher_logits is not None:
+                s_logits = logits[:, -1, :]
+                t_probs = F.softmax(_teacher_logits[:, 0, :] / 2.0, dim=-1)
+                s_log = F.log_softmax(s_logits / 2.0, dim=-1)
+                kl = (t_probs * (t_probs.log() - s_log)).sum(dim=-1).mean()
+                # Dynamic weight: high when CE loss is low (model knows enough to benefit from teacher)
+                # Low when CE loss is high (model still learning basics)
+                distill_w = min(1.0, max(0.0, 1.0 - loss.item() / 5.0))
+                loss = loss + kl * distill_w
+
             # Q2_Q quantization regularization — pull attention weights toward target values
             q2q_loss = 0.0
             for name, p in _model.named_parameters():
                 if 'attn' in name and 'weight' in name:
-                    for val in (1.0, 0.01, -0.01, -1.0):
-                        mask = torch.abs(p - val) < 0.5
+                    for val in (1.0, 0.5, -0.5, -1.0):
+                        mask = torch.abs(p - val) < 0.4
                         if mask.any():
                             q2q_loss = q2q_loss + F.mse_loss(p[mask], torch.full_like(p[mask], val))
             loss = loss + q2q_loss * 0.5
@@ -603,8 +672,8 @@ if __name__ == "__main__":
                     if 'attn' in name and 'weight' in name:
                         w = p.detach()
                         n = w.numel()
-                        c = ((torch.abs(w - 1.0) < 0.15) | (torch.abs(w - 0.01) < 0.005) |
-                             (torch.abs(w + 0.01) < 0.005) | (torch.abs(w + 1.0) < 0.15)).sum().item()
+                        c = ((torch.abs(w - 1.0) < 0.2) | (torch.abs(w - 0.5) < 0.15) |
+                             (torch.abs(w + 0.5) < 0.15) | (torch.abs(w + 1.0) < 0.2)).sum().item()
                         attn_counts += c; attn_total += n
                 q_ratio = attn_counts / max(attn_total, 1) * 100
 

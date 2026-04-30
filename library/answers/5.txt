@@ -1,13 +1,7 @@
-def merge_sorted(a, b):
-    result = []
-    i = j = 0
-    while i < len(a) and j < len(b):
-        if a[i] <= b[j]:
-            result.append(a[i])
-            i += 1
-        else:
-            result.append(b[j])
-            j += 1
-    result.extend(a[i:])
-    result.extend(b[j:])
-    return result
+def serialize(obj):
+    return repr(obj)
+
+def deserialize(s):
+    return eval(s)
+
+# Note: Only safe for basic types. Use ast.literal_eval for untrusted input.

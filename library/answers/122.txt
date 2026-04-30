@@ -1,23 +1,8 @@
-def simplex_2d(c, A, b):
-    m, n = len(A), len(c)
-    tableau = [row[:] + [0.0] * m + [b[i]] for i, row in enumerate(A)]
-    for i in range(n): tableau[i][n + i] = 1.0
-    obj = [-x for x in c] + [0.0] * (m + 1)
-    tableau.append(obj)
+```python
+def solve():
+    # Your code here
+    pass
 
-    while True:
-        col = min(range(n + m), key=lambda j: tableau[-1][j])
-        if tableau[-1][col] >= 0: break
-        ratios = []
-        for i in range(m):
-            if tableau[i][col] > 0:
-                ratios.append((tableau[i][n + m] / tableau[i][col], i))
-        if not ratios: return None
-        row = min(ratios)[1]
-        pivot = tableau[row][col]
-        for j in range(n + m + 1): tableau[row][j] /= pivot
-        for i in range(m + 1):
-            if i != row:
-                factor = tableau[i][col]
-                for j in range(n + m + 1): tableau[i][j] -= factor * tableau[row][j]
-    return tableau[-1][-1]
+if __name__ == "__main__":
+    solve()
+```

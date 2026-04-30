@@ -1,28 +1,10 @@
-class DynamicArray:
-    def __init__(self):
-        self.capacity = 1
-        self.size = 0
-        self.data = [None] * self.capacity
+Here is an example of how your Python function might look:
 
-    def append(self, val):
-        if self.size == self.capacity:
-            self.capacity *= 2
-            new_data = [None] * self.capacity
-            for i in range(self.size):
-                new_data[i] = self.data[i]
-            self.data = new_data
-        self.data[self.size] = val
-        self.size += 1
+```python
+def greet(name):
+    return f'Hello, {name}!'
 
-    def __getitem__(self, idx):
-        if idx < 0 or idx >= self.size:
-            raise IndexError
-        return self.data[idx]
-
-    def __setitem__(self, idx, val):
-        if idx < 0 or idx >= self.size:
-            raise IndexError
-        self.data[idx] = val
-
-    def __len__(self):
-        return self.size
+# Testing our function
+print(greet('User'))
+```
+This function takes in one parameter `name` and returns a greeting for the person named. For instance if you call this function with 'User', it will print out "Hello, User!".

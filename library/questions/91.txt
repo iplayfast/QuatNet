@@ -1,1 +1,1 @@
-Write a program that reads a CSV file and prints the min, max, mean, and median of a specified column.
+Write a function that performs a depth-first search on a graph represented as an adjacency list.

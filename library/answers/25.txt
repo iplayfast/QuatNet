@@ -1,7 +1,6 @@
 ```python
-def solve():
-    # Your code here
-    print("Hello, World!")
+def solve_problem():
+    print("Function created successfully")
 
-solve()
+solve_problem()
 ```

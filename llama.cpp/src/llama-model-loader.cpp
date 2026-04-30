@@ -908,18 +908,32 @@ static bool weight_buft_supported(const llama_hparams & hparams, ggml_tensor * w
     }
     ggml_context * ctx = ctx_ptr.get();
 
+    // If we're testing a Q2_Q tensor, use F32 for the support check (backend may not support Q2_Q directly)
+    ggml_tensor * w_test = w;
+    ggml_tensor w_f32;
+    if (w->type == GGML_TYPE_Q2_Q) {
+        w_f32 = *w;
+        w_f32.type = GGML_TYPE_F32;
+        w_f32.nb[0] = ggml_type_size(GGML_TYPE_F32);
+        for (int d = 1; d < GGML_MAX_DIMS; d++) {
+            w_f32.nb[d] = w_f32.nb[d-1] * (w_f32.ne[d-1] > 0 ? w_f32.ne[d-1] : 1);
+        }
+        w_test = &w_f32;
+    }
+
     ggml_tensor * op_tensor = nullptr;
 
     switch (op) {
         case GGML_OP_GET_ROWS:
             {
                 ggml_tensor * b = ggml_new_tensor_1d(ctx, GGML_TYPE_I32, 512);
-                op_tensor = ggml_get_rows(ctx, w, b);
+                op_tensor = ggml_get_rows(ctx, w_test, b);
             } break;
         case GGML_OP_MUL_MAT:
+        case GGML_OP_MUL_MAT_Q2_Q:
             {
-                ggml_tensor * b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, w->ne[0], 512, w->ne[2], w->ne[3]);
-                op_tensor = ggml_mul_mat(ctx, w, b);
+                ggml_tensor * b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, w_test->ne[0], 512, w_test->ne[2], w_test->ne[3]);
+                op_tensor = ggml_mul_mat(ctx, w_test, b);
             } break;
         case GGML_OP_MUL_MAT_ID:
             {
@@ -1130,6 +1144,14 @@ struct ggml_tensor * llama_model_loader::create_tensor(
         } else {
             if (tn.bid == -1) {
                 GGML_ABORT("repeating layer tensor %s used without a layer number", tn.str().c_str());
+            }
+        }
+
+        // Q2_Q tensors must use CPU buffer (CUDA doesn't support type 99)
+        if (t_meta->type == GGML_TYPE_Q2_Q) {
+            auto * cpu_dev = ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_CPU);
+            if (cpu_dev) {
+                return ggml_backend_dev_buffer_type(cpu_dev);
             }
         }
 

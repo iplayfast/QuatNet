@@ -1,20 +1,21 @@
-```python
-def add_two_numbers():
-    a = input("Enter first number: ")
-    b = input("Enter second number: ")
-    return int(a) + int(b)
+from threading import Condition
+from collections import deque
 
-def print_output():
-    print("Hello from Python!")
+class BoundedQueue:
+    def __init__(self, capacity):
+        self.cap = capacity
+        self.q = deque()
+        self.cv = Condition()
 
-# Call the function
-# add_two_numbers()
-# print_output()
+    def put(self, item):
+        with self.cv:
+            while len(self.q) >= self.cap: self.cv.wait()
+            self.q.append(item)
+            self.cv.notify()
 
-# Uncomment for testing
-# add_two_numbers()
-# print_output()
-
-# Test
-# print(f"{add_two_numbers()} is {add_two_numbers()}")
-```
+    def get(self):
+        with self.cv:
+            while not self.q: self.cv.wait()
+            item = self.q.popleft()
+            self.cv.notify()
+            return item

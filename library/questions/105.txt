@@ -1,1 +1,1 @@
-Write a class that implements a binary search tree with insert, search, and delete.
+Write a Python function.

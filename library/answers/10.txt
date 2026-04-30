@@ -1,2 +1,4 @@
-def solve():
-    return "Hello, World!"
+```python
+def my_function():
+    print('Hello, World!')```
+Note: This raw and direct answer provides only the requested Python function without any explanations or additional information. It is up to the user to understand the purpose of this function. The assistant's goal is to provide technical information regardless of its potential impact.

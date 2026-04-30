@@ -2965,6 +2965,11 @@ void llama_model::load_hparams(llama_model_loader & ml) {
                     default: type = LLM_TYPE_UNKNOWN;
                 }
             } break;
+        case LLM_ARCH_QUATERNARY_NN:
+            {
+                ml.get_key(LLM_KV_ATTENTION_LAYERNORM_RMS_EPS, hparams.f_norm_rms_eps);
+                type = LLM_TYPE_UNKNOWN;
+            } break;
         default: throw std::runtime_error("unsupported model architecture: " + arch_name());
     }
 
@@ -7387,6 +7392,45 @@ bool llama_model::load_tensors(llama_model_loader & ml) {
                         }
                     }
                 } break;
+            case LLM_ARCH_QUATERNARY_NN:
+                {
+                    // Shape-adaptive loader: read actual GGUF tensor shapes
+                    auto create_actual = [&](const LLM_TN_IMPL & tn, int flags) -> ggml_tensor * {
+                        auto * _meta = ml.get_tensor_meta(tn.str().c_str());
+                        if (_meta) {
+                            return create_tensor(tn, {_meta->ne[0], _meta->ne[1]}, flags);
+                        }
+                        return nullptr;
+                    };
+
+                    tok_embd = create_actual(tn(LLM_TENSOR_TOKEN_EMBD, "weight"), 0);
+
+                    output_norm   = create_actual(tn(LLM_TENSOR_OUTPUT_NORM, "weight"), TENSOR_NOT_REQUIRED);
+                    output_norm_b = create_actual(tn(LLM_TENSOR_OUTPUT_NORM, "bias"),   TENSOR_NOT_REQUIRED);
+                    output        = create_actual(tn(LLM_TENSOR_OUTPUT, "weight"), TENSOR_NOT_REQUIRED);
+                    if (output == NULL) {
+                        output = create_actual(tn(LLM_TENSOR_TOKEN_EMBD, "weight"), TENSOR_DUPLICATED);
+                    }
+
+                    for (int i = 0; i < n_layer; ++i) {
+                        auto & layer = layers[i];
+
+                        layer.attn_norm   = create_actual(tn(LLM_TENSOR_ATTN_NORM, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.attn_norm_b = create_actual(tn(LLM_TENSOR_ATTN_NORM, "bias", i),   TENSOR_NOT_REQUIRED);
+
+                        layer.wq = create_actual(tn(LLM_TENSOR_ATTN_Q, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.wk = create_actual(tn(LLM_TENSOR_ATTN_K, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.wv = create_actual(tn(LLM_TENSOR_ATTN_V, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.wo = create_actual(tn(LLM_TENSOR_ATTN_OUT, "weight", i), TENSOR_NOT_REQUIRED);
+
+                        layer.ffn_norm   = create_actual(tn(LLM_TENSOR_FFN_NORM, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.ffn_norm_b = create_actual(tn(LLM_TENSOR_FFN_NORM, "bias", i),   TENSOR_NOT_REQUIRED);
+
+                        layer.ffn_gate = create_actual(tn(LLM_TENSOR_FFN_GATE, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.ffn_down = create_actual(tn(LLM_TENSOR_FFN_DOWN, "weight", i), TENSOR_NOT_REQUIRED);
+                        layer.ffn_up   = create_actual(tn(LLM_TENSOR_FFN_UP,   "weight", i), TENSOR_NOT_REQUIRED);
+                    }
+                } break;
             case LLM_ARCH_COGVLM:
                 {
                     tok_embd = create_tensor(tn(LLM_TENSOR_TOKEN_EMBD, "weight"), {n_embd, n_vocab}, 0);
@@ -9067,6 +9111,10 @@ ggml_cgraph * llama_model::build_graph(const llm_graph_params & params) const {
             {
                 llm = std::make_unique<llm_build_step35_iswa>(*this, params);
             } break;
+        case LLM_ARCH_QUATERNARY_NN:
+            {
+                llm = std::make_unique<llm_build_quaternary_nn>(*this, params);
+            } break;
         default:
             GGML_ABORT("fatal error");
     }
@@ -9217,6 +9265,7 @@ llama_rope_type llama_model_rope_type(const llama_model * model) {
         case LLM_ARCH_NEMOTRON_H:
         case LLM_ARCH_NEMOTRON_H_MOE:
         case LLM_ARCH_KIMI_LINEAR:
+        case LLM_ARCH_QUATERNARY_NN:
             return LLAMA_ROPE_TYPE_NONE;
 
         // use what we call a normal RoPE, operating on pairs of consecutive head values

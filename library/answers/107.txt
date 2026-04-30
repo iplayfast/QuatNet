@@ -1,11 +1,39 @@
-Here is your Python function:
+def levenshtein(a, b):
+    m, n = len(a), len(b)
+    dp = [[0] * (n + 1) for _ in range(2)]
+    for i in range(m + 1): dp[i % 2][0] = i
+    for j in range(n + 1): dp[0][j] = j
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if a[i - 1] == b[j - 1]: dp[i % 2][j] = dp[(i - 1) % 2][j - 1]
+            else: dp[i % 2][j] = 1 + min(dp[(i - 1) % 2][j], dp[i % 2][j - 1], dp[(i - 1) % 2][j - 1])
+    return dp[m % 2][n]
 
-```python
-def my_function():
-    return "Hello, world!"
-```
-You can call this function like so:
-```python
-print(my_function())
-# Output: Hello, world!
-```
+class BKTree:
+    def __init__(self, words):
+        self.tree = None
+        for w in words: self.insert(w)
+
+    def insert(self, word):
+        if not self.tree: self.tree = (word, {}); return
+        node = self.tree
+        while True:
+            d = levenshtein(word, node[0])
+            if d == 0: return
+            if d in node[1]:
+                node = node[1][d]
+            else:
+                node[1][d] = (word, {}); return
+
+    def search(self, word, tolerance):
+        result = []
+        stack = [self.tree]
+        while stack:
+            node = stack.pop()
+            if not node: continue
+            d = levenshtein(word, node[0])
+            if d <= tolerance: result.append(node[0])
+            for dist, child in node[1].items():
+                if d - tolerance <= dist <= d + tolerance:
+                    stack.append(child)
+        return result

@@ -1,8 +1,7 @@
 ```python
-def solve_problem():
-    # Function body here
-    return "Function solved"
-
-# Call the function to print its result
-print(solve_problem())
+def example_function():
+    """
+    This is an example function that does nothing.
+    """
+    pass
 ```

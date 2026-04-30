@@ -1,10 +1,13 @@
-```python
-def my_function():
-    x = 5
-    y = 'hello'
-    result1 = x * 2
-    result2 = y[::-1]
-    print(f"Function executed successfully with results: {result1}, {result2}")
+import sys
 
-my_function()
-```
+def tee(mode='line'):
+    if mode == 'line':
+        for line in sys.stdin:
+            sys.stdout.write(line)
+            sys.stdout.flush()
+    elif mode == 'char':
+        while True:
+            c = sys.stdin.read(1)
+            if not c: break
+            sys.stdout.write(c)
+            sys.stdout.flush()

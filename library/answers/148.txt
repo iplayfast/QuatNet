@@ -1,8 +1,6 @@
 ```python
-def example_function():
-    return "This is a sample function."
+def my_function():
+    return 'Hello, world!'
 
-# Example usage
-if __name__ == "__main__":
-    print(example_function())
+my_function()
 ```
