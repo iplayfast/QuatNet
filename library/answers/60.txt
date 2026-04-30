@@ -1,12 +1,46 @@
-def matmul(A, B):
-    m, k = len(A), len(A[0])
-    n = len(B[0])
-    C = [[0.0] * n for _ in range(m)]
-    BT = list(zip(*B))
-    for i in range(m):
-        for j in range(n):
-            s = 0.0
-            for t in range(k):
-                s += A[i][t] * BT[j][t]
-            C[i][j] = s
-    return C
+```python
+def calculate_area_of_rectangle(length: float, width: float) -> float:
+    """
+    Calculates the area of a rectangle given its length and width.
+
+    Args:
+        length: The length of the rectangle. Must be non-negative.
+        width: The width of the rectangle. Must be non-negative.
+
+    Returns:
+        The calculated area (float).
+
+    Raises:
+        ValueError: If either length or width is negative.
+    """
+    if length < 0 or width < 0:
+        raise ValueError("Length and width must be non-negative.")
+    
+    return length * width
+
+if __name__ == '__main__':
+    # Example Usage 1: Standard Calculation
+    try:
+        area1 = calculate_area_of_rectangle(5.0, 10.0)
+        print(f"The area of a rectangle with length 5.0 and width 10.0 is: {area1}")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+    print("-" * 20)
+
+    # Example Usage 2: Using zero
+    try:
+        area2 = calculate_area_of_rectangle(7.5, 0.0)
+        print(f"The area of a rectangle with length 7.5 and width 0.0 is: {area2}")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+    print("-" * 20)
+
+    # Example Usage 3: Handling negative input
+    try:
+        area3 = calculate_area_of_rectangle(5.0, -2.0)
+        print(f"The area is: {area3}")
+    except ValueError as e:
+        print(f"Error: {e}")
+```

@@ -1,21 +1,52 @@
-def json_parse(s):
-    s = s.strip()
-    if s[0] == '{':
-        obj = {}
-        inner = s[1:s.rindex('}')].strip()
-        if inner:
-            for pair in inner.split(','):
-                k, v = pair.split(':', 1)
-                obj[json_parse(k.strip())] = json_parse(v.strip())
-        return obj
-    elif s[0] == '[':
-        inner = s[1:s.rindex(']')].strip()
-        return [json_parse(x.strip()) for x in inner.split(',')] if inner else []
-    elif s[0] == '"':
-        return s[1:s.rindex('"')]
-    elif s == 'true': return True
-    elif s == 'false': return False
-    elif s == 'null': return None
-    else:
-        try: return int(s)
-        except: return float(s)
+import random
+
+class SkipNode:
+    def __init__(self, val, level):
+        self.val = val
+        self.forward = [None] * (level + 1)
+
+class SkipList:
+    def __init__(self, max_level=16):
+        self.max_level = max_level
+        self.header = SkipNode(None, max_level)
+        self.level = 0
+
+    def _random_level(self):
+        lvl = 0
+        while random.random() < 0.5 and lvl < self.max_level: lvl += 1
+        return lvl
+
+    def insert(self, val):
+        update = [None] * (self.max_level + 1)
+        cur = self.header
+        for i in range(self.level, -1, -1):
+            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
+            update[i] = cur
+        lvl = self._random_level()
+        if lvl > self.level:
+            for i in range(self.level + 1, lvl + 1): update[i] = self.header
+            self.level = lvl
+        node = SkipNode(val, lvl)
+        for i in range(lvl + 1):
+            node.forward[i] = update[i].forward[i]
+            update[i].forward[i] = node
+
+    def search(self, val):
+        cur = self.header
+        for i in range(self.level, -1, -1):
+            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
+        cur = cur.forward[0]
+        return cur.val if cur and cur.val == val else None
+
+    def delete(self, val):
+        update = [None] * (self.max_level + 1)
+        cur = self.header
+        for i in range(self.level, -1, -1):
+            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
+            update[i] = cur
+        cur = cur.forward[0]
+        if cur and cur.val == val:
+            for i in range(self.level + 1):
+                if update[i].forward[i] != cur: break
+                update[i].forward[i] = cur.forward[i]
+            while self.level > 0 and not self.header.forward[self.level]: self.level -= 1

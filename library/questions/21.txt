@@ -1,1 +1,1 @@
-Write a text-based Battleship game against a simple AI opponent.
+Write a Python function.

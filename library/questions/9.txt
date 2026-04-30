@@ -1,1 +1,1 @@
-Write a function that finds the longest common subsequence of two strings.
+Write a function that returns the elements at odd indices in a list.

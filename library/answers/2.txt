@@ -1,20 +1,10 @@
-```python
-def main():
-    # Test cases
-    test_cases = [
-        {"input": "Hello", "output": 5},
-        {"input": "World", "output": 5},
-        {"input": "", "output": 0},
-        {"input": "a", "output": 1}
-    ]
+import json, sys
 
-    for test_case in test_cases:
-        count = count_vowels(test_case["input"])
-        assert count == test_case["output"], f"Test case {test_case['input']} failed"
-
-def count_vowels(string):
-    return sum(1 for char in string.lower() if char in 'aeiou')
-
-if __name__ == "__main__":
-    main()
-```
+def pretty_json(filename, indent=2):
+    with open(filename) as f:
+        try:
+            data = json.load(f)
+            print(json.dumps(data, indent=indent))
+        except json.JSONDecodeError as e:
+            print(f'Invalid JSON: {e}', file=sys.stderr)
+            sys.exit(1)

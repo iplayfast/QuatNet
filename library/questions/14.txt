@@ -1,1 +1,1 @@
-Write a function that detects if a graph contains a cycle.
+Write a number guessing game where the computer picks a random number and the user guesses until correct, with hints for too high/too low.

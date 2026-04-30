@@ -1,1 +1,1 @@
-Implement quicksort.
+Write a function that implements a simple grep utility matching a regex pattern line by line.

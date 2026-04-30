@@ -1,6 +1,46 @@
-```python
-def solve_problem():
-    # Function body goes here
+def evaluate(expr):
+    def apply_op(op, a, b):
+        if op == '+': return a + b
+        if op == '-': return a - b
+        if op == '*': return a * b
+        if op == '/': return a // b
+        return 0
 
-solve_problem()
-```
+    def precedence(op):
+        if op in ('+', '-'): return 1
+        if op in ('*', '/'): return 2
+        return 0
+
+    nums = []
+    ops = []
+    i = 0
+    while i < len(expr):
+        c = expr[i]
+        if c.isdigit():
+            val = 0
+            while i < len(expr) and expr[i].isdigit():
+                val = val * 10 + int(expr[i])
+                i += 1
+            nums.append(val)
+            continue
+        elif c == '(':
+            ops.append(c)
+        elif c == ')':
+            while ops and ops[-1] != '(':
+                b = nums.pop(); a = nums.pop()
+                nums.append(apply_op(ops.pop(), a, b))
+            ops.pop()
+        elif c in '+-*/':
+            while ops and precedence(ops[-1]) >= precedence(c):
+                b = nums.pop(); a = nums.pop()
+                nums.append(apply_op(ops.pop(), a, b))
+            ops.append(c)
+        i += 1
+
+    while ops:
+        b = nums.pop(); a = nums.pop()
+        nums.append(apply_op(ops.pop(), a, b))
+    return nums[0]
+
+# print(evaluate("3+5*2"))  # 13
+# print(evaluate("(3+5)*2"))  # 16

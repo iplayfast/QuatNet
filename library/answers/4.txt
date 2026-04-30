@@ -1,8 +1,7 @@
-Here is your Python function:
-
 ```python
-def my_function():
-    print('Hello, world!')
-```
+def solve_problem():
+    # your logic here
 
-No explanation provided.
+
+solve_problem()
+```

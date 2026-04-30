@@ -1,6 +1,13 @@
-import csv, statistics
+import time
 
-def analyze_column(filename, col):
-    with open(filename) as f:
-        vals = [float(row[col]) for row in csv.reader(f)]
-    print(f'min={min(vals):.2f} max={max(vals):.2f} mean={statistics.mean(vals):.2f} median={statistics.median(vals):.2f}')
+def stopwatch():
+    input('Press Enter to start...')
+    start = time.time()
+    lap_num = 1
+    while True:
+        try:
+            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
+            lap_num += 1
+        except KeyboardInterrupt:
+            print(f'\nTotal: {time.time() - start:.2f}s')
+            break

@@ -1,1 +1,1 @@
-Write a function that implements an exponential backoff retry wrapper for flaky operations.
+Write a function that checks if a string is a palindrome.

@@ -1,2 +1,18 @@
-def solution():
-    return "Hello"
+```python
+def find_max_element(numbers):
+    """
+    Returns the maximum element from a list of numbers.
+    Raises ValueError if the list is empty.
+    """
+    if not numbers:
+        raise ValueError("List cannot be empty.")
+    
+    max_value = numbers[0]
+    for num in numbers[1:]:
+        if num > max_value:
+            max_value = num
+    return max_value
+
+# Example usage
+print(find_max_element([3, 7, 2, 9, 1]))  # Output: 9
+```

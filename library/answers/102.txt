@@ -1,5 +1,30 @@
-name = input("Enter your name: ")
-if name == "Alice" or name == "Bob":
-    print(f"Hello, {name}!")
-else:
-    print("Hello, stranger!")
+```python
+def find_prime_numbers(n):
+    """
+    Find all prime numbers from 2 up to (and including) n.
+    """
+    if n < 2:
+        return []
+
+    primes = set(range(2, int(n ** 0.5) + 1))
+    return primes
+
+
+def is_prime(n):
+    """
+    Check if a number is prime or not.
+    """
+    if n <= 1:
+        return False
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
+
+
+if __name__ == "__main__":
+    result = find_prime_numbers(20)
+    print("Primes up to 20:", result)
+    result = find_prime_numbers(5)
+    print("Primes up to 5:", result)
+```

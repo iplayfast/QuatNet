@@ -1,1 +1,1 @@
-Write a function that computes all topological orderings of a directed acyclic graph.
+Write a generator function that yields an infinite stream of prime numbers using the Sieve of Eratosthenes.

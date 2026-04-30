@@ -1,24 +1,79 @@
-import heapq
+from collections import OrderedDict
 
-def astar(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    def h(a, b): return abs(a[0] - b[0]) + abs(a[1] - b[1])
-    pq = [(0, start)]
-    came_from = {}
-    g_score = {start: 0}
-    while pq:
-        _, cur = heapq.heappop(pq)
-        if cur == end:
-            path = []
-            while cur in came_from: path.append(cur); cur = came_from[cur]
-            return [start] + path[::-1]
-        for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:
-            nr, nc = cur[0] + dr, cur[1] + dc
-            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != 1:
-                nb = (nr, nc)
-                tg = g_score[cur] + 1
-                if tg < g_score.get(nb, float('inf')):
-                    came_from[nb] = cur
-                    g_score[nb] = tg
-                    heapq.heappush(pq, (tg + h(nb, end), nb))
-    return None
+class LRUCache:
+    """LRU cache with O(1) get/put using OrderedDict (Python 3.7+ preserves insertion order)."""
+
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)  # mark as recently used
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.cap:
+            self.cache.popitem(last=False)  # evict least recently used
+
+
+# Manual implementation with doubly-linked list + hash map:
+class _Node:
+    __slots__ = ('key', 'val', 'prev', 'next')
+    def __init__(self, key=0, val=0):
+        self.key, self.val = key, val
+        self.prev = self.next = None
+
+class LRUCacheManual:
+    """LRU cache with hand-rolled doubly-linked list for O(1) operations."""
+
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.map = {}
+        self.head = _Node()  # dummy head (most recent)
+        self.tail = _Node()  # dummy tail (least recent)
+        self.head.next, self.tail.prev = self.tail, self.head
+
+    def _remove(self, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+    def _add_to_front(self, node):
+        node.next = self.head.next
+        node.prev = self.head
+        self.head.next.prev = node
+        self.head.next = node
+
+    def get(self, key):
+        if key not in self.map:
+            return -1
+        node = self.map[key]
+        self._remove(node)
+        self._add_to_front(node)
+        return node.val
+
+    def put(self, key, value):
+        if key in self.map:
+            node = self.map[key]
+            self._remove(node)
+            node.val = value
+            self._add_to_front(node)
+        else:
+            if len(self.map) >= self.cap:
+                lru = self.tail.prev
+                self._remove(lru)
+                del self.map[lru.key]
+            node = _Node(key, value)
+            self.map[key] = node
+            self._add_to_front(node)
+
+# Usage:
+# cache = LRUCache(2)
+# cache.put(1, 1); cache.put(2, 2)
+# cache.get(1)       # returns 1
+# cache.put(3, 3)    # evicts key 2
+# cache.get(2)       # returns -1 (not found)

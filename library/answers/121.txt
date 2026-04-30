@@ -1,15 +1,7 @@
 ```python
 def solve_problem():
-    x = int(input("Enter first integer number: "))
-    y = int(input("Enter second integer number: "))
+    # Function body goes here
+    return None
 
-    if x == y:
-        return f"The numbers are equal and sum is {x + y}"
-    elif x > y:
-        return f"{x} is greater than {y} by {x - y}."
-    else:
-        return f"{y} is greater than {x} by {y - x}"
-
-result = solve_problem()
-print(result)
+solve_problem()
 ```

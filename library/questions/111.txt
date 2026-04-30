@@ -1,1 +1,1 @@
-Write a program that plays Hangman, choosing letters that eliminate the most possible words.
+Write a program that scrapes all links from a given URL using only the standard library.

@@ -1,9 +1,7 @@
-```python
-def write_python_function():
-    # Just an example of a simple function that adds two numbers
-    def add_numbers(a, b):
-        return a + b
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+import sys
 
-    return add_numbers
-```
-I've provided an example of a Python function that takes in two numbers and returns their sum. Note that this is just one possible solution, and the actual problem you're trying to solve might be different.
+port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+httpd = HTTPServer(('', port), SimpleHTTPRequestHandler)
+print(f'Serving on port {port}')
+httpd.serve_forever()

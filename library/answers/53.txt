@@ -1,8 +1,37 @@
 ```python
-def example_function():
-    return "This is an example function."
+def fibonacci(n: int) -> int:
+    """
+    Calculates the Nth Fibonacci number using an iterative approach.
 
-# Example usage
+    Args:
+        n: The index of the desired Fibonacci number (non-negative integer).
+
+    Returns:
+        The Nth Fibonacci number.
+
+    Raises:
+        ValueError: If n is negative.
+    """
+    if not isinstance(n, int) or n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    
+    if n <= 1:
+        return n
+
+    a, b = 0, 1
+    # We start at i=2 because F(0) and F(1) are already handled.
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    
+    return b
+
 if __name__ == "__main__":
-    print(example_function())
+    # Example Usage:
+    try:
+        print(f"F(0): {fibonacci(0)}")  # Expected: 0
+        print(f"F(1): {fibonacci(1)}")  # Expected: 1
+        print(f"F(6): {fibonacci(6)}")  # Expected: 8 (0, 1, 1, 2, 3, 5, 8)
+        print(f"F(10): {fibonacci(10)}") # Expected: 55
+    except ValueError as e:
+        print(f"Error: {e}")
 ```

@@ -1,3 +1,5 @@
-def find_anagrams(word, dictionary):
-    key = sorted(word)
-    return [w for w in dictionary if sorted(w) == key]
+```python
+def solve():
+    # Your solution code goes here
+    pass
+```

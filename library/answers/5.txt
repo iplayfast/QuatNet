@@ -1,3 +1,26 @@
-n = int(input("Enter a number: "))
-total = n * (n + 1) // 2
-print(f"Sum from 1 to {n} is {total}")
+```python
+def fibonacci(n):
+    """
+    Calculates the Nth Fibonacci number.
+    Returns 0 if n is negative.
+    """
+    if n < 0:
+        return 0
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+if __name__ == '__main__':
+    # Test cases
+    print(f"Fibonacci(0): {fibonacci(0)}")
+    print(f"Fibonacci(1): {fibonacci(1)}")
+    print(f"Fibonacci(5): {fibonacci(5)}")
+    print(f"Fibonacci(10): {fibonacci(10)}")
+    print(f"Fibonacci(negative): {fibonacci(-5)}")
+```

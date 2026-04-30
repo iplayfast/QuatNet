@@ -1,7 +1,14 @@
 ```python
-def sum_numbers(numbers):
-    return sum(numbers)
+def solve():
+    # Example code to demonstrate a complete working solution
+    def gcd(a, b):
+        while b != 0:
+            a, b = b, a % b
+        return abs(a)
+    
+    num1 = int(input())
+    num2 = int(input())
 
-# Example usage
-print(sum_numbers([1, 2, 3]))  # 6
+    result = gcd(num1, num2)
+    print(result)
 ```

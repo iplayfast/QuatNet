@@ -1,2 +1,7 @@
-def solve():
-    return "Hello, world!"
+```python
+def example_function():
+    """
+    This is an example function that does nothing.
+    """
+    pass
+```

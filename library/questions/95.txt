@@ -1,1 +1,1 @@
-Implement quicksort.
+Write a program that plays Hangman, choosing letters that eliminate the most possible words.

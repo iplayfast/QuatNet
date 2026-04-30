@@ -1,29 +1,4 @@
 ```python
-def count_vowels(text):
-    """
-    Counts the number of vowels (a, e, i, o, u) in a given string,
-    case-insensitively.
-
-    Args:
-        text (str): The input string.
-
-    Returns:
-        int: The total count of vowels.
-    """
-    vowels = "aeiouAEIOU"
-    count = 0
-    for char in text:
-        if char in vowels:
-            count += 1
-    return count
-
-# Example Usage
-if __name__ == "__main__":
-    test_string_1 = "Hello World"
-    test_string_2 = "Rhythm"
-    test_string_3 = "Programming is fun"
-
-    print(f"'{test_string_1}' has {count_vowels(test_string_1)} vowels.")
-    print(f"'{test_string_2}' has {count_vowels(test_string_2)} vowels.")
-    print(f"'{test_string_3}' has {count_vowels(test_string_3)} vowels.")
+def sum_of_elements(elements):
+    return sum(elements)
 ```

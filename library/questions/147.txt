@@ -1,1 +1,1 @@
-Write a function that finds all anagrams of a word from a given dictionary list.
+Write a Python function.

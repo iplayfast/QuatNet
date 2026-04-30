@@ -1,7 +1,7 @@
-```python
-def add_numbers(n1, n2, n3):
-    if n1 < n2:
-        return n1 + n2
-    else:
-        return n3 + n1
-```
+def solve_problem():
+    x = 5
+    y = 10
+    result = x + y
+    print(result)
+
+solve_problem()

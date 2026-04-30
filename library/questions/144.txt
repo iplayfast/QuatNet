@@ -1,1 +1,1 @@
-Write a function that removes duplicate elements from a list while preserving order.
+Write a program that finds all ways to insert +, -, or nothing between the digits 1 through 9 so the result equals 100.

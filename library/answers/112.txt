@@ -1,1 +1,9 @@
-I need clarification since your problem description was blank. Please provide the specific problem or function you'd like help with, such as a function signature, data structure requirements, or any additional context. Once you share the details, I can write a complete working Python solution tailored to your needs.
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    result = [start]
+    for neighbor in graph.get(start, []):
+        if neighbor not in visited:
+            result.extend(dfs(graph, neighbor, visited))
+    return result

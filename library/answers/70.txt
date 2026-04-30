@@ -1,16 +1,11 @@
-import hashlib
-
-class BloomFilter:
-    def __init__(self, size, num_hashes):
-        self.size = size
-        self.num_hashes = num_hashes
-        self.bits = [False] * size
-
-    def _hashes(self, item):
-        return [int(hashlib.md5(f'{item}{i}'.encode()).hexdigest(), 16) % self.size for i in range(self.num_hashes)]
-
-    def add(self, item):
-        for h in self._hashes(item): self.bits[h] = True
-
-    def contains(self, item):
-        return all(self.bits[h] for h in self._hashes(item))
+n = int(input("Enter a number: "))
+choice = input("Enter 's' for sum or 'p' for product: ")
+if choice == 's':
+    result = n * (n + 1) // 2
+elif choice == 'p':
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+else:
+    result = "Invalid choice"
+print(f"Result: {result}")

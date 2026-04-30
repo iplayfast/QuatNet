@@ -140,8 +140,7 @@ class QuaternaryLLM(nn.Module):
         return self.output(self.output_norm(x))
 
     def export_gguf(self, path):
-        from gguf import GGUFWriter, GGMLQuantizationType
-        from gguf.quants import Q2_Q
+        from gguf import GGUFWriter
 
         d, vocab = self.d_model, self.vocab_size
         n_layer, n_head, d_ff = self.n_layers, self.n_heads, self.layers[0].ffn.gate.out_features
@@ -171,7 +170,7 @@ class QuaternaryLLM(nn.Module):
         w.add_token_list([bytes([i]) for i in range(vocab)])
         w.add_token_merges([b""])
 
-        # F32 export for now (Q2_Q MUL_MAT kernel needs CUDA buffer management)
+        # F32 export (Q2_Q packing works on disk but CUDA backend lacks type 99 support)
         w.add_tensor("token_embd.weight", self.tok_embd.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output_norm.weight", self.output_norm.weight.detach().cpu().numpy().astype(np.float32))
         w.add_tensor("output.weight", self.output.weight.detach().cpu().numpy().astype(np.float32))

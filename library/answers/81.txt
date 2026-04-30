@@ -1,19 +1,9 @@
-def forth_repl():
-    stack = []
-    while True:
-        inp = input('> ').strip()
-        if inp == 'exit': break
-        for tok in inp.split():
-            if tok.isdigit() or (tok[0] == '-' and tok[1:].isdigit()):
-                stack.append(int(tok))
-            elif tok == '+': stack.append(stack.pop() + stack.pop())
-            elif tok == '-': a, b = stack.pop(), stack.pop(); stack.append(b - a)
-            elif tok == '*': stack.append(stack.pop() * stack.pop())
-            elif tok == '/': a, b = stack.pop(), stack.pop(); stack.append(b // a)
-            elif tok == '.': print(stack.pop() if stack else 'empty')
-            elif tok == 'dup': stack.append(stack[-1])
-            elif tok == 'swap': stack[-2], stack[-1] = stack[-1], stack[-2]
-            elif tok == 'drop': stack.pop()
-            elif tok == 'emit': print(chr(stack.pop()), end='')
-            else: print(f'Unknown: {tok}')
-        print(f' ok')
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    result = [start]
+    for neighbor in graph.get(start, []):
+        if neighbor not in visited:
+            result.extend(dfs(graph, neighbor, visited))
+    return result

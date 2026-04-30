@@ -1,1 +1,1 @@
-Write a function that implements the A* pathfinding algorithm on a 2D grid.
+Implement a Least Recently Used (LRU) cache class with fixed capacity, get(key) and put(key, value) operations both O(1).

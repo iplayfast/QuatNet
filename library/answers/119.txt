@@ -1,10 +1,3 @@
-def save_ppm(filename, pixels, max_val=255):
-    h, w = len(pixels), len(pixels[0])
-    with open(filename, 'wb') as f:
-        f.write(f'P6\n{w} {h}\n{max_val}\n'.encode())
-        for row in pixels:
-            for r, g, b in row:
-                f.write(bytes([r, g, b]))
-
-def create_gradient(w, h):
-    return [[(int(255 * x / w), int(255 * y / h), 128) for x in range(w)] for y in range(h)]
+def python_function():
+    result = None
+    return result

@@ -1,1 +1,1 @@
-Write a program that implements a command-line stopwatch with lap timing.
+Write a function that flattens a nested list structure, e.g. [1,[2,[3,4]],5] becomes [1,2,3,4,5].

@@ -1,20 +1,8 @@
 ```python
-def main():
-    num_elements = int(input("Enter number of elements: "))
-    arr = [int(i) for i in input(f"Enter {num_elements} elements separated by space: ").split()]
-    
-    max_element = find_max(arr)
-    min_element = find_min(arr)
-    
-    print(f"Max element is: {max_element}")
-    print(f"Min element is: {min_element}")
+def solve_problem():
+    result = "Solution"
+    return result
 
-def find_max(arr):
-    return max(arr)
-
-def find_min(arr):
-    return min(arr)
-
-if __name__ == "__main__":
-    main()
+result = solve_problem()
+print(result)
 ```

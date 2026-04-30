@@ -1,25 +1,50 @@
-def sum_numbers(numbers):
-    """
-    Calculate the sum of all numbers in a list.
-    
-    Args:
-        numbers: A list of numbers to sum
-        
-    Returns:
-        The sum of all numbers in the list
-        
-    Raises:
-        TypeError: If input is not a list or contains non-numeric values
-    """
-    if not isinstance(numbers, list):
-        raise TypeError("Input must be a list")
-    
-    try:
-        return sum(num for num in numbers if isinstance(num, (int, float)))
-    except Exception as e:
-        raise TypeError(f"Invalid input: {str(e)}")
+```python
+import math
+from typing import List
 
-if __name__ == "__main__":
-    print(sum_numbers([1, 2, 3, 4]))  # Output: 10
-    print(sum_numbers([1.5, 2.5, 3]))  # Output: 7.0
-    print(sum_numbers([]))  # Output: 0
+def calculate_fibonacci(n: int) -> int:
+    """
+    Calculates the nth Fibonacci number iteratively.
+
+    Args:
+        n: The index of the Fibonacci number to calculate (n >= 0).
+
+    Returns:
+        The nth Fibonacci number.
+
+    Raises:
+        ValueError: If n is negative.
+    """
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer.")
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+if __name__ == '__main__':
+    # Example Usage
+    try:
+        input_number = 10
+        result = calculate_fibonacci(input_number)
+        print(f"The {input_number}th Fibonacci number is: {result}")
+
+        input_number_2 = 0
+        result_2 = calculate_fibonacci(input_number_2)
+        print(f"The {input_number_2}th Fibonacci number is: {result_2}")
+
+        input_number_3 = 1
+        result_3 = calculate_fibonacci(input_number_3)
+        print(f"The {input_number_3}th Fibonacci number is: {result_3}")
+
+        # Example of handling errors
+        # calculate_fibonacci(-5)
+
+    except ValueError as e:
+        print(f"Error: {e}")
+```

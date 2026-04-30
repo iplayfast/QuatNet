@@ -1,8 +1,12 @@
-```python
-def example_function():
-    return "This is a function."
+Here is a simple Python function that returns the sum of two numbers:
 
-# Example usage
-if __name__ == "__main__":
-    print(example_function())
+```python
+def add_numbers(a, b):
+    return a + b
+
+print(add_numbers(3, 4))
 ```
+
+This will output `7`. If you need to modify this program or use it for another problem, just change what's inside the function "add_numbers". For instance, if your problem required multiplication instead of addition, you would change `return a + b` to `return a * b`.
+
+Please provide more details about the specific problem you are trying to solve if you need a customized solution.

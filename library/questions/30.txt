@@ -1,1 +1,1 @@
-Write a function that computes the intersection and union of two sets without using the set data type.
+Write a program that detects faces in an image using the Viola-Jones sliding window approach (simplified).

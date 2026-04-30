@@ -1,1 +1,1 @@
-Write a function that computes the integer square root of a number using binary search.
+Write a function that implements a basic rate limiter (e.g. max N requests per minute).

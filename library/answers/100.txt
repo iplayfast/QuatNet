@@ -1,41 +1,22 @@
-import random
+def rotate_left(arr, k):
+    """Rotate list left by k positions in-place using O(1) extra space."""
+    if not arr:
+        return arr
+    n = len(arr)
+    k %= n
+    if k == 0:
+        return arr
 
-with open('/usr/share/dict/words', 'r') as f:
-    words = [w.strip().lower() for w in f if len(w.strip()) > 3]
-if not words:
-    words = ['python', 'hangman', 'computer', 'programming']
+    def reverse(start, end):
+        while start < end:
+            arr[start], arr[end] = arr[end], arr[start]
+            start += 1
+            end -= 1
 
-word = random.choice(words)
-guessed = set()
-remaining = set(word)
-lives = 6
+    reverse(0, k - 1)
+    reverse(k, n - 1)
+    reverse(0, n - 1)
+    return arr
 
-print("Hangman!")
-while lives > 0 and remaining:
-    display = ''.join(c if c in guessed else '_' for c in word)
-    print(f"Word: {display}  Lives: {lives}")
-
-    best = None
-    best_count = 0
-    for c in 'abcdefghijklmnopqrstuvwxyz':
-        if c in guessed or c in remaining:
-            continue
-        count = sum(1 for w in [word] if c in w)
-        if count > best_count:
-            best_count = count
-            best = c
-    if not best:
-        best = random.choice([c for c in 'abcdefghijklmnopqrstuvwxyz' if c not in guessed])
-
-    guess = best
-    print(f"Computer guesses: {guess}")
-    guessed.add(guess)
-    if guess in remaining:
-        remaining.remove(guess)
-    else:
-        lives -= 1
-
-if not remaining:
-    print(f"Computer won! Word was: {word}")
-else:
-    print(f"Computer lost! Word was: {word}")
+# Example usage:
+# print(rotate_left([1, 2, 3, 4, 5], 2))  # [3, 4, 5, 1, 2]

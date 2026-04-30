@@ -1,9 +1,10 @@
-def solve_problem_1():
-    pass
+Here is a simple Python function that takes two arguments and returns their sum:
 
-solve_problem_2():
-    return None
+```python
+def add_numbers(a, b):
+    return a + b
+```
+You can call it with any two numbers like so:
+`print(add_numbers(5, 10)) # outputs: 15`
 
-solve_problem_3(input):
-    output = input + 5
-    return output
+This solution meets the given problem by providing a Python function that adds together any two numerical inputs.

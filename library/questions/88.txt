@@ -1,1 +1,1 @@
-Write a function that implements run-length encoding and decoding of a string.
+Write a function that computes the union area of overlapping 2D rectangles.

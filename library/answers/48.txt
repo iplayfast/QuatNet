@@ -1,2 +1,2 @@
-def solve_problem():
-    return "7f8d9e0b5c"  # Replace with actual solution
+def my_function():
+    return 'Hello, World!'

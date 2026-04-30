@@ -1,15 +1,1 @@
-Here is your python function:
-
-```python
-def my_function(arg1: str) -> str:
-    return arg1 + " Hello from Python's world!"
-
-print(my_function("Welcome to my world"))
-```
-
-This function `my_function` takes a string parameter and returns a concatenated string of the input with "Hello from Python's world!".
-
-When you call this function with the argument "Welcome to my world", it will output: 
-```python
-"Welcome to my world Hello from Python's world!"
-```
+def my_function():\n    pass\n

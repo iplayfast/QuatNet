@@ -1,1 +1,1 @@
-Write a function that computes all topological orderings of a directed acyclic graph.
+Write a function that implements a simple grep utility matching a regex pattern line by line.

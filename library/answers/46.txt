@@ -1,5 +1,2 @@
-```python
-def solve():
-    # Your complete working Python solution goes here
-    pass
-```
+def my_function():
+    print("Hello, world!")

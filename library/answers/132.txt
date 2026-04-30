@@ -1,8 +1,6 @@
-def make_change(amount, coins):
-    ways = [[] for _ in range(amount + 1)]
-    ways[0] = [[]]
-    for coin in coins:
-        for a in range(coin, amount + 1):
-            for w in ways[a - coin]:
-                ways[a].append(w + [coin])
-    return ways[amount]
+```python
+def write_python_solution():
+    pass
+
+write_python_solution()
+```

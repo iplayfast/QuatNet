@@ -1,8 +1,2 @@
-def unique_preserve_order(lst):
-    seen = set()
-    result = []
-    for x in lst:
-        if x not in seen:
-            seen.add(x)
-            result.append(x)
-    return result
+def greet():
+    return "Hello"

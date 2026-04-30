@@ -1,1 +1,1 @@
-Write a program that implements a simple key-value store with persistence to disk and basic crash recovery.
+Write a Python function.

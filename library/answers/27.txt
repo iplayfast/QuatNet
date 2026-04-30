@@ -1,23 +1,39 @@
-def all_topological_orders(graph):
-    n = len(graph)
-    in_deg = [0] * n
-    for u in range(n):
-        for v in graph[u]: in_deg[v] += 1
+def primes():
+    """Infinite stream of primes using incremental Sieve of Eratosthenes."""
+    yield 2
+    sieve = {}  # composite -> prime factor
+    n = 3
+    while True:
+        p = sieve.pop(n, None)
+        if p is None:
+            yield n  # n is prime
+            sieve[n * n] = n
+        else:
+            # n is composite: mark next multiple
+            step = p * 2
+            m = n + step
+            while m in sieve:
+                m += step
+            sieve[m] = p
+        n += 2  # skip evens
 
-    result = []
-    orders = []
 
-    def backtrack():
-        if len(result) == n:
-            orders.append(result[:])
-            return
-        for u in range(n):
-            if in_deg[u] == 0 and u not in result:
-                result.append(u)
-                for v in graph[u]: in_deg[v] -= 1
-                backtrack()
-                for v in graph[u]: in_deg[v] += 1
-                result.pop()
+# Alternative: bounded sieve for primes up to N
+def primes_up_to(n):
+    """Return list of primes up to n using classic Sieve of Eratosthenes."""
+    if n < 2:
+        return []
+    sieve = [True] * (n + 1)
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(n ** 0.5) + 1):
+        if sieve[i]:
+            step = i
+            start = i * i
+            sieve[start:n + 1:step] = [False] * ((n - start) // step + 1)
+    return [i for i, is_prime in enumerate(sieve) if is_prime]
 
-    backtrack()
-    return orders
+
+# Usage:
+# p = primes()
+# first_10 = [next(p) for _ in range(10)]  # [2,3,5,7,11,13,17,19,23,29]
+# all_primes_under_100 = primes_up_to(100)

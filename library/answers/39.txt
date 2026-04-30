@@ -1,26 +1,9 @@
-import json, os
+```python
+def example_function():
+    # Example function implementation
+    return "This is an example function."
 
-class KVStore:
-    def __init__(self, path='kvstore.json'):
-        self.path = path
-        self.data = {}
-        if os.path.exists(path):
-            with open(path) as f:
-                try: self.data = json.load(f)
-                except: self.data = {}
-
-    def put(self, key, value):
-        self.data[key] = value
-        self._flush()
-
-    def get(self, key):
-        return self.data.get(key, None)
-
-    def delete(self, key):
-        self.data.pop(key, None)
-        self._flush()
-
-    def _flush(self):
-        tmp = self.path + '.tmp'
-        with open(tmp, 'w') as f: json.dump(self.data, f)
-        os.replace(tmp, self.path)
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
+```

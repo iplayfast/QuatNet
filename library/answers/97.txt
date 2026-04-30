@@ -1,39 +1,31 @@
-```python
-def factorial(n: int) -> int:
-    """
-    Calculates the factorial of a non-negative integer n (n!).
+def tarjan_scc(graph):
+    n = len(graph)
+    index = 0
+    indices = [-1] * n
+    lowlink = [0] * n
+    on_stack = [False] * n
+    stack = []
+    sccs = []
 
-    Args:
-        n: The integer for which to calculate the factorial.
+    def strongconnect(v):
+        nonlocal index
+        indices[v] = lowlink[v] = index; index += 1
+        stack.append(v); on_stack[v] = True
+        for w in graph[v]:
+            if indices[w] == -1:
+                strongconnect(w)
+                lowlink[v] = min(lowlink[v], lowlink[w])
+            elif on_stack[w]:
+                lowlink[v] = min(lowlink[v], indices[w])
+        if lowlink[v] == indices[v]:
+            comp = []
+            while True:
+                w = stack.pop(); on_stack[w] = False
+                comp.append(w)
+                if w == v: break
+            sccs.append(comp)
 
-    Returns:
-        The factorial of n.
-
-    Raises:
-        ValueError: If n is a negative number.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    
-    if n == 0 or n == 1:
-        return 1
-    
-    result = 1
-    for i in range(2, n + 1):
-        result *= i
-    return result
-
-if __name__ == '__main__':
-    print(f"Factorial of 5: {factorial(5)}")  # Expected: 120
-    print(f"Factorial of 0: {factorial(0)}")  # Expected: 1
-    print(f"Factorial of 1: {factorial(1)}")  # Expected: 1
-    
-    # Example of handling negative input
-    try:
-        factorial(-3)
-    except ValueError as e:
-        print(f"Error caught: {e}")
-```
+    for v in range(n):
+        if indices[v] == -1:
+            strongconnect(v)
+    return sccs

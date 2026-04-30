@@ -1,42 +1,5 @@
-class MinHeap:
-    def __init__(self):
-        self.data = []
-
-    def push(self, val):
-        self.data.append(val)
-        i = len(self.data) - 1
-        while i > 0:
-            parent = (i - 1) // 2
-            if self.data[i] >= self.data[parent]:
-                break
-            self.data[i], self.data[parent] = self.data[parent], self.data[i]
-            i = parent
-
-    def pop(self):
-        if not self.data:
-            return None
-        if len(self.data) == 1:
-            return self.data.pop()
-        min_val = self.data[0]
-        self.data[0] = self.data.pop()
-        n = len(self.data)
-        i = 0
-        while True:
-            smallest = i
-            left = 2 * i + 1
-            right = 2 * i + 2
-            if left < n and self.data[left] < self.data[smallest]:
-                smallest = left
-            if right < n and self.data[right] < self.data[smallest]:
-                smallest = right
-            if smallest == i:
-                break
-            self.data[i], self.data[smallest] = self.data[smallest], self.data[i]
-            i = smallest
-        return min_val
-
-    def peek(self):
-        return self.data[0] if self.data else None
-
-    def __len__(self):
-        return len(self.data)
+name = input("Enter your name: ")
+if name == "Alice" or name == "Bob":
+    print(f"Hello, {name}!")
+else:
+    print("Hello, stranger!")

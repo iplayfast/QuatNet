@@ -1,15 +1,4 @@
-import time, random
-
-def retry(max_attempts=5, base_delay=1.0, max_delay=60.0):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            for attempt in range(max_attempts):
-                try:
-                    return func(*args, **kwargs)
-                except Exception as e:
-                    if attempt == max_attempts - 1: raise
-                    delay = min(base_delay * (2 ** attempt) + random.uniform(0, 1), max_delay)
-                    time.sleep(delay)
-            return None
-        return wrapper
-    return decorator
+```python
+def sum_of_elements(elements):
+    return sum(elements)
+```

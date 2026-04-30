@@ -1,1 +1,1 @@
-Write a function that multiplies two matrices, optimized for cache performance.
+Write a Python function.

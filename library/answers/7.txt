@@ -1,44 +1,14 @@
+Here is a simple Python function that just squares any number passed into it:
+
 ```python
-def factorial(n: int) -> int:
-    """
-    Calculates the factorial of a non-negative integer n.
-    Raises a ValueError if n is negative.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    if n == 0:
-        return 1
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+def square(n):
+    return n**2
 
-if __name__ == '__main__':
-    try:
-        # Test case 1: Normal positive number
-        print(f"Factorial of 5: {factorial(5)}") # Expected: 120
-        
-        # Test case 2: Zero
-        print(f"Factorial of 0: {factorial(0)}") # Expected: 1
-        
-        # Test case 3: Larger number
-        print(f"Factorial of 10: {factorial(10)}") # Expected: 3628800
-        
-        # Test case 4: Negative number (Error handling)
-        try:
-            print(f"Factorial of -3: {factorial(-3)}")
-        except ValueError as e:
-            print(f"Caught expected error: {e}")
-
-        # Test case 5: Wrong type (Error handling)
-        try:
-            print(f"Factorial of 5.5: {factorial(5.5)}")
-        except TypeError as e:
-            print(f"Caught expected error: {e}")
-            
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+print(square(4))
 ```
+
+This function takes an input `n`, and returns the value of `n` raised to the power of 2, which is the same as squaring `n`. Then we call our function with an argument of 4 to check if it works.
+
+The output would be: `16`
+
+If you're looking for a specific solution based on your problem, please provide more detail about the nature of that problem.

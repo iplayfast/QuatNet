@@ -1,1 +1,1 @@
-Write a program that reads a CSV file and prints the min, max, mean, and median of a specified column.
+Write a program that implements a command-line stopwatch with lap timing.

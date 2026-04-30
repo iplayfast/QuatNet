@@ -1,7 +1,8 @@
 ```python
-def my_function():
-    # Your code here
+def solution():
+    # Your implementation here
     pass
 
-my_function()
+# Example usage:
+solution()
 ```
