@@ -1,24 +1,29 @@
-import time
-from collections import deque
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.end = False
 
-class RateLimiter:
-    def __init__(self, max_requests, window_sec):
-        self.max_reqs = max_requests
-        self.window = window_sec
-        self.timestamps = deque()
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
 
-    def allow(self):
-        now = time.time()
-        while self.timestamps and self.timestamps[0] < now - self.window:
-            self.timestamps.popleft()
-        if len(self.timestamps) >= self.max_reqs:
-            return False
-        self.timestamps.append(now)
+    def insert(self, word):
+        node = self.root
+        for c in word:
+            if c not in node.children: node.children[c] = TrieNode()
+            node = node.children[c]
+        node.end = True
+
+    def search(self, word):
+        node = self.root
+        for c in word:
+            if c not in node.children: return False
+            node = node.children[c]
+        return node.end
+
+    def starts_with(self, prefix):
+        node = self.root
+        for c in prefix:
+            if c not in node.children: return False
+            node = node.children[c]
         return True
-
-# Usage:
-# limiter = RateLimiter(10, 60)  # 10 requests per minute
-# if limiter.allow():
-#     print("Allowed")
-# else:
-#     print("Rate limited")

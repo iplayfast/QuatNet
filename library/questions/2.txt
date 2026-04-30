@@ -1,1 +1,1 @@
-Write a program that reads a JSON file, pretty-prints it with configurable indentation, and validates it.
+Write a function that implements the Reservoir sampling algorithm (select k random items from a stream).

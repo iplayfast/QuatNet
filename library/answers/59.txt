@@ -1,76 +1,13 @@
-```python
-def find_max_product(nums: list[int], k: int) -> int:
-    """
-    Find the maximum product of k elements from the given list.
-    
-    Args:
-        nums: List of integers
-        k: Number of elements to choose (must be <= len(nums))
-    
-    Returns:
-        Maximum product of k elements, or 0 if not possible
-    """
-    if k > len(nums):
-        raise ValueError("k cannot be greater than the length of the list")
-    if k == 0:
-        return 1
-    
-    if len(nums) == 0:
-        raise ValueError("List cannot be empty")
-    
-    nums.sort()
-    
-    if k == len(nums):
-        product = 1
-        for num in nums:
-            product *= num
-        return product
-    
-    left = 0
-    right = len(nums) - 1
-    count = 0
-    product = 1
-    
-    while count < k:
-        if nums[right] > 0 and nums[left] < 0:
-            left_product = nums[left]
-            right_product = nums[right]
-            
-            if left_product * right_product > nums[right]:
-                product *= right_product
-                right -= 1
-                count += 1
-            else:
-                product *= left_product
-                left += 1
-                count += 1
-        elif nums[right] >= 0 and nums[left] >= 0:
-            product *= nums[right]
-            right -= 1
-            count += 1
-        elif nums[right] < 0 and nums[left] < 0:
-            product *= nums[left]
-            left += 1
-            count += 1
-        else:
-            product *= nums[right]
-            right -= 1
-            count += 1
-    
-    return product
+import random
 
-def reverse_string(s: str) -> str:
-    """Reverse a given string."""
-    return s[::-1]
-
-def validate_positive_ints(nums: list[int]) -> bool:
-    """Check if all elements in the list are positive integers."""
-    return all(isinstance(num, int) and num > 0 for num in nums)
-
-if __name__ == "__main__":
-    # Example usage
-    print(f"Max product of 3 from [1,2,3,4,5]: {find_max_product([1,2,3,4,5], 3)}")
-    print(f"Reverse 'hello': {reverse_string('hello')}")
-    print(f"Validate positive [1,2,3]: {validate_positive_ints([1,2,3])}")
-    print(f"Validate positive [-1,2]: {validate_positive_ints([-1,2])}")
-```
+target = random.randint(1, 100)
+print("I'm thinking of a number between 1 and 100.")
+while True:
+    guess = int(input("Your guess: "))
+    if guess < target:
+        print("Too low!")
+    elif guess > target:
+        print("Too high!")
+    else:
+        print(f"Correct! The number was {target}.")
+        break

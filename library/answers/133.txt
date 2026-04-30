@@ -1,7 +1,13 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-import sys
-
-port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-httpd = HTTPServer(('', port), SimpleHTTPRequestHandler)
-print(f'Serving on port {port}')
-httpd.serve_forever()
+def mandelbrot(xmin, xmax, ymin, ymax, width, height, max_iter=256):
+    image = [[0] * width for _ in range(height)]
+    for y in range(height):
+        for x in range(width):
+            cx = xmin + (x / width) * (xmax - xmin)
+            cy = ymin + (y / height) * (ymax - ymin)
+            zx, zy = 0.0, 0.0
+            n = 0
+            while n < max_iter and zx * zx + zy * zy < 4.0:
+                zx, zy = zx * zx - zy * zy + cx, 2 * zx * zy + cy
+                n += 1
+            image[y][x] = n
+    return image

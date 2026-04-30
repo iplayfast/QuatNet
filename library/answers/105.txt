@@ -1,8 +1,10 @@
-def flatten(nested):
-    result = []
-    for item in nested:
-        if isinstance(item, list):
-            result.extend(flatten(item))
+def trabb_pardo_knuth(f, arr):
+    for x in reversed(arr):
+        y = f(x)
+        if y > 400:
+            print(f'f({x}) = TOO LARGE')
         else:
-            result.append(item)
-    return result
+            print(f'f({x}) = {y}')
+
+# Example:
+# trabb_pardo_knuth(lambda x: abs(x) ** 0.5 + 5 * x ** 3, range(11))

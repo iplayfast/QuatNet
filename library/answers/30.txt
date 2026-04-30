@@ -1,17 +1,2 @@
-def detect_faces(image, window_size=(24, 24), step=4):
-    h, w = len(image), len(image[0])
-    faces = []
-    for y in range(0, h - window_size[0], step):
-        for x in range(0, w - window_size[1], step):
-            window = [row[x:x+window_size[1]] for row in image[y:y+window_size[0]]]
-            if is_face(window):  # placeholder for trained classifier
-                faces.append((x, y, window_size[0], window_size[1]))
-    return faces
-
-def is_face(window):
-    # Simplified: check if center region is darker than eyes region
-    h, w = len(window), len(window[0])
-    if h < 3 or w < 3: return False
-    center = sum(window[i][j] for i in range(h//3, 2*h//3) for j in range(w//3, 2*w//3))
-    top = sum(window[i][j] for i in range(h//4) for j in range(w//4, 3*w//4))
-    return center < top * 0.8
+def f():
+    return 42

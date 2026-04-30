@@ -1,2 +1,6 @@
-def greet():
-    return "Hello"
+```python
+def solve_problem():
+    print("Function created successfully")
+
+solve_problem()
+```

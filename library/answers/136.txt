@@ -1,13 +1,28 @@
-import time
+```python
+import re
 
-def stopwatch():
-    input('Press Enter to start...')
-    start = time.time()
-    lap_num = 1
-    while True:
-        try:
-            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
-            lap_num += 1
-        except KeyboardInterrupt:
-            print(f'\nTotal: {time.time() - start:.2f}s')
-            break
+def is_palindrome(s: str) -> bool:
+    """
+    Checks if a given string is a palindrome, ignoring case and non-alphanumeric characters.
+    A palindrome reads the same forwards and backwards.
+    """
+    # 1. Clean the string: remove non-alphanumeric characters and convert to lowercase
+    cleaned_string = re.sub(r'[^a-zA-Z0-9]', '', s).lower()
+    
+    # 2. Check if the cleaned string equals its reverse
+    return cleaned_string == cleaned_string[::-1]
+
+if __name__ == '__main__':
+    # Test cases
+    test1 = "Racecar"
+    test2 = "A man, a plan, a canal: Panama"
+    test3 = "hello world"
+    test4 = "madam"
+    test5 = ""
+
+    print(f"'{test1}' is palindrome: {is_palindrome(test1)}")
+    print(f"'{test2}' is palindrome: {is_palindrome(test2)}")
+    print(f"'{test3}' is palindrome: {is_palindrome(test3)}")
+    print(f"'{test4}' is palindrome: {is_palindrome(test4)}")
+    print(f"'{test5}' is palindrome: {is_palindrome(test5)}")
+```

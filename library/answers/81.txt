@@ -1,9 +1,17 @@
-def dfs(graph, start, visited=None):
-    if visited is None:
-        visited = set()
-    visited.add(start)
-    result = [start]
-    for neighbor in graph.get(start, []):
-        if neighbor not in visited:
-            result.extend(dfs(graph, neighbor, visited))
-    return result
+```python
+def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+
+    max_sum = float('-inf')
+    current_sum = 0
+
+    for num in arr:
+        current_sum += num
+        if current_sum > max_sum:
+            max_sum = current_sum
+        if current_sum < 0:
+            current_sum = 0
+
+    print(max_sum)
+```

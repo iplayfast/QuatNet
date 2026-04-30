@@ -1,8 +1,6 @@
 ```python
-def solve_problem():
-    result = "Solution"
-    return result
+def my_function():
+    return 'Hello, world!'
 
-result = solve_problem()
-print(result)
+my_function()
 ```

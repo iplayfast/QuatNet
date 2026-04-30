@@ -1,8 +1,7 @@
-def is_balanced(s):
-    pairs = {')': '(', ']': '[', '}': '{'}
-    stack = []
-    for c in s:
-        if c in '([{': stack.append(c)
-        elif c in ')]}':
-            if not stack or stack.pop() != pairs[c]: return False
-    return not stack
+def progress_bar(frac, width=40):
+    filled = int(frac * width)
+    bar = '[' + '#' * filled + '-' * (width - filled) + ']'
+    pct = int(frac * 100)
+    print(f"\r{bar} {pct}%", end='', flush=True)
+    if frac >= 1.0:
+        print()

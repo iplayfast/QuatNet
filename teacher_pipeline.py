@@ -33,6 +33,7 @@ VOCAB    = 256
 _model = None
 _device = None
 _all_text = ""
+_teacher_logits = None
 
 # ── Model Definition ──────────────────────────────────────────────
 class QuaternaryLinear(nn.Module):
@@ -521,6 +522,50 @@ def generate_qa():
     return True
 
 
+# ── Teacher Logits (Distillation) ──────────────────────────────────
+DISTILL_EVERY = 500
+
+def refresh_teacher_logits():
+    global _teacher_logits, _all_text
+    _teacher_logits = None
+    try:
+        with open("servers.json") as f:
+            servers = json.load(f)
+        teachers = [s for s in servers if s.get("role") == "judge" and s.get("enabled", False)]
+        teachers += [s for s in servers if s.get("role") == "worker" and s.get("enabled", False)]
+        if not teachers:
+            return
+        teacher = random.choice(teachers)
+    except:
+        return
+
+    if not _all_text or len(_all_text) < MAX_SEQ * 2:
+        return
+    start = random.randint(0, len(_all_text) - MAX_SEQ - 1)
+    prompt = _all_text[start:start + MAX_SEQ]
+
+    try:
+        req = urllib.request.Request(f"{teacher['url']}/api/generate",
+            data=json.dumps({"model": teacher["model"], "prompt": prompt, "stream": False}).encode(),
+            headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            answer = json.loads(resp.read()).get("response", "").strip()
+        if not answer:
+            return
+        answer_bytes = answer.encode('utf-8', errors='replace')[:MAX_SEQ]
+        # Create smoothed target: high for the teacher's byte, low for neighbors
+        target = torch.full((MAX_SEQ, 256), 0.01, device=_device)
+        for i, b in enumerate(answer_bytes):
+            target[i, b] = 1.0
+            if b > 0: target[i, b - 1] = 0.5
+            if b < 255: target[i, b + 1] = 0.5
+        target = target / target.sum(dim=-1, keepdim=True)
+        _teacher_logits = torch.log(target).unsqueeze(0).detach()
+        print(f"  [DISTILL] Refreshed from {teacher['name']}")
+    except Exception as e:
+        pass
+
+
 # ── Signal Handler ────────────────────────────────────────────────
 def signal_handler(sig, frame):
     global _model
@@ -566,10 +611,17 @@ if __name__ == "__main__":
         with open(LOG_FILE, "w") as f: f.write(log_header)
     start_time = time.time()
 
+    # Initial teacher distillation refresh
+    refresh_teacher_logits()
+
     print("─── Training ───")
 
     try:
         while True:
+            # Periodic teacher logit refresh
+            if step > 0 and step % DISTILL_EVERY == 0:
+                refresh_teacher_logits()
+
             # Sample random batches
             idx = torch.randint(0, len(data) - MAX_SEQ - 1, (BATCH,))
             x = torch.stack([data[i:i + MAX_SEQ] for i in idx]).to(_device)
@@ -577,6 +629,15 @@ if __name__ == "__main__":
 
             logits = _model(x)
             loss = F.cross_entropy(logits.view(-1, _model.vocab_size), y.view(-1))
+
+            # Distillation loss: match teacher logits when available
+            if _teacher_logits is not None:
+                student_logits = logits.detach()  # no gradient to student from distillation, only CE
+                # KL divergence between teacher softmax and student logits
+                t_probs = F.softmax(_teacher_logits / 2.0, dim=-1)
+                s_log = F.log_softmax(student_logits / 2.0, dim=-1)
+                distill_loss = F.kl_div(s_log, t_probs, reduction='batchmean') * (2.0 ** 2)
+                loss = loss + distill_loss * 0.5
 
             # Q2_Q quantization regularization — pull attention weights toward target values
             q2q_loss = 0.0

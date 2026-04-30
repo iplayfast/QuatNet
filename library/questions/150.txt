@@ -1,1 +1,1 @@
-Write a class that implements a singly linked list with insert, delete, and search operations.
+Write a Python function.

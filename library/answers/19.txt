@@ -1,9 +1,16 @@
-def interleave(a, b):
-    result = []
-    min_len = min(len(a), len(b))
-    for i in range(min_len):
-        result.append(a[i])
-        result.append(b[i])
-    result.extend(a[min_len:])
-    result.extend(b[min_len:])
-    return result
+from itertools import cycle
+
+class LoadBalancer:
+    def __init__(self, backends):
+        self.backends = backends
+        self.pool = cycle(range(len(backends)))
+
+    def route(self, request):
+        idx = next(self.pool)
+        return self.backends[idx].handle(request)
+
+class Worker:
+    def __init__(self, name):
+        self.name = name
+    def handle(self, request):
+        return f'{self.name} handled {request}'

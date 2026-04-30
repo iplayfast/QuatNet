@@ -1,13 +1,7 @@
 ```python
-def solve_problem():
-    # Function implementation goes here
-    return None
+def my_function():
+    result = 42
+    return result
 
-# Example usage:
-result = solve_problem()
-print(result)
+print(my_function())
 ```
-
-However, I realize that you asked me to write a solution for "Write a complete working Python solution for this problem." but didn't provide the problem statement.
-
-If you could please provide the problem statement or any additional details, I'll be happy to assist you further.

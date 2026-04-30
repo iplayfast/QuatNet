@@ -1,1 +1,1 @@
-Implement merge sort.
+Write a Python function.

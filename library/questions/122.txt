@@ -1,1 +1,1 @@
-Write a function that implements a basic rate limiter (e.g. max N requests per minute).
+Write a class that implements a trie (prefix tree) with insert, search, and startsWith operations.

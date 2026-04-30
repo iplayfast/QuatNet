@@ -1,1 +1,1 @@
-Write a function that evaluates a mathematical expression string like "3+5*2" respecting operator precedence.
+Write a program that implements a simple DNS resolver that queries authoritative nameservers.

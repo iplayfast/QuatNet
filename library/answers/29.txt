@@ -1,8 +1,19 @@
-def is_balanced(s):
-    pairs = {')': '(', ']': '[', '}': '{'}
+def forth_repl():
     stack = []
-    for c in s:
-        if c in '([{': stack.append(c)
-        elif c in ')]}':
-            if not stack or stack.pop() != pairs[c]: return False
-    return not stack
+    while True:
+        inp = input('> ').strip()
+        if inp == 'exit': break
+        for tok in inp.split():
+            if tok.isdigit() or (tok[0] == '-' and tok[1:].isdigit()):
+                stack.append(int(tok))
+            elif tok == '+': stack.append(stack.pop() + stack.pop())
+            elif tok == '-': a, b = stack.pop(), stack.pop(); stack.append(b - a)
+            elif tok == '*': stack.append(stack.pop() * stack.pop())
+            elif tok == '/': a, b = stack.pop(), stack.pop(); stack.append(b // a)
+            elif tok == '.': print(stack.pop() if stack else 'empty')
+            elif tok == 'dup': stack.append(stack[-1])
+            elif tok == 'swap': stack[-2], stack[-1] = stack[-1], stack[-2]
+            elif tok == 'drop': stack.pop()
+            elif tok == 'emit': print(chr(stack.pop()), end='')
+            else: print(f'Unknown: {tok}')
+        print(f' ok')

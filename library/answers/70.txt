@@ -1,11 +1,2 @@
-n = int(input("Enter a number: "))
-choice = input("Enter 's' for sum or 'p' for product: ")
-if choice == 's':
-    result = n * (n + 1) // 2
-elif choice == 'p':
-    result = 1
-    for i in range(2, n + 1):
-        result *= i
-else:
-    result = "Invalid choice"
-print(f"Result: {result}")
+def hello_world():
+    return "Hello, World!"
