@@ -1,1 +1,1 @@
-Implement a Least Recently Used (LRU) cache class with fixed capacity, get(key) and put(key, value) operations both O(1).
+Write a Python function.

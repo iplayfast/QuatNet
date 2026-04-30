@@ -1,8 +1,8 @@
 ```python
-def solve():
-    # Your code here
-    return
+def solution(s):
+    return s == s[::-1]
 
 # Test cases
-print(solve())  # Output: None (assuming no specific output is required)
+print(solution("madam")) # True
+print(solution("hello")) # False
 ```

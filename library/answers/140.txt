@@ -1,7 +1,9 @@
-import re
-
-def grep(pattern, filename):
-    with open(filename) as f:
-        for line in f:
-            if re.search(pattern, line):
-                print(line, end='')
+def pair_sum(lst, target):
+    seen = set()
+    pairs = []
+    for x in lst:
+        complement = target - x
+        if complement in seen:
+            pairs.append((complement, x))
+        seen.add(x)
+    return pairs

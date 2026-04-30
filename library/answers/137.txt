@@ -1,7 +1,9 @@
-import re
+```python
+def python_function():
+    x = 5
+    y = 10
+    z = x * y
+    return f"The final answer is {z}."
 
-def grep(pattern, filename):
-    with open(filename) as f:
-        for line in f:
-            if re.search(pattern, line):
-                print(line, end='')
+print(python_function())
+```

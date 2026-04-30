@@ -1,6 +1,7 @@
 ```python
-def write_python_solution():
-    pass
-
-write_python_solution()
+def function(name):
+    """
+    This function demonstrates basic Python function structure with a name.
+    """
+    return "Hello"
 ```

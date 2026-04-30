@@ -1,19 +1,2 @@
-def has_cycle(graph):
-    WHITE, GRAY, BLACK = 0, 1, 2
-    color = {node: WHITE for node in graph}
-
-    def dfs(node):
-        color[node] = GRAY
-        for neighbor in graph.get(node, []):
-            if color[neighbor] == GRAY:
-                return True
-            if color[neighbor] == WHITE and dfs(neighbor):
-                return True
-        color[node] = BLACK
-        return False
-
-    for node in graph:
-        if color[node] == WHITE:
-            if dfs(node):
-                return True
-    return False
+def my_function():
+    print("This is a test.")

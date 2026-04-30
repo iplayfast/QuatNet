@@ -1,63 +1,11 @@
 ```python
-def fibonacci(n: int) -> int:
+def example_function():
     """
-    Calculates the Nth Fibonacci number using an iterative approach.
-    
-    Args:
-        n: The position in the Fibonacci sequence (n >= 0).
-        
-    Returns:
-        The Nth Fibonacci number.
-        
-    Raises:
-        ValueError: If n is a negative number.
+    This is a sample function that demonstrates the structure of a Python function.
     """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-        
-    if n < 0:
-        raise ValueError("Fibonacci number is not defined for negative indices.")
-    
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
-    
-    # Start with F(0) and F(1)
-    a, b = 0, 1
-    
-    # Loop n-1 times to reach F(n)
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-        
-    return b
+    print("This is a sample function.")
 
-if __name__ == '__main__':
-    # Test cases
-    test_cases = [
-        (0, 0),
-        (1, 1),
-        (2, 1),
-        (3, 2),
-        (5, 5),
-        (10, 55),
-        (15, 610)
-    ]
-    
-    print("--- Testing Fibonacci Sequence ---")
-    for n, expected in test_cases:
-        result = fibonacci(n)
-        assert result == expected, f"Test failed for n={n}. Expected: {expected}, Got: {result}"
-        print(f"F({n}) = {result} (Passed)")
-
-    # Example of error handling
-    try:
-        fibonacci(-1)
-    except ValueError as e:
-        print(f"\nCaught expected error: {e}")
-        
-    try:
-        fibonacci(5.5)
-    except TypeError as e:
-        print(f"Caught expected error: {e}")
+# Example usage
+if __name__ == "__main__":
+    example_function()
 ```

@@ -1,10 +1,18 @@
-def save_ppm(filename, pixels, max_val=255):
-    h, w = len(pixels), len(pixels[0])
-    with open(filename, 'wb') as f:
-        f.write(f'P6\n{w} {h}\n{max_val}\n'.encode())
-        for row in pixels:
-            for r, g, b in row:
-                f.write(bytes([r, g, b]))
+def sum_for(lst):
+    total = 0
+    for x in lst:
+        total += x
+    return total
 
-def create_gradient(w, h):
-    return [[(int(255 * x / w), int(255 * y / h), 128) for x in range(w)] for y in range(h)]
+def sum_while(lst):
+    total = 0
+    i = 0
+    while i < len(lst):
+        total += lst[i]
+        i += 1
+    return total
+
+def sum_recursive(lst):
+    if not lst:
+        return 0
+    return lst[0] + sum_recursive(lst[1:])

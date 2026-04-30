@@ -1,17 +1,7 @@
-```python
-def solve():
-    n = int(input())
-    arr = list(map(int, input().split()))
-
-    max_sum = float('-inf')
-    current_sum = 0
-
-    for num in arr:
-        current_sum += num
-        if current_sum > max_sum:
-            max_sum = current_sum
-        if current_sum < 0:
-            current_sum = 0
-
-    print(max_sum)
-```
+def concat_lists(a, b):
+    result = []
+    for x in a:
+        result.append(x)
+    for x in b:
+        result.append(x)
+    return result

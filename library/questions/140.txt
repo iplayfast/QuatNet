@@ -1,1 +1,1 @@
-Write a function that implements a simple grep utility matching a regex pattern line by line.
+Write a function that finds all pairs of numbers in a list that sum to a given target.

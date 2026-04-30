@@ -1,19 +1,39 @@
-def spell_check(word, dictionary):
-    if word in dictionary: return word
-    candidates = []
-    for dw in dictionary:
-        d = levenshtein(word, dw)
-        if d <= 2: candidates.append((d, dw))
-    candidates.sort()
-    return candidates[0][1] if candidates else word
+def primes():
+    """Infinite stream of primes using incremental Sieve of Eratosthenes."""
+    yield 2
+    sieve = {}  # composite -> prime factor
+    n = 3
+    while True:
+        p = sieve.pop(n, None)
+        if p is None:
+            yield n  # n is prime
+            sieve[n * n] = n
+        else:
+            # n is composite: mark next multiple
+            step = p * 2
+            m = n + step
+            while m in sieve:
+                m += step
+            sieve[m] = p
+        n += 2  # skip evens
 
-def levenshtein(a, b):
-    m, n = len(a), len(b)
-    dp = [[0] * (n + 1) for _ in range(2)]
-    for i in range(m + 1): dp[i % 2][0] = i
-    for j in range(n + 1): dp[0][j] = j
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if a[i - 1] == b[j - 1]: dp[i % 2][j] = dp[(i - 1) % 2][j - 1]
-            else: dp[i % 2][j] = 1 + min(dp[(i - 1) % 2][j], dp[i % 2][j - 1], dp[(i - 1) % 2][j - 1])
-    return dp[m % 2][n]
+
+# Alternative: bounded sieve for primes up to N
+def primes_up_to(n):
+    """Return list of primes up to n using classic Sieve of Eratosthenes."""
+    if n < 2:
+        return []
+    sieve = [True] * (n + 1)
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(n ** 0.5) + 1):
+        if sieve[i]:
+            step = i
+            start = i * i
+            sieve[start:n + 1:step] = [False] * ((n - start) // step + 1)
+    return [i for i, is_prime in enumerate(sieve) if is_prime]
+
+
+# Usage:
+# p = primes()
+# first_10 = [next(p) for _ in range(10)]  # [2,3,5,7,11,13,17,19,23,29]
+# all_primes_under_100 = primes_up_to(100)

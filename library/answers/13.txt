@@ -1,2 +1,5 @@
-def group(lst, n):
-    return [lst[i:i + n] for i in range(0, len(lst), n)]
+def contains(lst, value):
+    for x in lst:
+        if x == value:
+            return True
+    return False

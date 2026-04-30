@@ -1,1 +1,1 @@
-Write a program that implements a simple REPL for a stack-based (Forth-like) language.
+Write a Python function.

@@ -1,10 +1,5 @@
-def trabb_pardo_knuth(f, arr):
-    for x in reversed(arr):
-        y = f(x)
-        if y > 400:
-            print(f'f({x}) = TOO LARGE')
-        else:
-            print(f'f({x}) = {y}')
-
-# Example:
-# trabb_pardo_knuth(lambda x: abs(x) ** 0.5 + 5 * x ** 3, range(11))
+```python
+def my_function():
+    # Your code here
+    return "Hello, World!"
+```

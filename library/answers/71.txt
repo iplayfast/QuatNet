@@ -1,32 +1,23 @@
-def factorial(n):
-    """
-    Calculate the factorial of a non-negative integer n.
-    
-    Args:
-        n (int): A non-negative integer
-        
-    Returns:
-        int: The factorial of n
-        
-    Raises:
-        ValueError: If n is negative or not an integer
-        TypeError: If n is not an integer type
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer")
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers")
-    
-    if n == 0 or n == 1:
-        return 1
-    
-    result = 1
-    for i in range(2, n + 1):
-        result *= i
-    return result
+from array import array
 
-# Example usage
-if __name__ == "__main__":
-    print(factorial(5))  # Output: 120
-    print(factorial(0))  # Output: 1
-    print(factorial(10)) # Output: 3628800
+def ring_buffer(capacity):
+    buf = [None] * capacity
+    read_pos = 0
+    write_pos = 0
+
+    def push(item):
+        nonlocal write_pos
+        nxt = (write_pos + 1) % capacity
+        if nxt == read_pos: return False
+        buf[write_pos] = item
+        write_pos = nxt
+        return True
+
+    def pop():
+        nonlocal read_pos
+        if read_pos == write_pos: return None
+        item = buf[read_pos]
+        read_pos = (read_pos + 1) % capacity
+        return item
+
+    return push, pop

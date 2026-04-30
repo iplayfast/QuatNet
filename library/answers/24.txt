@@ -1,4 +1,4 @@
-def my_function():\n
-    return "Hello, world!"\n
-\n
-print(my_function())\n
+for i in range(1, 13):
+    for j in range(1, 13):
+        print(f"{i * j:4d}", end="")
+    print()

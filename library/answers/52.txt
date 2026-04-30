@@ -1,5 +1,13 @@
-def my_function():\n\
-    return 42\n\
-\n\
-# Test the function\n\
-print(my_function())
+import sys
+
+def tee(mode='line'):
+    if mode == 'line':
+        for line in sys.stdin:
+            sys.stdout.write(line)
+            sys.stdout.flush()
+    elif mode == 'char':
+        while True:
+            c = sys.stdin.read(1)
+            if not c: break
+            sys.stdout.write(c)
+            sys.stdout.flush()

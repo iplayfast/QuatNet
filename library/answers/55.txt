@@ -1,7 +1,4 @@
 ```python
-def example_function():
-    """
-    This is an example function that does nothing.
-    """
-    pass
+def sum_of_elements(elements):
+    return sum(elements)
 ```

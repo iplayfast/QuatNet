@@ -1,1 +1,1 @@
-Write a function that validates a string of parentheses, brackets, and braces is balanced.
+Write a program that asks for a number n and prints the sum of the numbers from 1 to n.

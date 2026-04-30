@@ -1,31 +1,4 @@
-def tarjan_scc(graph):
-    n = len(graph)
-    index = 0
-    indices = [-1] * n
-    lowlink = [0] * n
-    on_stack = [False] * n
-    stack = []
-    sccs = []
+def my_function():
+    return 42
 
-    def strongconnect(v):
-        nonlocal index
-        indices[v] = lowlink[v] = index; index += 1
-        stack.append(v); on_stack[v] = True
-        for w in graph[v]:
-            if indices[w] == -1:
-                strongconnect(w)
-                lowlink[v] = min(lowlink[v], lowlink[w])
-            elif on_stack[w]:
-                lowlink[v] = min(lowlink[v], indices[w])
-        if lowlink[v] == indices[v]:
-            comp = []
-            while True:
-                w = stack.pop(); on_stack[w] = False
-                comp.append(w)
-                if w == v: break
-            sccs.append(comp)
-
-    for v in range(n):
-        if indices[v] == -1:
-            strongconnect(v)
-    return sccs
+my_function()

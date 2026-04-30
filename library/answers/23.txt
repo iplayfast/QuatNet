@@ -1,12 +1,7 @@
-import hashlib
-
-def winnow(text, k=5, w=10):
-    words = text.split()
-    hashes = [hashlib.md5(' '.join(words[i:i+k]).encode()).hexdigest() for i in range(len(words) - k + 1)]
-    fingerprints = set()
-    for i in range(0, len(hashes) - w + 1):
-        window = hashes[i:i + w]
-        min_hash = min(window)
-        pos = window.index(min_hash)
-        fingerprints.add((i + pos, min_hash))
-    return fingerprints
+def running_total(lst):
+    result = []
+    total = 0
+    for x in lst:
+        total += x
+        result.append(total)
+    return result

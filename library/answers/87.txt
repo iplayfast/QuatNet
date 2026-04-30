@@ -1,8 +1,6 @@
-def unique_preserve_order(lst):
-    seen = set()
-    result = []
-    for x in lst:
-        if x not in seen:
-            seen.add(x)
-            result.append(x)
-    return result
+```python
+def my_function():
+    return 'This is my Function!'
+
+my_function()
+```

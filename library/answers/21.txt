@@ -1,52 +1,18 @@
-```python
-import functools
+from collections import deque
 
-def fibonacci(n: int) -> int:
-    """
-    Calculates the nth Fibonacci number using memoization (dynamic programming).
-
-    The Fibonacci sequence starts with 0 and 1, and each subsequent
-    number is the sum of the two preceding ones (e.g., 0, 1, 1, 2, 3, 5, 8...).
-
-    Args:
-        n: The index of the Fibonacci number to calculate (must be non-negative).
-
-    Returns:
-        The nth Fibonacci number.
-
-    Raises:
-        ValueError: If n is a negative integer.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    
-    if n < 0:
-        raise ValueError("Fibonacci sequence is defined for non-negative integers.")
-
-    # Using functools.lru_cache is the most Pythonic and efficient way 
-    # to implement memoization for recursive functions.
-    @functools.lru_cache(None)
-    def fib_recursive(k):
-        if k <= 1:
-            return k
-        return fib_recursive(k - 1) + fib_recursive(k - 2)
-
-    return fib_recursive(n)
-
-# Example Usage (optional, but good for testing the completeness)
-if __name__ == '__main__':
-    # Test case 1: Standard sequence calculation
-    print(f"F(0): {fibonacci(0)}")
-    print(f"F(1): {fibonacci(1)}")
-    print(f"F(6): {fibonacci(6)}") # Expected: 8
-    print(f"F(10): {fibonacci(10)}") # Expected: 55
-
-    # Test case 2: Larger number (efficient due to memoization)
-    print(f"F(50): {fibonacci(50)}")
-
-    # Test case 3: Handling edge cases
-    try:
-        fibonacci(-1)
-    except ValueError as e:
-        print(f"\nCaught expected error for negative input: {e}")
-```
+def solve_maze(maze, start, end):
+    rows, cols = len(maze), len(maze[0])
+    queue = deque([(start[0], start[1], [start])])
+    visited = {start}
+    while queue:
+        r, c, path = queue.popleft()
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
+                pos = (nr, nc)
+                if pos == end:
+                    return path + [pos]
+                if pos not in visited:
+                    visited.add(pos)
+                    queue.append((nr, nc, path + [pos]))
+    return None

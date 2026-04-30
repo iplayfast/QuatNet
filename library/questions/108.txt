@@ -1,1 +1,1 @@
-Write a function that returns the largest element in a list.
+Write a function that implements the simplex algorithm for linear programming (2D case).

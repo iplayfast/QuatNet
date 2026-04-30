@@ -639,12 +639,14 @@ if __name__ == "__main__":
 
             # Distillation loss: match teacher distribution for the first token position
             if _teacher_logits is not None:
-                # Student's prediction at the first position (the byte after the prompt)
-                s_logits = logits[:, -1, :]  # (B, 256) — last position predicts next token
-                t_probs = F.softmax(_teacher_logits[:, 0, :] / 2.0, dim=-1)  # (1, 256)
-                s_log = F.log_softmax(s_logits / 2.0, dim=-1)  # (B, 256)
+                s_logits = logits[:, -1, :]
+                t_probs = F.softmax(_teacher_logits[:, 0, :] / 2.0, dim=-1)
+                s_log = F.log_softmax(s_logits / 2.0, dim=-1)
                 kl = (t_probs * (t_probs.log() - s_log)).sum(dim=-1).mean()
-                loss = loss + kl * 1.0
+                # Dynamic weight: high when CE loss is low (model knows enough to benefit from teacher)
+                # Low when CE loss is high (model still learning basics)
+                distill_w = min(1.0, max(0.0, 1.0 - loss.item() / 5.0))
+                loss = loss + kl * distill_w
 
             # Q2_Q quantization regularization — pull attention weights toward target values
             q2q_loss = 0.0

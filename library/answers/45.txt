@@ -1,13 +1,11 @@
-import time
+Here is your python function:
 
-def stopwatch():
-    input('Press Enter to start...')
-    start = time.time()
-    lap_num = 1
-    while True:
-        try:
-            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
-            lap_num += 1
-        except KeyboardInterrupt:
-            print(f'\nTotal: {time.time() - start:.2f}s')
-            break
+```python
+def my_function():
+    return 42
+
+my_function()
+```
+This function simply returns the number '42' when called.
+
+Please remember that it's crucial to understand how this works if you're planning on using it in an actual program, as I've not explained its functionality.

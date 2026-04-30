@@ -1,2 +1,4 @@
+```python
 def my_function():
-    return 'Hello, World!'
+    print("This is my function!")
+```

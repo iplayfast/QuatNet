@@ -1,1 +1,1 @@
-Write a program that implements a simple load balancer that distributes requests to backend workers using round-robin.
+Write a function that implements a simple version of git diff (Myers diff algorithm).

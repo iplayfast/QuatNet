@@ -1,1 +1,1 @@
-Write a function that implements the Fisher-Yates shuffle algorithm.
+Write a class that implements a thread-safe bounded queue (producer-consumer) using threading primitives.

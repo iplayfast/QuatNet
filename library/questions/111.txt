@@ -1,1 +1,1 @@
-Write a program that scrapes all links from a given URL using only the standard library.
+Write a Python function.

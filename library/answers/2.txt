@@ -1,12 +1,2 @@
-import random
-
-def reservoir_sample(stream, k):
-    reservoir = []
-    for i, item in enumerate(stream):
-        if i < k:
-            reservoir.append(item)
-        else:
-            j = random.randint(0, i)
-            if j < k:
-                reservoir[j] = item
-    return reservoir
+def my_function():
+    return 'Hello, World!'

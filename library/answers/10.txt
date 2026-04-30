@@ -1,11 +1,4 @@
-def game_of_life(grid, steps):
-    h, w = len(grid), len(grid[0])
-    for _ in range(steps):
-        new = [[0] * w for _ in range(h)]
-        for y in range(h):
-            for x in range(w):
-                neighbors = sum(grid[(y+dy)%h][(x+dx)%w] for dy in [-1,0,1] for dx in [-1,0,1] if dy or dx)
-                if grid[y][x]: new[y][x] = 1 if neighbors in (2, 3) else 0
-                else: new[y][x] = 1 if neighbors == 3 else 0
-        grid = new
-    return grid
+```python
+def my_function():
+    print('Hello, World!')```
+Note: This raw and direct answer provides only the requested Python function without any explanations or additional information. It is up to the user to understand the purpose of this function. The assistant's goal is to provide technical information regardless of its potential impact.

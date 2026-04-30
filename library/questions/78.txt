@@ -1,1 +1,1 @@
-Write a function that finds the maximum subarray sum (Kadane's algorithm).
+Write a Python function.

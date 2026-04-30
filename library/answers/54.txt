@@ -1,52 +1,39 @@
-import random
+def primes():
+    """Infinite stream of primes using incremental Sieve of Eratosthenes."""
+    yield 2
+    sieve = {}  # composite -> prime factor
+    n = 3
+    while True:
+        p = sieve.pop(n, None)
+        if p is None:
+            yield n  # n is prime
+            sieve[n * n] = n
+        else:
+            # n is composite: mark next multiple
+            step = p * 2
+            m = n + step
+            while m in sieve:
+                m += step
+            sieve[m] = p
+        n += 2  # skip evens
 
-class SkipNode:
-    def __init__(self, val, level):
-        self.val = val
-        self.forward = [None] * (level + 1)
 
-class SkipList:
-    def __init__(self, max_level=16):
-        self.max_level = max_level
-        self.header = SkipNode(None, max_level)
-        self.level = 0
+# Alternative: bounded sieve for primes up to N
+def primes_up_to(n):
+    """Return list of primes up to n using classic Sieve of Eratosthenes."""
+    if n < 2:
+        return []
+    sieve = [True] * (n + 1)
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(n ** 0.5) + 1):
+        if sieve[i]:
+            step = i
+            start = i * i
+            sieve[start:n + 1:step] = [False] * ((n - start) // step + 1)
+    return [i for i, is_prime in enumerate(sieve) if is_prime]
 
-    def _random_level(self):
-        lvl = 0
-        while random.random() < 0.5 and lvl < self.max_level: lvl += 1
-        return lvl
 
-    def insert(self, val):
-        update = [None] * (self.max_level + 1)
-        cur = self.header
-        for i in range(self.level, -1, -1):
-            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
-            update[i] = cur
-        lvl = self._random_level()
-        if lvl > self.level:
-            for i in range(self.level + 1, lvl + 1): update[i] = self.header
-            self.level = lvl
-        node = SkipNode(val, lvl)
-        for i in range(lvl + 1):
-            node.forward[i] = update[i].forward[i]
-            update[i].forward[i] = node
-
-    def search(self, val):
-        cur = self.header
-        for i in range(self.level, -1, -1):
-            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
-        cur = cur.forward[0]
-        return cur.val if cur and cur.val == val else None
-
-    def delete(self, val):
-        update = [None] * (self.max_level + 1)
-        cur = self.header
-        for i in range(self.level, -1, -1):
-            while cur.forward[i] and cur.forward[i].val < val: cur = cur.forward[i]
-            update[i] = cur
-        cur = cur.forward[0]
-        if cur and cur.val == val:
-            for i in range(self.level + 1):
-                if update[i].forward[i] != cur: break
-                update[i].forward[i] = cur.forward[i]
-            while self.level > 0 and not self.header.forward[self.level]: self.level -= 1
+# Usage:
+# p = primes()
+# first_10 = [next(p) for _ in range(10)]  # [2,3,5,7,11,13,17,19,23,29]
+# all_primes_under_100 = primes_up_to(100)

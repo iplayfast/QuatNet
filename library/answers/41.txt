@@ -1,7 +1,7 @@
-```python
-def my_function():
-    result = 42
-    return result
+import struct
 
-print(my_function())
-```
+def float_to_ieee754(f):
+    return format(struct.unpack('!I', struct.pack('!f', f))[0], '032b')
+
+def double_to_ieee754(f):
+    return format(struct.unpack('!Q', struct.pack('!d', f))[0], '064b')

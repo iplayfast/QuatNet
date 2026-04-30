@@ -1,11 +1,7 @@
-```python
-def add_numbers(a, b):
-    """
-    Takes two numbers and returns their sum.
-    """
-    return a + b
+def apply_to_each(f, lst):
+    return [f(x) for x in lst]
 
-if __name__ == "__main__":
-    result = add_numbers(5, 10)
-    print(f"The sum is: {result}")
-```
+# Print first 20 perfect squares
+squares = apply_to_each(lambda x: x * x, range(1, 21))
+for s in squares:
+    print(s)

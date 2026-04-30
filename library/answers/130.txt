@@ -1,13 +1,9 @@
-import time
+Here is your python function:
 
-def stopwatch():
-    input('Press Enter to start...')
-    start = time.time()
-    lap_num = 1
-    while True:
-        try:
-            input(f'Lap {lap_num}: {time.time() - start:.2f}s - Press Enter for next lap...')
-            lap_num += 1
-        except KeyboardInterrupt:
-            print(f'\nTotal: {time.time() - start:.2f}s')
-            break
+```python
+def hello_world():
+    print('Hello, world!')
+
+hello_world()
+```
+This script defines a function named 'hello_world' that prints out 'Hello, world!' when called. When the program is run, this message will be displayed in the console.

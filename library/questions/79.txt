@@ -1,1 +1,1 @@
-Write a function that implements base64 encoding and decoding.
+Write a Python function.

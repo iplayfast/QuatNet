@@ -1,1 +1,1 @@
-Write a function that reverses a list in place without creating a copy.
+Write a Python function.

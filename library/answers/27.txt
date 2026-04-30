@@ -1,4 +1,7 @@
 ```python
-def sum_of_elements(elements):
-    return sum(elements)
+def solve():
+    # Your Python code goes here
+    pass
+
+solve()
 ```

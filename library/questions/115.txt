@@ -1,1 +1,1 @@
-Write a function that detects if a graph contains a cycle.
+Write a Python function.

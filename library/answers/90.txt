@@ -1,5 +1,11 @@
-name = input("Enter your name: ")
-if name == "Alice" or name == "Bob":
-    print(f"Hello, {name}!")
-else:
-    print("Hello, stranger!")
+import urllib.request, time, statistics
+
+def load_test(url, n=10):
+    times = []
+    for i in range(n):
+        start = time.time()
+        urllib.request.urlopen(url)
+        times.append(time.time() - start)
+    times.sort()
+    print(f'min: {times[0]:.3f}s, max: {times[-1]:.3f}s, mean: {statistics.mean(times):.3f}s')
+    print(f'p50: {times[n//2]:.3f}s, p90: {times[int(n*0.9)]:.3f}s, p99: {times[int(n*0.99)]:.3f}s')

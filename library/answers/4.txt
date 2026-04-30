@@ -1,7 +1,7 @@
 ```python
-def solve_problem():
-    # your logic here
-
-
-solve_problem()
+def example_function():
+    """
+    This is an example function that does nothing.
+    """
+    pass
 ```

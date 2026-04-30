@@ -1,22 +1,4 @@
-def rotate_left(arr, k):
-    """Rotate list left by k positions in-place using O(1) extra space."""
-    if not arr:
-        return arr
-    n = len(arr)
-    k %= n
-    if k == 0:
-        return arr
-
-    def reverse(start, end):
-        while start < end:
-            arr[start], arr[end] = arr[end], arr[start]
-            start += 1
-            end -= 1
-
-    reverse(0, k - 1)
-    reverse(k, n - 1)
-    reverse(0, n - 1)
-    return arr
-
-# Example usage:
-# print(rotate_left([1, 2, 3, 4, 5], 2))  # [3, 4, 5, 1, 2]
+```python
+def sum_of_elements(elements):
+    return sum(elements)
+```
