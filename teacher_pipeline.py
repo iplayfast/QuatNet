@@ -525,45 +525,52 @@ def generate_qa():
 # ── Teacher Logits (Distillation) ──────────────────────────────────
 DISTILL_EVERY = 500
 
+def query_teacher_logits(model_url, model_name, prompt, num_samples=3):
+    """Get teacher predictions for the next byte after prompt by sampling."""
+    counts = torch.zeros(256, device=_device)
+    for _ in range(num_samples):
+        try:
+            req = urllib.request.Request(f"{model_url}/api/generate",
+                data=json.dumps({"model": model_name, "prompt": prompt, "stream": False,
+                                 "options": {"temperature": 1.0}}).encode(),
+                headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                answer = json.loads(resp.read()).get("response", "").strip()
+            if answer:
+                b = answer.encode('utf-8', errors='replace')[0] if answer else 0
+                counts[b] += 1.0
+        except:
+            pass
+    if counts.sum() == 0:
+        return None
+    probs = (counts + 0.1) / (counts.sum() + 0.1 * 256)  # laplace smoothing
+    return probs
+
 def refresh_teacher_logits():
     global _teacher_logits, _all_text
     _teacher_logits = None
     try:
         with open("servers.json") as f:
             servers = json.load(f)
-        teachers = [s for s in servers if s.get("role") == "judge" and s.get("enabled", False)]
-        teachers += [s for s in servers if s.get("role") == "worker" and s.get("enabled", False)]
-        if not teachers:
+        candidates = [s for s in servers if s.get("enabled", False) and s.get("role") != "judge"]
+        if not candidates:
             return
-        teacher = random.choice(teachers)
+        teacher = random.choice(candidates)
     except:
         return
 
-    if not _all_text or len(_all_text) < MAX_SEQ * 2:
+    if not _all_text or len(_all_text) < MAX_SEQ:
         return
     start = random.randint(0, len(_all_text) - MAX_SEQ - 1)
     prompt = _all_text[start:start + MAX_SEQ]
 
-    try:
-        req = urllib.request.Request(f"{teacher['url']}/api/generate",
-            data=json.dumps({"model": teacher["model"], "prompt": prompt, "stream": False}).encode(),
-            headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            answer = json.loads(resp.read()).get("response", "").strip()
-        if not answer:
-            return
-        answer_bytes = answer.encode('utf-8', errors='replace')[:MAX_SEQ]
-        # Create smoothed target: high for the teacher's byte, low for neighbors
-        target = torch.full((MAX_SEQ, 256), 0.01, device=_device)
-        for i, b in enumerate(answer_bytes):
-            target[i, b] = 1.0
-            if b > 0: target[i, b - 1] = 0.5
-            if b < 255: target[i, b + 1] = 0.5
-        target = target / target.sum(dim=-1, keepdim=True)
-        _teacher_logits = torch.log(target).unsqueeze(0).detach()
-        print(f"  [DISTILL] Refreshed from {teacher['name']}")
-    except Exception as e:
-        pass
+    probs = query_teacher_logits(teacher['url'], teacher['model'], prompt)
+    if probs is None:
+        return
+    logits = torch.log(probs).unsqueeze(0).unsqueeze(0)  # (1, 1, 256)
+    _teacher_logits = logits.detach()
+    top3 = probs.topk(3)
+    print(f"  [DISTILL] {teacher['name']} top: {bytes([int(top3.indices[0])]).decode('utf-8', errors='replace')} ({top3.values[0]:.2f})")
 
 
 # ── Signal Handler ────────────────────────────────────────────────
@@ -630,14 +637,14 @@ if __name__ == "__main__":
             logits = _model(x)
             loss = F.cross_entropy(logits.view(-1, _model.vocab_size), y.view(-1))
 
-            # Distillation loss: match teacher logits when available
+            # Distillation loss: match teacher distribution for the first token position
             if _teacher_logits is not None:
-                student_logits = logits.detach()  # no gradient to student from distillation, only CE
-                # KL divergence between teacher softmax and student logits
-                t_probs = F.softmax(_teacher_logits / 2.0, dim=-1)
-                s_log = F.log_softmax(student_logits / 2.0, dim=-1)
-                distill_loss = F.kl_div(s_log, t_probs, reduction='batchmean') * (2.0 ** 2)
-                loss = loss + distill_loss * 0.5
+                # Student's prediction at the first position (the byte after the prompt)
+                s_logits = logits[:, -1, :]  # (B, 256) — last position predicts next token
+                t_probs = F.softmax(_teacher_logits[:, 0, :] / 2.0, dim=-1)  # (1, 256)
+                s_log = F.log_softmax(s_logits / 2.0, dim=-1)  # (B, 256)
+                kl = (t_probs * (t_probs.log() - s_log)).sum(dim=-1).mean()
+                loss = loss + kl * 1.0
 
             # Q2_Q quantization regularization — pull attention weights toward target values
             q2q_loss = 0.0
