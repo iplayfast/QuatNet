@@ -58,11 +58,11 @@ def make_plot(log, out):
 
     plt.tight_layout()
     plt.savefig(out, dpi=150)
-    plt.close(fig)
-    return True
+    return fig
 
 os.makedirs("images", exist_ok=True)
 name = os.path.splitext(os.path.basename(log))[0]
 out = os.path.join("images", f"{name}.png")
-make_plot(log, out)
+fig = make_plot(log, out)
 print(f"Saved {out}")
+plt.show()
