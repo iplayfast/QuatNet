@@ -61,6 +61,14 @@ def make_plot(log, out):
 os.makedirs("images", exist_ok=True)
 name = os.path.splitext(os.path.basename(log))[0]
 out = os.path.join("images", f"{name}.png")
-fig = make_plot(log, out)
-print(f"Saved {out}")
-plt.show()
+
+def on_key(event):
+    if event.key == 'q':
+        plt.close(event.canvas.figure)
+
+while True:
+    fig = make_plot(log, out)
+    fig.canvas.mpl_connect('key_press_event', on_key)
+    print(f"Saved {out} — press 'q' to refresh with latest data")
+    plt.show(block=True)
+    plt.close(fig)
