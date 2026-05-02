@@ -693,6 +693,8 @@ if __name__ == "__main__":
     # LR scheduler: halve LR when Q2_Q convergence plateaus
     best_q_ratio = 0.0
     q_ratio_steps = 0
+    best_loss = float('inf')
+    loss_plateau_steps = 0
 
     # Initialize log file
     log_header = "step,loss,lr,q2q_pct,data_bytes,elapsed_sec\n"
@@ -765,12 +767,18 @@ if __name__ == "__main__":
                     q_ratio_steps = 0
                 else:
                     q_ratio_steps += SAVE_INTERVAL
+                # Loss plateau tracking (independent of Q2_Q)
+                if loss.item() < best_loss - 0.05:
+                    best_loss = min(best_loss, loss.item())
+                    loss_plateau_steps = 0
+                else:
+                    loss_plateau_steps += SAVE_INTERVAL
                 if q_ratio_steps > 0 and q_ratio_steps % 2000 == 0:
                     old_lr = opt.param_groups[0]['lr']
                     should_grow = False
                     if q_ratio > 95 and (old_lr < 1e-8 or q_ratio > 98):
                         should_grow = True  # Q2_Q converged
-                    elif q_ratio_steps >= 10000 and loss.item() < 5.0:
+                    elif loss_plateau_steps >= 10000 and loss.item() < 5.0:
                         should_grow = True  # Loss plateaued for 10K steps
                     if should_grow:
                         _model = _model.grow()
