@@ -145,8 +145,8 @@ class QuaternaryLLM(nn.Module):
         new_heads = min(new_d, max(1, new_d // 16))
         new_kv = min(new_heads, max(1, new_d // 64))
         new_ff = new_d * 4
-        new_layers = max(2, new_d // 64)
         if old_d != new_d:
+            new_layers = max(self.n_layers, new_d // 64)
             desc = f"Widening {old_d}d→{new_d}d"
         else:
             new_layers = self.n_layers + 2
