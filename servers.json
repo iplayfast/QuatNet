@@ -19,5 +19,5 @@
   {"name": "gemma4-26b","url": "http://localhost:11434", "model": "gemma4:26b",      "role": "worker", "enabled": false, "active": false},
   {"name": "devstral", "url": "http://localhost:11434", "model": "devstral-small-2","role": "worker", "enabled": false, "active": false},
   {"name": "alfred",   "url": "http://localhost:11434", "model": "alfred",          "role": "worker", "enabled": false, "active": false},
-  {"name": "qwen3.5",   "url": "http://100.88.100.53:11434", "model": "qwen3.5",          "role": "worker", "enabled": true, "active": true},
+  {"name": "qwen3.5",   "url": "http://100.88.100.53:11434", "model": "qwen3.5",          "role": "worker", "enabled": true, "active": true}
 ]
