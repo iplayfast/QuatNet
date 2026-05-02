@@ -33,7 +33,7 @@ def generate_one():
         req = urllib.request.Request(f"{server['url']}/api/generate",
             data=json.dumps({"model": model, "prompt": prompt, "stream": False}).encode(),
             headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=60) as resp:
             answer = json.loads(resp.read()).get("response", "").strip()
     except Exception as e:
         print(f"  [POP] Failed ({model}): {e}")
