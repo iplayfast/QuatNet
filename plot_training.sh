@@ -18,28 +18,41 @@ with open(log) as f:
         d_model.append(int(row.get("d_model", 128)))
         n_layers.append(int(row.get("n_layers", 4)))
 
-fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+fig, axes = plt.subplots(5, 1, figsize=(14, 16), sharex=True)
 
-ax = axes[0, 0]
-ax.plot(steps, loss)
-ax.set_xlabel("Step"); ax.set_ylabel("Loss"); ax.set_title("Training Loss"); ax.grid(True)
-ax2 = ax.twinx(); ax2.plot(steps, d_model, 'g-', alpha=0.5); ax2.set_ylabel("d_model", color='g')
+ax = axes[0]
+ax.plot(steps, loss, linewidth=1)
+ax.set_ylabel("Loss"); ax.set_title("Training Loss"); ax.grid(True)
 
-ax = axes[0, 1]
-ax.semilogy(steps, lr)
-ax.set_xlabel("Step"); ax.set_ylabel("Learning Rate"); ax.set_title("Learning Rate (log)"); ax.grid(True)
-ax2 = ax.twinx(); ax2.plot(steps, d_model, 'g-', alpha=0.5); ax2.set_ylabel("d_model", color='g')
+ax = axes[1]
+ax.semilogy(steps, lr, linewidth=1)
+ax.set_ylabel("Learning Rate"); ax.set_title("Learning Rate (log)"); ax.grid(True)
 
-ax = axes[1, 0]
-ax.plot(steps, q2q)
-ax.set_xlabel("Step"); ax.set_ylabel("Q2_Q Converged (%)"); ax.set_title("Attention Quantization Convergence"); ax.grid(True)
+ax = axes[2]
+ax.plot(steps, q2q, linewidth=1)
+ax.set_ylabel("Q2_Q (%)"); ax.set_title("Attention Quantization Convergence"); ax.grid(True)
 ax.set_ylim(-5, 105)
-ax2 = ax.twinx(); ax2.plot(steps, d_model, 'g-', alpha=0.5); ax2.set_ylabel("d_model", color='g')
 
-ax = axes[1, 1]
-ax.plot(steps, data_bytes)
-ax.set_xlabel("Step"); ax.set_ylabel("Data Size (bytes)"); ax.set_title("Training Data Size"); ax.grid(True)
-ax2 = ax.twinx(); ax2.plot(steps, d_model, 'g-', alpha=0.5); ax2.set_ylabel("d_model", color='g')
+ax = axes[3]
+ax.plot(steps, data_bytes, linewidth=1)
+ax.set_ylabel("Data (bytes)"); ax.set_title("Training Data Size"); ax.grid(True)
+
+ax = axes[4]
+ax.plot(steps, d_model, 'g-', linewidth=2, label='d_model')
+ax.set_ylabel("d_model", color='g')
+ax2 = ax.twinx()
+ax2.plot(steps, n_layers, 'b--', linewidth=2, label='n_layers')
+ax2.set_ylabel("n_layers", color='b')
+ax.set_xlabel("Step"); ax.set_title("Model Architecture (green=d_model, blue=n_layers)"); ax.grid(True)
+# Mark growth events
+prev_d, prev_n = 0, 0
+for i, (s, d, n) in enumerate(zip(steps, d_model, n_layers)):
+    if d != prev_d or n != prev_n:
+        ax.axvline(x=s, color='gray', linestyle=':', alpha=0.4)
+        ax.annotate(f"{d}d,{n}L", (s, ax.get_ylim()[1]),
+                   fontsize=9, color='darkgreen', ha='left', va='top',
+                   bbox=dict(boxstyle='round,pad=0.2', fc='white', alpha=0.8))
+        prev_d, prev_n = d, n
 
 plt.tight_layout()
 os.makedirs("images", exist_ok=True)
