@@ -504,90 +504,8 @@ def verify_with_llama(path, prompt="Hello"):
         print(f"[VERIFY] FAILED: {e}")
 
 
-# ── Ollama Q&A Generator ──────────────────────────────────────────
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"
-GENERATE_EVERY = 3000  # generate new Q&A every N steps
-
-def generate_qa():
-    """Query Ollama to answer a random question from programmingquestions.txt."""
-    # Load questions
-    try:
-        with open(QUESTIONS_FILE) as f:
-            raw = f.read()
-        questions = [q.strip() for q in raw.strip().split("\n") if q.strip() and q.strip() != "Advanced"]
-    except:
-        questions = ["Write a Python function."]
-    question = random.choice(questions)
-
-    # Pick a random Ollama server+model, preferring remote machines
-    try:
-        with open("servers.json") as f:
-            servers = json.load(f)
-        workers = [s for s in servers if s.get("enabled", False) and s.get("role", "worker") == "worker"]
-        remote = [s for s in workers if "localhost" not in s["url"] and "127.0.0.1" not in s["url"]]
-        server = random.choice(remote) if remote else random.choice(workers) if workers else None
-    except:
-        server = None
-    if server is None:
-        server = {"url": OLLAMA_URL, "model": OLLAMA_MODEL}
-    model = server["model"]
-    url = server["url"] + "/api/generate"
-
-    prompt = (f"Write a complete working Python solution for this problem. "
-              f"Show only the code, no explanation.\n\nProblem: {question}")
-    try:
-        req = urllib.request.Request(url, data=json.dumps({
-            "model": model, "prompt": prompt, "stream": False,
-        }).encode(), headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            answer = json.loads(resp.read()).get("response", "").strip()
-    except Exception as e:
-        print(f"  [OLLAMA] Failed ({model}): {e}")
-        return None
-
-    if not answer:
-        return None
-
-    # Replace an existing library file with the Ollama answer
-    q_dir = os.path.join(LIBRARY_DIR, "questions")
-    a_dir = os.path.join(LIBRARY_DIR, "answers")
-    os.makedirs(q_dir, exist_ok=True)
-    os.makedirs(a_dir, exist_ok=True)
-
-    existing = sorted([f for f in os.listdir(q_dir) if f.endswith(".txt")])
-    if existing:
-        n = random.choice(existing).replace(".txt", "")
-    else:
-        n = str(len(os.listdir(q_dir)) + 1)
-
-    with open(os.path.join(q_dir, f"{n}.txt"), "w") as f:
-        f.write(question + "\n")
-    with open(os.path.join(a_dir, f"{n}.txt"), "w") as f:
-        f.write(answer + "\n")
-    print(f"  [OLLAMA] Generated Q&A #{n}: {question[:60]}...")
-
-    # Also copy a random "best" Q&A pair into the main library
-    best_q_dir = os.path.join(LIBRARY_DIR, "questions", "bestquestions")
-    best_a_dir = os.path.join(LIBRARY_DIR, "answers", "bestanswers")
-    best_files = sorted([f for f in os.listdir(best_q_dir) if f.endswith(".txt")])
-    if best_files:
-        bf = random.choice(best_files)
-        bq_path = os.path.join(best_q_dir, bf)
-        ba_path = os.path.join(best_a_dir, bf)
-        if os.path.exists(bq_path) and os.path.exists(ba_path):
-            dst_n = random.choice(existing).replace(".txt", "") if existing else str(len(os.listdir(q_dir)) + 1)
-            with open(bq_path) as f:
-                best_q = f.read()
-            with open(ba_path) as f:
-                best_a = f.read()
-            with open(os.path.join(q_dir, f"{dst_n}.txt"), "w") as f:
-                f.write(best_q)
-            with open(os.path.join(a_dir, f"{dst_n}.txt"), "w") as f:
-                f.write(best_a)
-            print(f"  [BEST]  Seeded Q&A #{dst_n}: {best_q[:60].strip()}...")
-
-    return True
+# ── Library reload (data populated by library_populator.py) ───────
+DATA_RELOAD_EVERY = 3000
 
 
 # ── Teacher Logits (Distillation) ──────────────────────────────────
@@ -808,11 +726,12 @@ if __name__ == "__main__":
                 if step % VERIFY_EVERY == 0:
                     verify_with_llama(LLAMA_MODEL)
 
-                if step > 0 and step % GENERATE_EVERY == 0:
-                    if generate_qa():
-                        _all_text = load_all_text()
-                        data = torch.tensor([b for b in _all_text.encode('utf-8', errors='replace')], dtype=torch.long)
-                        print(f"  [DATA] Reloaded: {len(data)} bytes")
+                if step > 0 and step % DATA_RELOAD_EVERY == 0:
+                    _all_text = load_all_text()
+                    old_len = len(data)
+                    data = torch.tensor([b for b in _all_text.encode('utf-8', errors='replace')], dtype=torch.long)
+                    if len(data) != old_len:
+                        print(f"  [DATA] Reloaded: {len(data)} bytes ({len(data) - old_len:+d})")
 
     except KeyboardInterrupt:
         pass
