@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Plot training metrics from training_log.csv using matplotlib."""
 import csv, sys, os
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 log = "training_log.csv"
