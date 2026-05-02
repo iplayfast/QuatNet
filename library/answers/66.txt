@@ -1,0 +1,1 @@
+"The Tetris clone implements the classic falling-block puzzle with seven tetromino shapes. Each piece descends automatically with gravity, with the player controlling left/right movement, rotation, and soft/hard drop. Completed horizontal lines are cleared with a scoring system. The game ends when blocks stack past the top boundary."

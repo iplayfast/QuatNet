@@ -1,1 +1,1 @@
-Write a program that reads a CSV file and prints the min, max, mean, and median of a specified column.
+Write a function that finds all pairs of numbers in a list that sum to a given target.

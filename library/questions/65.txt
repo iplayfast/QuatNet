@@ -1,0 +1,1 @@
+Write a program that simulates a bouncing ball inside a rectangular window.

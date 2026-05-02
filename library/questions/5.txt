@@ -1,1 +1,1 @@
-Write a function that serializes a binary tree to a string and deserializes it back to the tree.
+Write a program that asks for a number n and prints the sum of all multiples of 3 or 5 from 1 to n.

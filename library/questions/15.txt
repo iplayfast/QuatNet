@@ -1,1 +1,1 @@
-Write a function that implements a basic spell-checker using a dictionary and edit distance.
+Write a function that returns the elements at odd indices in a list.

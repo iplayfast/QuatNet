@@ -1,4 +1,6 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+def reverse_inplace(lst):
+    l,r=0,len(lst)-1
+    while l<r:
+        lst[l],lst[r]=lst[r],lst[l]
+        l+=1; r-=1
+    return lst

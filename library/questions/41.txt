@@ -1,1 +1,1 @@
-Write a function that generates all permutations of a list.
+Write a program that translates English text to Pig Latin and back.

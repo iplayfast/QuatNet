@@ -36,7 +36,7 @@ def generate_one():
         with urllib.request.urlopen(req, timeout=60) as resp:
             answer = json.loads(resp.read()).get("response", "").strip()
     except Exception as e:
-        print(f"  [POP] Failed ({model}): {e}")
+        print(f"  [POP] Failed {server['name']} ({model} @ {server['url']}): {e}")
         return False
 
     if not answer:

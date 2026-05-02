@@ -1,0 +1,1 @@
+"The bouncing ball simulation renders a circle moving diagonally across a canvas, reversing direction each time it reaches a boundary. The animation loop updates position, clears the screen, and redraws the ball at each frame"

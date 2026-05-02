@@ -1,0 +1,30 @@
+import time
+def mul_naive(A,B):
+    n,m,k=len(A),len(A[0]),len(B[0])
+    C=[[0]*k for _ in range(n)]
+    for i in range(n):
+        for j in range(k):
+            s=0
+            for p in range(m):
+                s+=A[i][p]*B[p][j]
+            C[i][j]=s
+    return C
+
+def mul_transposed(A,B):
+    # Transpose B for better cache locality
+    BT=list(zip(*B))
+    n,m=len(A),len(A[0])
+    k=len(BT)
+    C=[[0]*k for _ in range(n)]
+    for i in range(n):
+        for j in range(k):
+            s=0
+            rowA=A[i]
+            colB=BT[j]
+            for p in range(m):
+                s+=rowA[p]*colB[p]
+            C[i][j]=s
+    return C
+# For large matrices, use numpy.dot() which uses BLAS.
+# Strassen's algorithm: O(n^2.807) vs O(n^3) naive, beneficial for n>100.
+# Cache effects: row-major access is faster. Transpose second matrix for better locality.

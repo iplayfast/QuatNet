@@ -1,4 +1,37 @@
 ```python
-def sum_of_elements(elements):
-    return sum(elements)
+def vigenere(text, key, mode='encrypt'):
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    result = []
+
+    k_idx = 0
+    for char in text:
+        if char.isalpha():
+            is_upper = char.isupper()
+            char = char.upper()
+            offset = alphabet.find(char)
+            key_char = key[k_idx % len(key)].upper()
+            key_offset = alphabet.find(key_char)
+
+            if mode == 'encrypt':
+                new_offset = (offset + key_offset) % 26
+            elif mode == 'decrypt':
+                new_offset = (offset - key_offset) % 26
+
+            result.append(alphabet[new_offset])
+            k_idx += 1
+        else:
+            result.append(char)
+
+    return ''.join(result)
+
+
+# Example usage:
+original_text = "ATTACKATDAWN"
+key = "LEMON"
+encrypted = vigenere(original_text, key)
+decrypted = vigenere(encrypted, key, mode='decrypt')
+
+print("Original:", original_text)
+print("Encrypted:", encrypted)
+print("Decrypted:", decrypted)
 ```

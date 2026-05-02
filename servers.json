@@ -12,12 +12,11 @@
   {"name": "redteam",  "url": "http://localhost:11434", "model": "RedTeamAI",       "role": "worker", "enabled": false,  "active": true},
   {"name": "glm-ocr",  "url": "http://localhost:11434", "model": "glm-ocr",         "role": "worker", "enabled": false,  "active": true},
   {"name": "rnj",      "url": "http://localhost:11434", "model": "rnj-1",           "role": "worker", "enabled": false, "active": true},
-  {"name": "steve-glm",     "url": "http://100.73.27.126:11434", "model": "mistral-medium-3.5:latest", "role": "worker", "enabled": true, "active": true},
+  {"name": "steve-glm",     "url": "http://100.73.27.126:11434", "model": "mistral-medium-3.5:latest", "role": "worker", "enabled": false, "active": true},
   {"name": "steve-granite", "url": "http://100.73.27.126:11434", "model": "granite4.1:3b",            "role": "worker", "enabled": true, "active": true},
-  {"name": "steve-qwen",    "url": "http://100.73.27.126:11434", "model": "qwen3.6:latest",            "role": "worker", "enabled": true, "active": true},
-  {"name": "glm4.7",   "url": "http://localhost:11434", "model": "glm-4.7-flash",   "role": "worker", "enabled": false, "active": false},
+  {"name": "steve-qwen",    "url": "http://100.73.27.126:11434", "model": "qwen3.6:latest",            "role": "worker", "enabled": false, "active": true},
   {"name": "gemma4-26b","url": "http://localhost:11434", "model": "gemma4:26b",      "role": "worker", "enabled": false, "active": false},
   {"name": "devstral", "url": "http://localhost:11434", "model": "devstral-small-2","role": "worker", "enabled": false, "active": false},
   {"name": "alfred",   "url": "http://localhost:11434", "model": "alfred",          "role": "worker", "enabled": false, "active": false},
-  {"name": "qwen3.5",   "url": "http://100.88.100.53:11434", "model": "qwen3.5",          "role": "worker", "enabled": true, "active": true}
+  {"name": "qwen3.5",   "url": "http://100.88.100.53:11434", "model": "qwen3.5",          "role": "worker", "enabled": false, "active": true}
 ]

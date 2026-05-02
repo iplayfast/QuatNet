@@ -1,0 +1,1 @@
+"The memory game implementation creates a shuffled deck of card pairs arranged in a grid, where players reveal two cards each turn via click or coordinate input. Matching pairs stay visible, non-matching pairs flip back after a brief delay. The game tracks total turns and ends when all pairs are revealed."

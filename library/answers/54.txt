@@ -1,4 +1,45 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+class BSTNode:
+    def __init__(self,k,v=None):
+        self.k=k; self.v=v; self.l=None; self.r=None
+
+class BST:
+    def __init__(self): self.root=None
+    
+    def insert(self,k,v=None):
+        if not self.root:
+            self.root=BSTNode(k,v); return
+        cur=self.root
+        while True:
+            if k<cur.k:
+                if cur.l: cur=cur.l
+                else: cur.l=BSTNode(k,v); return
+            elif k>cur.k:
+                if cur.r: cur=cur.r
+                else: cur.r=BSTNode(k,v); return
+            else: cur.v=v; return
+    
+    def search(self,k):
+        cur=self.root
+        while cur:
+            if k==cur.k: return cur.v
+            cur=cur.l if k<cur.k else cur.r
+        return None
+    
+    def delete(self,k):
+        self.root=self._delete(self.root,k)
+    
+    def _delete(self,node,k):
+        if not node: return None
+        if k<node.k: node.l=self._delete(node.l,k)
+        elif k>node.k: node.r=self._delete(node.r,k)
+        else:
+            if not node.l: return node.r
+            if not node.r: return node.l
+            succ=self._min(node.r)
+            node.k,node.v=succ.k,succ.v
+            node.r=self._delete(node.r,succ.k)
+        return node
+    
+    def _min(self,node):
+        while node.l: node=node.l
+        return node

@@ -1,8 +1,2 @@
-```python
-def example_function():
-    return "This is a sample function."
-
-# Example usage
-if __name__ == "__main__":
-    print(example_function())
-```
+def concat(a,b):
+    return a+b

@@ -1,5 +1,23 @@
-```python
-def my_function():
-    # Your code goes here
-    pass
-```
+def nearest_larger(arr):
+    n=len(arr)
+    # Preprocess: for each position, find nearest larger on left and right
+    left=[-1]*n; right=[-1]*n
+    stack=[]
+    for i in range(n):
+        while stack and arr[stack[-1]]<=arr[i]:
+            stack.pop()
+        left[i]=stack[-1] if stack else -1
+        stack.append(i)
+    stack=[]
+    for i in range(n-1,-1,-1):
+        while stack and arr[stack[-1]]<=arr[i]:
+            stack.pop()
+        right[i]=stack[-1] if stack else -1
+        stack.append(i)
+    def query(i):
+        if left[i]==-1 and right[i]==-1: return -1
+        if left[i]==-1: return right[i]
+        if right[i]==-1: return left[i]
+        return left[i] if i-left[i]<=right[i]-i else right[i]
+    return query
+# O(n) preprocessing, O(1) per query

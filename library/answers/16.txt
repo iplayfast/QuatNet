@@ -1,26 +1,6 @@
-def main():
-    def generate_random_password(length):
-        all_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-={}:<>?/'
-        if length < 8:
-            print("Password length should be at least 8 characters.")
-            return None
-        password = ''.join(random.choice(all_characters) for _ in range(length))
-        return password
-
-    import random
-
-    while True:
-        try:
-            length = int(input("Enter the desired length of the password: "))
-            if length > 0:
-                break
-            else:
-                print("Length should be greater than zero.")
-        except ValueError:
-            print("Invalid input. Please enter a valid integer.")
-
-    password = generate_random_password(length)
-    if password is not None:
-        print(f"Generated Password : {password}")
-
-main()
+def running_total(lst):
+    t=[]; s=0
+    for x in lst:
+        s+=x; t.append(s)
+    return t
+# Or: from itertools import accumulate

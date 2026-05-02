@@ -1,7 +1,8 @@
-def most_frequent(lst):
-    if not lst:
-        return None
-    freq = {}
-    for x in lst:
-        freq[x] = freq.get(x, 0) + 1
-    return max(freq, key=freq.get)
+def binary_search(arr,x):
+    l,r=0,len(arr)-1
+    while l<=r:
+        m=(l+r)//2
+        if arr[m]==x: return m
+        elif arr[m]<x: l=m+1
+        else: r=m-1
+    return -1

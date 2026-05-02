@@ -1,30 +1,15 @@
-```python
-def factorial(n):
-    """
-    Calculate the factorial of a non-negative integer.
-    
-    Args:
-        n (int): Non-negative integer
-    
-    Returns:
-        int: Factorial of n
-    
-    Raises:
-        ValueError: If n is negative
-        TypeError: If n is not an integer
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer")
-    if n < 0:
-        raise ValueError("Input must be a non-negative integer")
-    
-    result = 1
-    for i in range(2, n + 1):
-        result *= i
-    return result
+def to_pig_latin(text):
+    r=[]
+    for w in text.split():
+        if w[0].isalpha():
+            r.append(w[1:]+w[0]+'ay')
+        else: r.append(w)
+    return ' '.join(r)
 
-# Test cases
-print(factorial(0))   # Output: 1
-print(factorial(5))   # Output: 120
-print(factorial(10))  # Output: 3628800
-```
+def from_pig_latin(text):
+    r=[]
+    for w in text.split():
+        if w.endswith('ay') and len(w)>2:
+            r.append(w[-3]+w[:-3])
+        else: r.append(w)
+    return ' '.join(r)

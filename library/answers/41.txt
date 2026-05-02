@@ -1,9 +1,12 @@
-def permutations(lst):
-    if len(lst) <= 1:
-        return [lst[:]]
-    result = []
-    for i in range(len(lst)):
-        rest = lst[:i] + lst[i + 1:]
-        for p in permutations(rest):
-            result.append([lst[i]] + p)
-    return result
+def leap_rule(year_days):
+    best_err=float('inf'); best=(0,0,0,0)
+    for a in range(1,50):
+        for b in range(0,a):
+            for c in range(0,a):
+                for d in range(0,a):
+                    avg=365+(1/a)-(1/b)+(1/c)-(1/d) if b and c and d else 0
+                    err=abs(avg-year_days)
+                    if err<best_err and avg>0:
+                        best_err=err; best=(a,b,c,d)
+    return best
+# Returns (leap_interval, exception_interval, exception_exception, ...)

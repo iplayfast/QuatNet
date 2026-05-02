@@ -1,1 +1,1 @@
-Write a function that implements a simple pub/sub event bus with subscribe, unsubscribe, and emit.
+Write a class that implements a dynamic array (similar to Python's list) with amortized O(1) append.

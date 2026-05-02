@@ -1,6 +1,12 @@
-def fuzzy_match(pattern, text):
-    pi, ti = 0, 0
-    while pi < len(pattern) and ti < len(text):
-        if pattern[pi].lower() == text[ti].lower(): pi += 1
-        ti += 1
-    return pi == len(pattern)
+def to_dot(graph,digraph=True):
+    e='->' if digraph else '--'
+    s='digraph G {' if digraph else 'graph G {'
+    s+='
+'
+    for u in graph.adj:
+        for v,val in graph.adj[u]:
+            label=f' [label="{val}"]' if val else ''
+            s+=f'  "{u}" {e} "{v}"{label};
+'
+    s+='}'
+    return s

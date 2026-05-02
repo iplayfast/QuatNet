@@ -1,9 +1,33 @@
-def roman_to_int(s):
-    vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
-    total, prev = 0, 0
-    for c in reversed(s):
-        cur = vals[c]
-        if cur < prev: total -= cur
-        else: total += cur
-        prev = cur
-    return total
+```python
+import csv
+import statistics
+
+def main():
+    filename = input().strip()
+    column_index = int(input().strip()) - 1
+    
+    values = []
+    
+    with open(filename, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            try:
+                value = float(row[column_index])
+                values.append(value)
+            except ValueError:
+                continue  # Skip rows where conversion to float fails
+    
+    if not values:
+        print("No valid numeric data found.")
+        return
+    
+    min_val = min(values)
+    max_val = max(values)
+    mean_val = statistics.mean(values)
+    median_val = statistics.median(values)
+    
+    print(f"{min_val} {max_val} {mean_val} {median_val}")
+
+if __name__ == "__main__":
+    main()
+```

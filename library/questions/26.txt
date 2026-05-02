@@ -1,1 +1,1 @@
-Write a Python function.
+Write functions for addition, subtraction, and multiplication of numbers represented as digit lists (big integer arithmetic).

@@ -1,1 +1,1 @@
-Write a program that implements a simple database index using a B-tree with insert and search.
+Write a program that asks for a number n and computes either the sum or the product of 1 to n based on user choice.

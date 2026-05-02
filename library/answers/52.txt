@@ -1,13 +1,25 @@
-def determinant(mat):
-    n = len(mat)
-    m = [row[:] for row in mat]
-    det = 1.0
-    for i in range(n):
-        pivot = max(range(i, n), key=lambda r: abs(m[r][i]))
-        if abs(m[pivot][i]) < 1e-12: return 0.0
-        if pivot != i: m[i], m[pivot] = m[pivot], m[i]; det = -det
-        det *= m[i][i]
-        for j in range(i + 1, n):
-            factor = m[j][i] / m[i][i]
-            for k in range(i, n): m[j][k] -= factor * m[i][k]
-    return det
+class ChunkedList:
+    CHUNK=100
+    def __init__(self):
+        self.chunks=[]; self.size=0
+    def add(self,x):
+        if not self.chunks or len(self.chunks[-1])>=self.CHUNK:
+            self.chunks.append([])
+        self.chunks[-1].append(x); self.size+=1
+    def get(self,i):
+        for chunk in self.chunks:
+            if i<len(chunk): return chunk[i]
+            i-=len(chunk)
+        raise IndexError
+    def remove(self,i):
+        for ci,chunk in enumerate(self.chunks):
+            if i<len(chunk):
+                chunk.pop(i); self.size-=1
+                if not chunk:
+                    self.chunks.pop(ci)
+                return
+            i-=len(chunk)
+        raise IndexError
+    def __len__(self): return self.size
+# Chunked: no copying on growth. O(n) get/remove due to chunk scanning.
+# Trade-offs: bookkeeping overhead varies. Can use index array mapping chunk[i]->offset for O(1) access.

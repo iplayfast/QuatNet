@@ -1,65 +1,11 @@
-```python
-def factorial(n: int) -> int:
-    """
-    Calculates the factorial of a non-negative integer n (n!).
-
-    Args:
-        n: The integer for which to calculate the factorial.
-
-    Returns:
-        The factorial of n.
-
-    Raises:
-        ValueError: If n is a negative number.
-        TypeError: If n is not an integer.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    
-    if n == 0:
-        return 1
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
-
-# Example usage demonstrating the function's completeness
-if __name__ == "__main__":
-    print("--- Testing Factorial Function ---")
-    
-    # Test case 1: Positive integer (5!)
-    num_positive = 5
-    try:
-        fact_result = factorial(num_positive)
-        print(f"The factorial of {num_positive} is: {fact_result}") # Expected: 120
-    except (ValueError, TypeError) as e:
-        print(f"Error for {num_positive}: {e}")
-
-    # Test case 2: Zero (0!)
-    num_zero = 0
-    try:
-        fact_result = factorial(num_zero)
-        print(f"The factorial of {num_zero} is: {fact_result}") # Expected: 1
-    except (ValueError, TypeError) as e:
-        print(f"Error for {num_zero}: {e}")
-
-    # Test case 3: Negative integer (Should raise ValueError)
-    num_negative = -3
-    print(f"\nAttempting factorial of {num_negative} (Expect error):")
-    try:
-        factorial(num_negative)
-    except ValueError as e:
-        print(f"Successfully caught expected error: {e}")
-        
-    # Test case 4: Non-integer input (Should raise TypeError)
-    num_float = 4.5
-    print(f"\nAttempting factorial of {num_float} (Expect error):")
-    try:
-        factorial(num_float)
-    except TypeError as e:
-        print(f"Successfully caught expected error: {e}")
-```
+import random
+n=random.randint(1,100)
+guesses=set()
+tries=0
+while True:
+    g=int(input('Guess: '))
+    if g not in guesses: tries+=1
+    guesses.add(g)
+    if g<n: print('Too low')
+    elif g>n: print('Too high')
+    else: print(f'Correct in {tries} tries'); break
