@@ -1,9 +1,6 @@
-```python
-def write_function():
-    def inner_function():
-        return "Function has been written"
-
-    return inner_function()
-
-print(write_function())
-```
+def text_to_graph(text):
+    words=text.lower().split()
+    g=Graph()
+    for i in range(len(words)-1):
+        g.add_edge(words[i],words[i+1])
+    return g

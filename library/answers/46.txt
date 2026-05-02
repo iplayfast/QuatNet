@@ -1,10 +1,13 @@
-import itertools, time, sys
-
-def spinner(duration=10):
-    chars = itertools.cycle('|/-\\')
-    start = time.time()
-    while time.time() - start < duration:
-        sys.stdout.write(f'\r{next(chars)} {time.time() - start:.1f}s')
-        sys.stdout.flush()
-        time.sleep(0.1)
-    print()
+def random_walk(graph,steps=20):
+    import random
+    nodes=list(graph.adj.keys())
+    current=random.choice(nodes)
+    result=[current]
+    for _ in range(steps):
+        neighbors=graph.adj.get(current,[])
+        if neighbors:
+            current=random.choice(neighbors)[0]
+        else:
+            current=random.choice(nodes)
+        result.append(current)
+    return ' '.join(result)

@@ -1,1 +1,3 @@
-def my_function():\n    pass\n
+name = input('Enter your name: ')
+if name in ('Alice', 'Bob'):
+    print(f'Hello {name}')

@@ -1,1 +1,1 @@
-Write a function that serializes a binary tree to a string and deserializes it back to the tree.
+Write a program that plays Hangman, choosing letters that eliminate the most possible words.

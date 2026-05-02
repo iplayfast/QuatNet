@@ -1,1 +1,1 @@
-Write a function that finds the most frequent element in a list.
+Write a program that implements a command-line progress spinner with elapsed time.

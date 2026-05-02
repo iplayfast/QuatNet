@@ -1,76 +1,22 @@
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-def serialize(root):
-    """Pre-order traversal with '#' for None, comma-separated."""
-    parts = []
-    def dfs(node):
-        if not node:
-            parts.append('#')
-            return
-        parts.append(str(node.val))
-        dfs(node.left)
-        dfs(node.right)
-    dfs(root)
-    return ','.join(parts)
-
-def deserialize(data):
-    """Reconstruct tree from serialized string."""
-    it = iter(data.split(','))
-    def dfs():
-        val = next(it)
-        if val == '#':
-            return None
-        node = TreeNode(int(val))
-        node.left = dfs()
-        node.right = dfs()
-        return node
-    return dfs()
-
-# Alternative: level-order (BFS) serialization
-from collections import deque
-
-def serialize_bfs(root):
-    """Level-order serialization, '#' for missing nodes."""
-    if not root:
-        return '#'
-    parts = []
-    q = deque([root])
-    while q:
-        node = q.popleft()
-        if node:
-            parts.append(str(node.val))
-            q.append(node.left)
-            q.append(node.right)
+def edit_distance(a,b):
+    m,n=len(a),len(b)
+    dp=[[0]*(n+1) for _ in range(m+1)]
+    for i in range(m+1): dp[i][0]=i
+    for j in range(n+1): dp[0][j]=j
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            if a[i-1]==b[j-1]:
+                dp[i][j]=dp[i-1][j-1]
+            else:
+                dp[i][j]=1+min(dp[i-1][j],dp[i][j-1])
+    # Reconstruct edits
+    i,j=m,n; ops=[]
+    while i>0 or j>0:
+        if i>0 and dp[i][j]==dp[i-1][j]+1:
+            ops.append(f'delete {a[i-1]} at {i-1}'); i-=1
+        elif j>0 and dp[i][j]==dp[i][j-1]+1:
+            ops.append(f'insert {b[j-1]} at {i}'); j-=1
         else:
-            parts.append('#')
-    return ','.join(parts)
-
-def deserialize_bfs(data):
-    """Reconstruct from level-order serialization."""
-    if data == '#':
-        return None
-    vals = data.split(',')
-    root = TreeNode(int(vals[0]))
-    q = deque([root])
-    i = 1
-    while q and i < len(vals):
-        node = q.popleft()
-        if vals[i] != '#':
-            node.left = TreeNode(int(vals[i]))
-            q.append(node.left)
-        i += 1
-        if i < len(vals) and vals[i] != '#':
-            node.right = TreeNode(int(vals[i]))
-            q.append(node.right)
-        i += 1
-    return root
-
-# Usage:
-# root = TreeNode(1, TreeNode(2), TreeNode(3, TreeNode(4), TreeNode(5)))
-# s = serialize(root)
-# t = deserialize(s)
-# assert serialize(t) == s
+            i-=1; j-=1
+    return ops[::-1]
+# O(mn) DP, Levenshtein distance (insertions + deletions only)

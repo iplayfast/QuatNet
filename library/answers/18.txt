@@ -1,8 +1,14 @@
-def fibonacci_first_100():
-    fib = [0, 1]
-    for i in range(2, 100):
-        fib.append(fib[i - 1] + fib[i - 2])
-    return fib
+def sum_for(lst):
+    s=0
+    for x in lst: s+=x
+    return s
 
-result = fibonacci_first_100()
-print(result)
+def sum_while(lst):
+    s,i=0,0
+    while i<len(lst):
+        s+=lst[i]; i+=1
+    return s
+
+def sum_rec(lst):
+    if not lst: return 0
+    return lst[0]+sum_rec(lst[1:])

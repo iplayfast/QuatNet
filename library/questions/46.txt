@@ -1,1 +1,1 @@
-Write a program that implements a command-line progress spinner with elapsed time.
+Write a function that multiplies two matrices, optimized for cache performance.

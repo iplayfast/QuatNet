@@ -1,10 +1,2 @@
-```python
-def solve_problem():
-    # Function body goes here
-
-
-# Example usage:
-if __name__ == "__main__":
-    result = solve_problem()
-    print(result)
-```
+name = input('Enter your name: ')
+print(f'Hello {name}')

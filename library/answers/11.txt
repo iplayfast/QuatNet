@@ -1,10 +1,6 @@
-Here is a simple python function:
-
-```python
-def hello_world():
-    return "Hello, World!"
-
-print(hello_world())
-```
-
-This program defines a function named `hello_world` that returns the string `"Hello, World!"`. Then it calls this function and prints its result to the console.
+import math
+pi=0
+for k in range(1,10**6+1):
+    pi+=(-1)**(k+1)/(2*k-1)
+print(4*pi)
+# Converges to ~3.14159 (π)

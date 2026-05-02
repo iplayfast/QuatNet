@@ -1,1 +1,1 @@
-Write a Python function.
+Write a program that prints all prime numbers up to a limit entered by the user.

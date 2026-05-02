@@ -1,7 +1,10 @@
-def most_frequent(lst):
-    if not lst:
-        return None
-    freq = {}
-    for x in lst:
-        freq[x] = freq.get(x, 0) + 1
-    return max(freq, key=freq.get)
+import itertools, time, sys
+
+def spinner(duration=10):
+    chars = itertools.cycle('|/-\\')
+    start = time.time()
+    while time.time() - start < duration:
+        sys.stdout.write(f'\r{next(chars)} {time.time() - start:.1f}s')
+        sys.stdout.flush()
+        time.sleep(0.1)
+    print()

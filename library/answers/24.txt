@@ -1,7 +1,7 @@
-```python
-def main():
-    # Your custom logic here
-
-if __name__ == "__main__":
-    main()
-```
+def fib100():
+    a,b=1,1; r=[a,b]
+    for _ in range(98):
+        a,b=b,a+b; r.append(b)
+    return r
+# First 100: [1,1,2,3,5,8,13,21,34,55,89,144,...
+# Last few: ...218922995834555169026,354224848179261915075,573147844013817084101]

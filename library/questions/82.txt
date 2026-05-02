@@ -1,1 +1,1 @@
-Write a function that implements the simplex algorithm for linear programming (2D case).
+Write a function that removes duplicate elements from a list while preserving order.

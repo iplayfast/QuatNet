@@ -1,1 +1,1 @@
-Write a function that finds the strongly connected components of a directed graph using Tarjan's algorithm.
+Write a program that asks for a number n and prints the sum of all multiples of 3 or 5 from 1 to n.

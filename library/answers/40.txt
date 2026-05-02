@@ -1,6 +1,11 @@
-import csv, statistics
-
-def analyze_column(filename, col):
-    with open(filename) as f:
-        vals = [float(row[col]) for row in csv.reader(f)]
-    print(f'min={min(vals):.2f} max={max(vals):.2f} mean={statistics.mean(vals):.2f} median={statistics.median(vals):.2f}')
+def find_100():
+    from itertools import product
+    results=[]
+    for ops in product(['+','-',''],repeat=8):
+        expr='1'
+        for i,op in enumerate(ops,2):
+            expr+=op+str(i)
+        if eval(expr)==100:
+            results.append(expr)
+    return results
+# Finds 11 solutions like '1+2+3-4+5+6+78+9', '12+3-4+5+67+8+9', etc.

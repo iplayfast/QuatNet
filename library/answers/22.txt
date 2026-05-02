@@ -1,23 +1,7 @@
-```python
-def count_odd_numbers(lst):
-    """
-    Count the number of odd integers in a given list.
-    
-    Parameters:
-        lst (list[int]): List of integers
-    
-    Returns:
-        int: Count of odd numbers
-    """
-    return sum(1 for x in lst if x % 2 != 0)
-```
-
-### Example Usage:
-```python
-if __name__ == "__main__":
-    numbers = [1, 2, 4, 6, 7, 9, 11]
-    result = count_odd_numbers(numbers)
-    print(f"Number of odd numbers in {numbers}: {result}")  # Output: 3
-```
-
-**Note:** Replace this function with your specific problem's requirements.
+def merge_sorted(a,b):
+    i=j=0; r=[]
+    while i<len(a) and j<len(b):
+        if a[i]<b[j]: r.append(a[i]); i+=1
+        else: r.append(b[j]); j+=1
+    r.extend(a[i:]); r.extend(b[j:])
+    return r

@@ -1,14 +1,8 @@
-class EventBus:
-    def __init__(self):
-        self.subs = {}
-
-    def subscribe(self, event, callback):
-        self.subs.setdefault(event, []).append(callback)
-
-    def unsubscribe(self, event, callback):
-        if event in self.subs:
-            self.subs[event] = [cb for cb in self.subs[event] if cb != callback]
-
-    def emit(self, event, *args, **kwargs):
-        for cb in self.subs.get(event, []):
-            cb(*args, **kwargs)
+def rotate(lst,k):
+    n=len(lst); k%=n
+    def rev(l,r):
+        while l<r:
+            lst[l],lst[r]=lst[r],lst[l]; l+=1; r-=1
+    rev(0,k-1); rev(k,n-1); rev(0,n-1)
+    return lst
+# Uses at most n swaps (3 reversals, each reversal costs ~len/2 swaps)

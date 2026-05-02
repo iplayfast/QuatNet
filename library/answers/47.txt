@@ -1,15 +1,6 @@
-```python
-def fibonacci(n):
-    """Return the nth Fibonacci number (0-indexed)."""
-    if n < 0:
-        raise ValueError("Input must be a non-negative integer")
-    elif n == 0:
-        return 0
-    elif n == 1 or n == 2:
-        return 1
-    else:
-        a, b = 0, 1
-        for _ in range(3, n + 1):
-            a, b = b, a + b
-        return b
-```
+MORSE = {'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':'/'}
+REV_MORSE={v:k for k,v in MORSE.items()}
+def to_morse(text):
+    return ' '.join(MORSE.get(c.upper(),c) for c in text)
+def from_morse(morse):
+    return ''.join(REV_MORSE.get(c,'?') for c in morse.split())
