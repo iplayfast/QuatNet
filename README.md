@@ -1,114 +1,130 @@
-# FourBitState: 2-Bit Quantized Language Model Training via Straight-Through Estimation
+# QuatNet: 2-Bit Quaternary Neural Network with Self-Growing Architecture
 
 ## Abstract
 
-We present FourBitState, a framework for training transformer language models with 2-bit quantized attention weights using straight-through estimation (STE). The model employs a quaternary value set {−1.0, −0.01, 0.01, 1.0} for attention projection matrices, achieving extreme compression while maintaining trainability via gradient bypass. Training is driven by a dual-objective loss combining byte-level next-token prediction and explicit quantization regularization that pulls attention weights toward their target values. Models are exported to GGUF format for inference via llama.cpp.
+QuatNet is a framework for training transformer language models with **2-bit quaternary weights** using straight-through estimation (STE). It employs a quaternary value set {1.0, 0.5, -0.5, -1.0} for attention projection matrices, achieving extreme compression while maintaining trainability via gradient bypass. The system introduces several novel techniques beyond standard quantization-aware training:
 
-## 1. Introduction
+- **Dynamic architecture growth**: model starts at 2 dimensions and automatically widens/deepens at plateaus
+- **Dual-objective loss**: byte-level CE + Q2_Q quantization regularization + KL distillation from heterogeneous teacher pools
+- **Self-pacing via plateau detection**: training autoregulates LR decay and model growth
+- **Native GGUF 2-bit type**: custom GGML quantization type 99 with CPU kernel and full llama.cpp integration
 
-Large language models require significant memory for storage and inference. Post-training quantization (PTQ) methods such as Q4_K_M and Q2_K reduce precision after training, but quality degradation increases at very low bit widths. Quantization-aware training (QAT) addresses this by simulating quantization during training, allowing the model to adapt.
+## Novel Techniques
 
-We push this to the extreme: 2-bit (Q2_Q) quantization of attention projection matrices using an asymmetric quaternary encoding scheme. Rather than learning weights in a continuous space and quantizing post-hoc, we embed quantization directly into the forward pass via STE, jointly optimizing for language modeling loss and quantization target convergence.
+### 1. Dynamic Architecture Growth with Weight Preservation
 
-## 2. Architecture
+The model starts at **2d × 4 layers** (~7K params) and automatically grows when training plateaus:
 
-### 2.1 Model Configuration
+| Growth Stage | Schedule |
+|---|---|
+| d < 16 | Square (2→4→16) |
+| d < 64 | ×4 (16→64) |
+| d < 16384 | Double (64→128→256→...→16384) |
+| d ≥ 16384 | Add 2 layers per growth |
 
-| Parameter | Value |
-|-----------|-------|
-| Embedding dimension (d_model) | 128 |
-| Number of layers | 4 |
-| Attention heads | 8 |
-| KV heads | 8 (supports GQA) |
-| Feed-forward dimension | 256 |
-| Maximum sequence length | 128 |
-| Vocabulary size | 256 (byte-level) |
-| Total parameters | 738K |
+**Key**: learned weights are copied into the expanded structure. The model never starts from scratch — it widens existing weights and randomly initializes new dimensions. This is unlike standard practice where model size is fixed at init and you discard smaller models when scaling up.
 
-### 2.2 Quaternary Linear Layer
+### 2. Quaternary 2-Bit STE Training with Triple-Objective Loss
 
-The core innovation is `QuaternaryLinear`, a linear layer whose weights are constrained to four discrete values during the forward pass while maintaining a continuous latent parameter for gradient accumulation:
-
-```
-w_q = quantize(w)  # maps to {−1.0, −0.01, 0.01, 1.0}
-w_ste = w_q + (w - w.detach())  # straight-through estimator
-output = linear(x, w_ste)
-```
-
-The forward pass uses quantized weights; the backward pass passes gradients through to the full-precision latent `w` unchanged. This allows the model to learn which weights should be which quaternary value through normal gradient descent.
-
-### 2.3 Attention with Grouped-Query Support
-
-Multi-head attention supports grouped-query attention (GQA) where key/value heads may be fewer than query heads. KV heads are expanded via `repeat_interleave` during the forward pass:
+Three losses combined dynamically:
 
 ```
-k = k.repeat_interleave(n_heads // n_kv_heads, dim=1)
-v = v.repeat_interleave(n_heads // n_kv_heads, dim=1)
+L = L_ce + λ_q2q * L_q2q + λ_distill * KL(student || teacher)
 ```
 
-## 3. Training Pipeline
+- **L_ce**: Standard next-byte prediction (256-class cross-entropy)
+- **L_q2q**: MSE pulling attention weights toward {1.0, 0.5, -0.5, -1.0} (λ_q2q = 0.5)
+- **KL divergence**: Student matches teacher output distribution
 
-### 3.1 Data Format
+The distillation weight is **dynamic**: λ_distill scales from 0 (model still learning basics) to 1 (model refined enough to benefit from teacher guidance), based on `min(1.0, max(0.0, 1.0 - L_ce / 5.0))`.
 
-Training data consists of programming Q&A pairs stored as structured text with delimiter tokens:
+### 3. Distributed Heterogeneous Teacher Pool
+
+Multiple Ollama servers contribute to distillation simultaneously:
+- Local models (llama3.2, gemma4)
+- Remote servers (mac-mini with qwen3-coder, glm-4.7-flash, gpt-oss)
+- Different architectures, sizes, and quantization levels
+
+The student learns from a diverse teacher ensemble, not a single fixed teacher. Data generation (library_populator.py) runs as a separate process, decoupled from training.
+
+### 4. Self-Pacing via Plateau Detection
+
+No manual LR scheduling or early stopping:
+
+1. If Q2_Q convergence improves → keep LR
+2. If Q2_Q plateaus for 2000 steps → halve LR
+3. If LR exhausts (≤1e-8) OR loss plateaus for 10K steps → **grow the model**
+4. After growth → reset optimizer and continue
+
+This lets the model auto-regulate its capacity: small when the task is easy, larger when it needs more representational power.
+
+### 5. Native GGUF 2-Bit Type (Q2_Q = 99)
+
+A custom GGML quantization type registered at type ID 99:
+- **32 weights per block**, 4 weights per byte (2 bits each)
+- **No scale/min** — pure packed 2-bit codes for {1.0, 0.5, -0.5, -1.0}
+- CPU kernel in `ggml-cpu.c` with thread-parallel matmul
+- Full llama.cpp architecture: `quaternary_nn` with `LLM_ARCH_QUATERNARY_NN` enum, load_tensors, build_graph, and model handler
+- Python quantize/dequantize in `gguf-py/gguf/quants.py` with GGUF writer fix for `raw_shape` passthrough
+
+### 6. Live-Plot Feedback Loop
+
+`plot_training.sh` with `q`-key refresh shows real-time:
+- Training loss
+- Learning rate (log scale)
+- Q2_Q convergence percentage
+- Data size
+- Model architecture (d_model + n_layers with green/blue overlay and growth annotations)
+
+## Pipeline Components
+
+| Script | Role |
+|--------|------|
+| `teacher_pipeline.py` | Core training with auto-growth, triple loss, GGUF export |
+| `library_populator.py` | Independent data collector — queries Ollama servers continuously |
+| `convert_to_quaternary.py` | Convert any GGUF model to quaternary_nn architecture |
+| `buildLibrary.py` | One-shot library builder from programmingquestions.txt |
+| `plot_training.sh` | Real-time training visualization (press 'q' to refresh) |
+| `validate_servers.py` | Test all Ollama workers in servers.json |
+| `restart_training.sh` | Clean reset: kill, clean artifacts, restart |
+
+## Project Structure
 
 ```
-<|Q|>Write a Python function.<|A|>def f(): pass<|END|>
+├── teacher_pipeline.py       # Main training loop with auto-growth
+├── library_populator.py      # Independent data generation (runs alongside training)
+├── convert_to_quaternary.py  # GGUF → quaternary_nn converter
+├── plot_training.sh          # Real-time matplotlib visualization
+├── restart_training.sh       # Clean restart script
+├── library/                  # Q&A training data
+│   ├── questions/            # Prompts
+│   ├── answers/              # Solutions
+│   └── questions/bestquestions/  # Curated seed questions
+├── llama.cpp/                # Fork with Q2_Q type 99, quaternary_nn arch
+│   ├── src/models/quaternary_nn.cpp
+│   ├── ggml/src/ggml.c       # Q2_Q type traits
+│   ├── ggml/src/ggml-cpu/ggml-cpu.c  # MUL_MAT_Q2_Q kernel
+│   └── gguf-py/gguf/quants.py        # Python Q2_Q class
+├── models/                   # Converted models
+├── images/                   # Training plots
+└── servers.json              # Ollama worker pool config
 ```
 
-This byte-level encoding operates directly on UTF-8 bytes (vocabulary size 256), avoiding the need for a separate tokenizer.
+## Running
 
-### 3.2 Dual-Objective Loss
+```bash
+# Terminal 1: Data generation
+source .venv/bin/activate && python library_populator.py
 
-The loss function combines standard next-token prediction with quantization regularization:
+# Terminal 2: Training
+./restart_training.sh
 
-```
-L = L_ce + λ * L_q2q
-```
-
-where `L_ce` is cross-entropy on byte predictions, `L_q2q` is MSE between attention weights and their nearest quaternary target value (within tolerance 0.5), and λ = 0.5 controls regularization strength.
-
-### 3.3 Learning Rate Schedule
-
-A conservative adaptive scheduler halves the learning rate when Q2_Q convergence plateaus for 2000 steps. A floor of 1e-8 triggers an LR reset to the initial value (5e-4), preventing the model from stalling entirely.
-
-### 3.4 Training Data Augmentation
-
-Every 1000 steps, the pipeline queries a pool of Ollama workers (local and remote) to generate fresh Q&A pairs. These are written to the library, and the training data is reloaded. The pool includes both local models and remote workers on networked machines.
-
-### 3.5 Metrics and Logging
-
-Training metrics (step, loss, learning rate, Q2_Q convergence percentage, data size, elapsed time) are logged to `training_log.csv` every 500 steps. The `plot_training.sh` script generates a four-panel visualization.
-
-## 4. GGUF Export and Inference
-
-The `QuaternaryLLM.export_gguf()` method writes the model to GGUF format with the `quaternary_nn` architecture. Attention weights are stored as Q2_Q quantized tensors; norms and embeddings remain fp32 for compatibility with llama.cpp's GGML backend.
-
-The exported model runs via:
-```
-./llama.cpp/build/bin/llama-simple -m quaternary_trained.gguf -p "<|Q|>" -n 20
+# Terminal 3: Monitoring
+python3 plot_training.sh
 ```
 
-## 5. Validation and Testing
+## Dependencies
 
-- `validate_servers.py`: Tests connectivity and response of all Ollama workers in `servers.json`
-- `verify_with_llama()`: Loads the exported GGUF in llama.cpp to confirm it loads and decodes correctly
-- `run_model.sh`: Convenience wrapper for interactive inference
-
-## 6. Results
-
-After 1.2 million training steps, the model achieves:
-- **Byte-level loss**: 0.10–0.50 (near-chance entropy for 256-vocab is ~5.5)
-- **Q2_Q convergence**: 25.2% of attention weights within tolerance of their target values
-- **Inference speed**: ~850 tokens/second on NVIDIA RTX 4090
-
-Q2_Q convergence continues to increase with training; the regularization pressure (λ = 0.5) is actively pulling weights toward their quaternary targets with each LR reset cycle.
-
-![Training Metrics](images/training_log.png)
-
-## 7. Dependencies
-
-- Python 3.10+
-- PyTorch (CUDA recommended)
-- llama.cpp (with GGUF Python bindings)
-- Access to an Ollama instance for data generation
+- Python 3.10+, PyTorch (CUDA recommended)
+- llama.cpp (via git subtree — included)
+- Access to Ollama instances for data generation
