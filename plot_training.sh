@@ -60,4 +60,27 @@ name = os.path.splitext(os.path.basename(log))[0]
 out = os.path.join("images", f"{name}.png")
 plt.savefig(out, dpi=150)
 print(f"Saved {out}")
-plt.show()
+if "--watch" in sys.argv:
+    import time
+    while True:
+        time.sleep(5)
+        # Re-read CSV and update
+        steps, loss, lr, q2q, data_bytes, elapsed, d_model, n_layers = [], [], [], [], [], [], [], []
+        with open(log) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                steps.append(int(row["step"])); loss.append(float(row["loss"]))
+                lr.append(float(row["lr"])); q2q.append(float(row["q2q_pct"]))
+                data_bytes.append(int(row["data_bytes"])); elapsed.append(float(row["elapsed_sec"]))
+                d_model.append(int(row.get("d_model", 128))); n_layers.append(int(row.get("n_layers", 4)))
+        # Update each plot line
+        axes[0].lines[0].set_data(steps, loss); axes[0].relim(); axes[0].autoscale_view()
+        axes[1].lines[0].set_data(steps, lr); axes[1].relim(); axes[1].autoscale_view()
+        axes[2].lines[0].set_data(steps, q2q); axes[2].relim(); axes[2].autoscale_view()
+        axes[3].lines[0].set_data(steps, data_bytes); axes[3].relim(); axes[3].autoscale_view()
+        axes[4].lines[0].set_data(steps, d_model); axes[4].relim(); axes[4].autoscale_view()
+        axes[4].lines[1].set_data(steps, n_layers); axes[4].relim(); axes[4].autoscale_view()
+        plt.savefig(out, dpi=150)
+        print(f"[{time.strftime('%H:%M:%S')}] Updated {out}")
+else:
+    plt.show()
