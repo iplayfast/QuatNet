@@ -3,7 +3,11 @@
 import csv, sys, os
 import matplotlib.pyplot as plt
 
-log = sys.argv[1] if len(sys.argv) > 1 else "training_log.csv"
+log = "training_log.csv"
+for arg in sys.argv[1:]:
+    if not arg.startswith('--'):
+        log = arg
+        break
 
 steps, loss, lr, q2q, data_bytes, elapsed, d_model, n_layers = [], [], [], [], [], [], [], []
 with open(log) as f:
