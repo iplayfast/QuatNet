@@ -615,7 +615,7 @@ if __name__ == "__main__":
     loss_plateau_steps = 0
 
     # Initialize log file
-    log_header = "step,loss,lr,q2q_pct,data_bytes,elapsed_sec\n"
+    log_header = "step,loss,lr,q2q_pct,data_bytes,elapsed_sec,d_model,n_layers\n"
     if not os.path.exists(LOG_FILE) or os.path.getsize(LOG_FILE) == 0:
         with open(LOG_FILE, "w") as f: f.write(log_header)
     start_time = time.time()
@@ -719,7 +719,7 @@ if __name__ == "__main__":
                 sample = _model.generate_sample("<|Q|>", 30)
                 print(f"  step {step:5d} | LR {opt.param_groups[0]['lr']:.1e} | loss {loss.item():.4f} | Q2_Q converged: {q_ratio:.0f}% | gen: {sample[:40]}")
                 with open(LOG_FILE, "a") as f:
-                    f.write(f"{step},{loss.item():.6f},{opt.param_groups[0]['lr']:.1e},{q_ratio:.1f},{len(data)},{elapsed:.1f}\n")
+                    f.write(f"{step},{loss.item():.6f},{opt.param_groups[0]['lr']:.1e},{q_ratio:.1f},{len(data)},{elapsed:.1f},{_model.d_model},{_model.n_layers}\n")
 
                 _model.export_gguf(LLAMA_MODEL)
 
