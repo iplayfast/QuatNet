@@ -132,9 +132,16 @@ class QuaternaryLLM(nn.Module):
         self.output_norm = RMSNorm(d)
         self.output = nn.Linear(d, vocab, bias=False)
 
-    def grow(self, factor=2):
-        """Double model capacity: widen d_model, add heads and layers."""
+    def grow(self):
+        """Increase model capacity: geometric growth for small, tapering for large."""
         old_d = self.d_model
+        if old_d >= 2048:
+            print(f"  [GROW] Already at {old_d}d, skipping growth")
+            return self
+        raw = old_d * (2 if old_d < 512 else 1.5 if old_d < 1024 else 1.25)
+        # Round to nearest multiple of n_heads for clean head splits
+        rounded = int(round(raw / self.n_heads)) * self.n_heads
+        factor = rounded / old_d
         new_d = old_d * factor
         new_heads = self.n_heads * factor
         new_kv = self.n_kv_heads * factor
