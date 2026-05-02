@@ -2,16 +2,17 @@
 """Validate all servers in servers.json are reachable and respond."""
 import json, urllib.request, urllib.error, sys, time
 
-def test_server(url, model, timeout=10):
-    """Check if an Ollama server is alive using /api/tags (model list query, no model load needed)."""
+def test_server(url, model, timeout=60):
+    """Ask the model 'Are you there?' — if it responds, the model is loaded and working."""
     try:
-        req = urllib.request.Request(f"{url}/api/tags")
+        req = urllib.request.Request(f"{url}/api/generate",
+            data=json.dumps({"model": model, "prompt": "Are you there?", "stream": False}).encode(),
+            headers={"Content-Type": "application/json"})
         start = time.time()
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read())
             elapsed = time.time() - start
-            models = [m["name"] for m in data.get("models", [])]
-            return ("ALIVE", f"{elapsed:.1f}s", f"{len(models)} models")
+            return ("OK", f"{elapsed:.1f}s", data.get("response", "")[:60])
     except urllib.error.HTTPError as e:
         return ("HTTP_ERR", str(e.code), str(e.reason))
     except urllib.error.URLError as e:
