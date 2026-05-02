@@ -142,8 +142,8 @@ class QuaternaryLLM(nn.Module):
             new_d = old_d * 2      # double: 256→512→1024→...→16384
         else:
             new_d = old_d
-        new_heads = max(1, new_d // 16)
-        new_kv = max(1, new_d // 64)
+        new_heads = min(new_d, max(1, new_d // 16))
+        new_kv = min(new_heads, max(1, new_d // 64))
         new_ff = new_d * 4
         new_layers = max(2, new_d // 64)
         if old_d != new_d:
@@ -161,25 +161,36 @@ class QuaternaryLLM(nn.Module):
             new_model.tok_embd.weight[:old_vocab, :old_d] = self.tok_embd.weight
             new_model.pos_embd.weight[:, :old_d] = self.pos_embd.weight
 
-        # Copy existing layers, pad new ones
-        for i in range(self.n_layers):
+        # Copy existing layers, pad new ones (handles changing head counts)
+        for i in range(min(self.n_layers, len(new_model.layers))):
             old_layer = self.layers[i]
             new_layer = new_model.layers[i]
             with torch.no_grad():
-                new_layer.attn_norm.weight[:old_d] = old_layer.attn_norm.weight
-                new_layer.ffn_norm.weight[:old_d] = old_layer.ffn_norm.weight
-                new_layer.attn.q.weight[:old_d, :old_d] = old_layer.attn.q.weight
-                new_layer.attn.k.weight[:old_d, :old_d] = old_layer.attn.k.weight
-                new_layer.attn.v.weight[:old_d, :old_d] = old_layer.attn.v.weight
-                new_layer.attn.o.weight[:old_d, :old_d] = old_layer.attn.o.weight
-                new_layer.ffn.gate.weight[:old_d, :old_d] = old_layer.ffn.gate.weight
-                new_layer.ffn.up.weight[:old_d, :old_d] = old_layer.ffn.up.weight
-                new_layer.ffn.down.weight[:old_d, :old_d] = old_layer.ffn.down.weight
+                for name in ['attn_norm', 'ffn_norm']:
+                    old_w = getattr(old_layer, name).weight
+                    new_w = getattr(new_layer, name).weight
+                    d_min = min(old_w.shape[0], new_w.shape[0])
+                    new_w[:d_min] = old_w[:d_min]
+                for name in ['q', 'k', 'v', 'o']:
+                    old_w = getattr(old_layer.attn, name).weight
+                    new_w = getattr(new_layer.attn, name).weight
+                    d0 = min(old_w.shape[0], new_w.shape[0])
+                    d1 = min(old_w.shape[1], new_w.shape[1])
+                    new_w[:d0, :d1] = old_w[:d0, :d1]
+                for name in ['gate', 'up', 'down']:
+                    old_w = getattr(old_layer.ffn, name).weight
+                    new_w = getattr(new_layer.ffn, name).weight
+                    d0 = min(old_w.shape[0], new_w.shape[0])
+                    d1 = min(old_w.shape[1], new_w.shape[1])
+                    new_w[:d0, :d1] = old_w[:d0, :d1]
 
         # Copy output norm and projection
         with torch.no_grad():
-            new_model.output_norm.weight[:old_d] = self.output_norm.weight
-            new_model.output.weight[:old_vocab, :old_d] = self.output.weight
+            d_min = min(self.output_norm.weight.shape[0], new_model.output_norm.weight.shape[0])
+            new_model.output_norm.weight[:d_min] = self.output_norm.weight[:d_min]
+            d0 = min(self.output.weight.shape[0], new_model.output.weight.shape[0])
+            d1 = min(self.output.weight.shape[1], new_model.output.weight.shape[1])
+            new_model.output.weight[:d0, :d1] = self.output.weight[:d0, :d1]
 
         print(f"  [GROW] {old_d}d×{self.n_layers}L→{new_d}d×{new_layers}L ({sum(p.numel() for p in new_model.parameters()):,} params)")
         return new_model
