@@ -1,7 +1,9 @@
-```python
-def solve_problem():
-    # Solution code here
-    pass
-
-solve_problem()
-```
+def pair_sum(lst, target):
+    seen = set()
+    pairs = []
+    for x in lst:
+        complement = target - x
+        if complement in seen:
+            pairs.append((complement, x))
+        seen.add(x)
+    return pairs

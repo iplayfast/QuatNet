@@ -1,1 +1,1 @@
-Write a class that implements a thread-safe bounded queue (producer-consumer) using threading primitives.
+Write a function that finds all pairs of numbers in a list that sum to a given target.

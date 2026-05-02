@@ -1,50 +1,12 @@
 ```python
-import math
-from typing import List
+def main():
+    # Example usage:
+    print(solution(2))  # Output: [1, 2]
+    print(solution(3))  # Output: [1, 2, 3]
 
-def calculate_fibonacci(n: int) -> int:
-    """
-    Calculates the nth Fibonacci number iteratively.
+def solution(n):
+    return list(range(1, n + 1))
 
-    Args:
-        n: The index of the Fibonacci number to calculate (n >= 0).
-
-    Returns:
-        The nth Fibonacci number.
-
-    Raises:
-        ValueError: If n is negative.
-    """
-    if n < 0:
-        raise ValueError("Input must be a non-negative integer.")
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
-
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-    return b
-
-if __name__ == '__main__':
-    # Example Usage
-    try:
-        input_number = 10
-        result = calculate_fibonacci(input_number)
-        print(f"The {input_number}th Fibonacci number is: {result}")
-
-        input_number_2 = 0
-        result_2 = calculate_fibonacci(input_number_2)
-        print(f"The {input_number_2}th Fibonacci number is: {result_2}")
-
-        input_number_3 = 1
-        result_3 = calculate_fibonacci(input_number_3)
-        print(f"The {input_number_3}th Fibonacci number is: {result_3}")
-
-        # Example of handling errors
-        # calculate_fibonacci(-5)
-
-    except ValueError as e:
-        print(f"Error: {e}")
+if __name__ == "__main__":
+    main()
 ```

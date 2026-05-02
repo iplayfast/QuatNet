@@ -1,48 +1,14 @@
 ```python
-def factorial(n):
-    """
-    Calculates the factorial of a non-negative integer n (n!).
-    
-    Args:
-        n (int): The number to calculate the factorial of.
-        
-    Returns:
-        int: The factorial of n.
-    
-    Raises:
-        ValueError: If n is a negative number.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    if n == 0:
-        return 1
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+def my_function():
+    x = 10
+    y = 20
 
-if __name__ == '__main__':
-    # Example 1: Calculate factorial of 5 (5! = 120)
-    try:
-        num1 = 5
-        print(f"The factorial of {num1} is: {factorial(num1)}")
-    except (ValueError, TypeError) as e:
-        print(f"Error: {e}")
+    if x > y:
+        print("x is greater than y")
+    elif x < y:
+        print("x is less than y")
+    else:
+        print("x is equal to y")
 
-    # Example 2: Factorial of 0
-    try:
-        num2 = 0
-        print(f"The factorial of {num2} is: {factorial(num2)}")
-    except (ValueError, TypeError) as e:
-        print(f"Error: {e}")
-
-    # Example 3: Handling invalid input (negative number)
-    try:
-        num3 = -3
-        print(f"The factorial of {num3} is: {factorial(num3)}")
-    except (ValueError, TypeError) as e:
-        print(f"Error handling {num3}: {e}")
+    return x + y
 ```

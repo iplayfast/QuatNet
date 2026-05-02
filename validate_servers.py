@@ -2,7 +2,7 @@
 """Validate all servers in servers.json are reachable and respond."""
 import json, urllib.request, urllib.error, sys, time
 
-def test_server(url, model, timeout=5):
+def test_server(url, model, timeout=25):
     try:
         req = urllib.request.Request(f"{url}/api/generate",
             data=json.dumps({"model": model, "prompt": "return 1", "stream": False}).encode(),

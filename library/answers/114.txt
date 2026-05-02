@@ -1,10 +1,7 @@
-Here is a simple Python function that takes two arguments and returns their sum:
+import struct
 
-```python
-def add_numbers(a, b):
-    return a + b
-```
-You can call it with any two numbers like so:
-`print(add_numbers(5, 10)) # outputs: 15`
+def float_to_ieee754(f):
+    return format(struct.unpack('!I', struct.pack('!f', f))[0], '032b')
 
-This solution meets the given problem by providing a Python function that adds together any two numerical inputs.
+def double_to_ieee754(f):
+    return format(struct.unpack('!Q', struct.pack('!d', f))[0], '064b')

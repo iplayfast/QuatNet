@@ -1,1 +1,1 @@
-Write a function that serializes an object to a Python-like repr string and deserializes it back.
+Write a function that serializes a binary tree to a string and deserializes it back to the tree.

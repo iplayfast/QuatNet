@@ -1,13 +1,2 @@
-Here is an example of a Python function that takes a list as input and returns the sum of its elements:
-
-```python
-def calculate_sum(input_list):
-    return sum(input_list)
-```
-
-You can call this function with a list as follows:
-
-```python
-print(calculate_sum([1, 2, 3, 4, 5]))
-# Output: 15
-```
+def my_function():
+    pass

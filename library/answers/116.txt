@@ -1,13 +1,65 @@
 ```python
-def example_function():
-    """
-    This is a sample function that demonstrates the structure of a Python function.
-    """
-    # Example code inside the function
-    print("This function is working correctly.")
+def is_prime(n):
+    """Check if a number is prime. Returns True if prime, else False."""
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
     return True
 
-# Example usage of the function
+
+def sum_of_digits(n):
+    """Sum of digits of a number."""
+    return sum(int(digit) for digit in str(n))
+
+
+def factor_sum(n):
+    """Return sum of prime factors of n."""
+    factors = [2, 3]
+    i = 5
+    while i * i <= n:
+        while n % i == 0:
+            factors.append(i)
+            n = n // i
+        i += 2
+    if n > 1:
+        factors.append(n)
+    return sum(factors)
+
+
+def calculate_sum(n):
+    """Calculate sum of digits of a number."""
+    return sum(int(digit) for digit in str(n))
+
+
+def check_prime(n):
+    """Check if n is a prime number."""
+    return is_prime(n)
+
+
+def find_gcd(a, b):
+    """GCD using Euclidean algorithm."""
+    while b:
+        a, b = b, a % b
+    return a
+
+
+# Example usage
 if __name__ == "__main__":
-    example_function()
+    num1 = 12345
+    num2 = 7623
+    print(is_prime(num1))
+    print(sum_of_digits(num1))
+    print(factor_sum(num1))
+    print(check_prime(num2))
+    print(find_gcd(12345, 13399))
+    print(calculate_sum(12345))
+    print("All functions executed successfully!")
 ```

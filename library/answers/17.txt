@@ -1,4 +1,9 @@
-def my_function():
-    return 42
+```python
+def example_function():
+    # Example function implementation
+    return "This is an example function."
 
-my_function()
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
+```

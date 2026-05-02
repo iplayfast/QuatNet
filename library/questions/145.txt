@@ -1,1 +1,1 @@
-Write a function that implements the Sieve of Eratosthenes as a generator yielding primes lazily.
+Write a function that finds the k-th smallest element in an unsorted array in O(n) average time (quickselect).

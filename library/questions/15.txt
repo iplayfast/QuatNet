@@ -1,1 +1,1 @@
-Write a function that implements the Knuth-Morris-Pratt (KMP) substring search algorithm.
+Write a function that implements a basic spell-checker using a dictionary and edit distance.

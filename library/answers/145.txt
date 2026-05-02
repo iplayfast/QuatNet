@@ -1,14 +1,11 @@
-def primes():
-    yield 2
-    sieve = {}
-    n = 3
-    while True:
-        p = sieve.pop(n, None)
-        if p is None:
-            yield n
-            sieve[n * n] = n
-        else:
-            m = n + p * 2
-            while m in sieve: m += p * 2
-            sieve[m] = p
-        n += 2
+import random
+
+def quickselect(arr, k):
+    if len(arr) == 1: return arr[0]
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    if k < len(left): return quickselect(left, k)
+    elif k < len(left) + len(mid): return mid[0]
+    else: return quickselect(right, k - len(left) - len(mid))

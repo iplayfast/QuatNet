@@ -1,5 +1,3 @@
-```python
-def my_function():
-    # Your code here
-    return "Hello, World!"
-```
+def find_anagrams(word, dictionary):
+    key = sorted(word)
+    return [w for w in dictionary if sorted(w) == key]

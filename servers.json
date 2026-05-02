@@ -21,5 +21,7 @@
   {"name": "mac-qwen3.5",     "url": "http://100.108.119.103:11434", "model": "qwen3.5:latest",     "role": "worker", "enabled": true, "active": true},
   {"name": "mac-gemma4",      "url": "http://100.108.119.103:11434", "model": "gemma4:latest",      "role": "worker", "enabled": true, "active": true},
   {"name": "mac-glm4.7",      "url": "http://100.108.119.103:11434", "model": "glm-4.7-flash:latest", "role": "worker", "enabled": true, "active": true},
-  {"name": "mac-gpt-oss",     "url": "http://100.108.119.103:11434", "model": "gpt-oss:latest",     "role": "worker", "enabled": true, "active": true}
+  {"name": "mac-gpt-oss",     "url": "http://100.108.119.103:11434", "model": "gpt-oss:latest",     "role": "worker", "enabled": true, "active": true},
+  {"name": "steve-glm4.7",      "url": "http://100.73.27.12:11434", "model": "glm-4.7-flash:latest", "role": "worker", "enabled": true, "active": true},
+  {"name": "steve-qwen3.5",      "url": "http://100.73.27.12:11434", "model": "qwen3.5:latest", "role": "worker", "enabled": true, "active": true}
 ]

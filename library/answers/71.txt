@@ -1,23 +1,16 @@
-from array import array
+from itertools import cycle
 
-def ring_buffer(capacity):
-    buf = [None] * capacity
-    read_pos = 0
-    write_pos = 0
+class LoadBalancer:
+    def __init__(self, backends):
+        self.backends = backends
+        self.pool = cycle(range(len(backends)))
 
-    def push(item):
-        nonlocal write_pos
-        nxt = (write_pos + 1) % capacity
-        if nxt == read_pos: return False
-        buf[write_pos] = item
-        write_pos = nxt
-        return True
+    def route(self, request):
+        idx = next(self.pool)
+        return self.backends[idx].handle(request)
 
-    def pop():
-        nonlocal read_pos
-        if read_pos == write_pos: return None
-        item = buf[read_pos]
-        read_pos = (read_pos + 1) % capacity
-        return item
-
-    return push, pop
+class Worker:
+    def __init__(self, name):
+        self.name = name
+    def handle(self, request):
+        return f'{self.name} handled {request}'

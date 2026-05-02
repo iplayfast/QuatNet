@@ -1,8 +1,13 @@
 ```python
-def solution(s):
-    return s == s[::-1]
+def solve():
+    x = 10
+    y = "Hello"
+    
+    # Perform some operations on x and y
+    z = x + len(y)
+    
+    print(z)
 
-# Test cases
-print(solution("madam")) # True
-print(solution("hello")) # False
+# Call the function to execute the solution
+solve()
 ```

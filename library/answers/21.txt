@@ -1,18 +1,9 @@
-from collections import deque
-
-def solve_maze(maze, start, end):
-    rows, cols = len(maze), len(maze[0])
-    queue = deque([(start[0], start[1], [start])])
-    visited = {start}
-    while queue:
-        r, c, path = queue.popleft()
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nr, nc = r + dr, c + dc
-            if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
-                pos = (nr, nc)
-                if pos == end:
-                    return path + [pos]
-                if pos not in visited:
-                    visited.add(pos)
-                    queue.append((nr, nc, path + [pos]))
-    return None
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr

@@ -1,42 +1,87 @@
 ```python
-def factorial(n: int) -> int:
-    """
-    Calculates the factorial of a non-negative integer n (n!).
+def my_function():
+    x = 5
+    y = 10
+    print("x =", x)
+    print("y =", y)
 
-    Args:
-        n: The integer for which to calculate the factorial.
+my_function()
 
-    Returns:
-        The factorial of n.
+def greet(name):
+    return f"Hello, {name}!"
 
-    Raises:
-        ValueError: If n is negative.
-    """
-    if not isinstance(n, int):
-        raise TypeError("Input must be an integer.")
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    if n == 0:
-        return 1
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+print(greet("John"))
+```
 
-if __name__ == '__main__':
-    # Example usage:
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def talk(self):
+        return f"My name is {self.name}, I am {self.age} years old."
+
+p = Person("Jane", 25)
+print(p.talk())
+```
+
+```python
+import random
+
+def generate_password(length=10, use_uppercase=True, use_numbers=True, use_special_chars=True):
+    chars = "abcdefghijklmnopqrstuvwxyz"
+    if use_uppercase:
+        chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if use_numbers:
+        chars += "0123456789"
+    if use_special_chars:
+        chars += "!@#$%^&*()"
+
+    password = "".join(random.choice(chars) for _ in range(length))
+    return password
+
+print(generate_password())
+```
+
+```python
+def calculate_average(numbers):
+    return sum(numbers) / len(numbers)
+
+numbers = [1, 2, 3, 4, 5]
+print(calculate_average(numbers))
+
+def calculate_average(numbers):
     try:
-        print(f"Factorial of 5: {factorial(5)}")  # Output: 120
-        print(f"Factorial of 0: {factorial(0)}")  # Output: 1
-        print(f"Factorial of 10: {factorial(10)}") # Output: 3628800
-    except (ValueError, TypeError) as e:
-        print(f"An error occurred: {e}")
+        return sum(numbers) / len(numbers)
+    except ZeroDivisionError:
+        print("Cannot divide by zero!")
+        return None
 
-    # Example of error handling:
-    print("\nTesting negative input:")
-    try:
-        factorial(-1)
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
+numbers = []
+print(calculate_average(numbers))
+```
+
+```python
+def binary_to_decimal(binary):
+    decimal = 0
+    power = 0
+    for char in reversed(binary):
+        if char == "1":
+            decimal += 2 ** power
+        power += 1
+    return decimal
+
+binary = "1010"
+print(binary_to_decimal(binary))
+
+def decimal_to_binary(decimal):
+    binary = ""
+    while decimal > 0:
+        binary += str(decimal % 2)
+        decimal //= 2
+    return binary[::-1]
+
+decimal = 10
+print(decimal_to_binary(decimal))
 ```

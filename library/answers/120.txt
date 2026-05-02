@@ -1,14 +1,18 @@
-def primes():
-    yield 2
-    sieve = {}
-    n = 3
-    while True:
-        p = sieve.pop(n, None)
-        if p is None:
-            yield n
-            sieve[n * n] = n
-        else:
-            m = n + p * 2
-            while m in sieve: m += p * 2
-            sieve[m] = p
-        n += 2
+def sum_for(lst):
+    total = 0
+    for x in lst:
+        total += x
+    return total
+
+def sum_while(lst):
+    total = 0
+    i = 0
+    while i < len(lst):
+        total += lst[i]
+        i += 1
+    return total
+
+def sum_recursive(lst):
+    if not lst:
+        return 0
+    return lst[0] + sum_recursive(lst[1:])

@@ -1,5 +1,11 @@
-```python
-def my_function():
-    # Your code here
-    pass
-```
+import random
+
+def quickselect(arr, k):
+    if len(arr) == 1: return arr[0]
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    if k < len(left): return quickselect(left, k)
+    elif k < len(left) + len(mid): return mid[0]
+    else: return quickselect(right, k - len(left) - len(mid))

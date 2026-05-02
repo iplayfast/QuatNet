@@ -1,12 +1,13 @@
-import random
+```python
+def example_function():
+    """
+    This is a sample function that demonstrates the structure of a Python function.
+    """
+    # Example code inside the function
+    print("This function is working correctly.")
+    return True
 
-def reservoir_sample(stream, k):
-    reservoir = []
-    for i, item in enumerate(stream):
-        if i < k:
-            reservoir.append(item)
-        else:
-            j = random.randint(0, i)
-            if j < k:
-                reservoir[j] = item
-    return reservoir
+# Example usage of the function
+if __name__ == "__main__":
+    example_function()
+```

@@ -1,10 +1,26 @@
-import itertools, time, sys
+```python
+def calculate_list_sum(numbers):
+    """
+    Calculates the sum of all integers in a list.
 
-def spinner(duration=10):
-    chars = itertools.cycle('|/-\\')
-    start = time.time()
-    while time.time() - start < duration:
-        sys.stdout.write(f'\r{next(chars)} {time.time() - start:.1f}s')
-        sys.stdout.flush()
-        time.sleep(0.1)
-    print()
+    Args:
+        numbers (list): A list of integers.
+
+    Returns:
+        int: The total sum of the numbers in the list.
+    """
+    return sum(numbers)
+
+if __name__ == '__main__':
+    list1 = [1, 2, 3, 4, 5]
+    total1 = calculate_list_sum(list1)
+    print(f"The sum of {list1} is: {total1}")
+
+    list2 = [10, -5, 15]
+    total2 = calculate_list_sum(list2)
+    print(f"The sum of {list2} is: {total2}")
+
+    list3 = []
+    total3 = calculate_list_sum(list3)
+    print(f"The sum of {list3} is: {total3}")
+```

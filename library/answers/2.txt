@@ -1,2 +1,10 @@
-def my_function():
-    return 'Hello, World!'
+```python
+def solve_problem():
+    # Function body goes here
+
+
+# Example usage:
+if __name__ == "__main__":
+    result = solve_problem()
+    print(result)
+```

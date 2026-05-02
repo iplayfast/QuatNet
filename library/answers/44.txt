@@ -1,4 +1,39 @@
-Here is your requested Python function:
+import random
 
-def my_function():
-    print('This is a sample Python function.')
+moves = ['rock', 'paper', 'scissors']
+history = []
+
+def beats(a, b):
+    return (a == 'rock' and b == 'scissors') or \
+           (a == 'scissors' and b == 'paper') or \
+           (a == 'paper' and b == 'rock')
+
+def counter(move):
+    return {'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock'}[move]
+
+def adapt_move():
+    if len(history) < 3:
+        return random.choice(moves)
+    freq = {}
+    for m in history[-5:]:
+        freq[m] = freq.get(m, 0) + 1
+    most_common = max(freq, key=freq.get)
+    return counter(most_common)
+
+print("Rock-Paper-Scissors (q to quit)")
+while True:
+    user = input("Your move: ").lower()
+    if user == 'q':
+        break
+    if user not in moves:
+        print("Invalid")
+        continue
+    comp = adapt_move()
+    history.append(user)
+    print(f"Computer: {comp}")
+    if beats(user, comp):
+        print("You win!")
+    elif beats(comp, user):
+        print("Computer wins!")
+    else:
+        print("Tie!")

@@ -1,12 +1,8 @@
-```python
-def solve():
-    n = int(input())
-    arr = list(map(int, input().split()))
-
-    if n % 2 == 0:
-        print(arr[n // 2 - 1])
-    else:
-        print(arr[n // 2])
-
-solve()
-```
+def flatten(nested):
+    result = []
+    for item in nested:
+        if isinstance(item, list):
+            result.extend(flatten(item))
+        else:
+            result.append(item)
+    return result

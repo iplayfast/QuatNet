@@ -1,10 +1,2 @@
-Here is a simple example:
-
-```python
-def greet(name):
-    return f'Hello, {name}'
-
-print(greet('User'))
-```
-
-This creates a function `greet` which takes a string input `name`, and returns a greeting with that name. When called with the argument 'User', it prints "Hello, User".
+def example_problem():
+    return 'solution'

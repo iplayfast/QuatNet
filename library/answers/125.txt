@@ -1,19 +1,8 @@
 ```python
-def add_numbers(a, b):
-    """
-    Adds two numbers together.
-    
-    Args:
-        a (int or float): The first number.
-        b (int or float): The second number.
-    
-    Returns:
-        int or float: The sum of a and b.
-    """
-    return a + b
+def calculate_total(items):
+    return sum(item for item in items if item > 0)
 
 if __name__ == "__main__":
-    # Example usage
-    result = add_numbers(10, 5)
-    print(f"The sum is: {result}")
+    result = calculate_total([1, 2, 3, 4, 5])
+    print(f"Total: {result}")
 ```

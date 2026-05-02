@@ -1,1 +1,1 @@
-Write a program that implements a command-line progress spinner with elapsed time.
+Write a Python function.

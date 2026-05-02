@@ -1,1 +1,1 @@
-Write a function that implements the Reservoir sampling algorithm (select k random items from a stream).
+Write a program that implements a command-line progress spinner with elapsed time.

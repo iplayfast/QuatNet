@@ -1,12 +1,46 @@
-Here is a simple Python function that returns the sum of two numbers:
-
 ```python
-def add_numbers(a, b):
-    return a + b
+import collections
 
-print(add_numbers(3, 4))
+def count_char_frequency(text: str) -> dict[str, int]:
+    """
+    Counts the frequency of each character in the given string.
+
+    Args:
+        text: The input string.
+
+    Returns:
+        A dictionary where keys are characters and values are their counts.
+    """
+    if not isinstance(text, str):
+        raise TypeError("Input must be a string.")
+        
+    # Use collections.Counter for an efficient and clean solution
+    return dict(collections.Counter(text))
+
+# --- Example Usage ---
+
+if __name__ == "__main__":
+    # Test Case 1: Basic sentence
+    sample_text_1 = "programming is fun"
+    frequency_1 = count_char_frequency(sample_text_1)
+    print(f"--- Analysis of '{sample_text_1}' ---")
+    print(f"Character Frequencies: {frequency_1}")
+
+    # Test Case 2: Empty string
+    sample_text_2 = ""
+    frequency_2 = count_char_frequency(sample_text_2)
+    print("\n--- Analysis of '' ---")
+    print(f"Character Frequencies: {frequency_2}")
+    
+    # Test Case 3: Punctuation and capitalization sensitivity
+    sample_text_3 = "Hello World!"
+    frequency_3 = count_char_frequency(sample_text_3)
+    print("\n--- Analysis of 'Hello World!' ---")
+    print(f"Character Frequencies: {frequency_3}")
+
+    # Example of error handling (uncomment to test)
+    # try:
+    #     count_char_frequency(12345)
+    # except TypeError as e:
+    #     print(f"\nCaught expected error: {e}")
 ```
-
-This will output `7`. If you need to modify this program or use it for another problem, just change what's inside the function "add_numbers". For instance, if your problem required multiplication instead of addition, you would change `return a + b` to `return a * b`.
-
-Please provide more details about the specific problem you are trying to solve if you need a customized solution.

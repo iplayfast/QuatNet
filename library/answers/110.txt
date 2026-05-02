@@ -1,9 +1,9 @@
-def compute_pi(terms=1_000_000):
-    pi = 0.0
-    sign = 1
-    for i in range(terms):
-        pi += sign / (2 * i + 1)
-        sign = -sign
-    return 4 * pi
+```python
+def example_function():
+    # Example function body
+    return "This is an example function."
 
-print(f"Pi approximation: {compute_pi()}")
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
+```

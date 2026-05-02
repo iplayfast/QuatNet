@@ -1,9 +1,30 @@
-def roman_to_int(s):
-    vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
-    total, prev = 0, 0
-    for c in reversed(s):
-        cur = vals[c]
-        if cur < prev: total -= cur
-        else: total += cur
-        prev = cur
-    return total
+```python
+def factorial(n):
+    """
+    Calculate the factorial of a non-negative integer.
+    
+    Args:
+        n (int): Non-negative integer
+    
+    Returns:
+        int: Factorial of n
+    
+    Raises:
+        ValueError: If n is negative
+        TypeError: If n is not an integer
+    """
+    if not isinstance(n, int):
+        raise TypeError("Input must be an integer")
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer")
+    
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+# Test cases
+print(factorial(0))   # Output: 1
+print(factorial(5))   # Output: 120
+print(factorial(10))  # Output: 3628800
+```

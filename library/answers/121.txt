@@ -1,13 +1,61 @@
-Here is your Python function:
-
 ```python
-def my_function(a, b):
-    return a + b
+import math
 
-result = my_function(5, 10)
-print(result)
+def is_prime(n):
+    """Checks if a number n is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def count_primes_in_range(start, end):
+    """
+    Counts the number of prime numbers within a specified inclusive range [start, end].
+    
+    Args:
+        start (int): The starting number of the range.
+        end (int): The ending number of the range.
+        
+    Returns:
+        int: The total count of prime numbers.
+    """
+    if start > end:
+        return 0
+    
+    count = 0
+    # Ensure we start checking from at least 2, as 1 and negative numbers are not prime
+    actual_start = max(2, start)
+    
+    for number in range(actual_start, end + 1):
+        if is_prime(number):
+            count += 1
+            
+    return count
+
+if __name__ == '__main__':
+    # Test Case 1: Primes between 1 and 10 (2, 3, 5, 7 -> Count: 4)
+    start1 = 1
+    end1 = 10
+    result1 = count_primes_in_range(start1, end1)
+    print(f"Primes in range [{start1}, {end1}]: {result1}")
+
+    # Test Case 2: Primes between 100 and 150
+    start2 = 100
+    end2 = 150
+    result2 = count_primes_in_range(start2, end2)
+    print(f"Primes in range [{start2}, {end2}]: {result2}")
+
+    # Test Case 3: Edge case (single prime number)
+    start3 = 7
+    end3 = 7
+    result3 = count_primes_in_range(start3, end3)
+    print(f"Primes in range [{start3}, {end3}]: {result3}")
+
+    # Test Case 4: Edge case (no primes, since input is too low)
+    start4 = 1
+    end4 = 1
+    result4 = count_primes_in_range(start4, end4)
+    print(f"Primes in range [{start4}, {end4}]: {result4}")
 ```
-
-As you didn't provide specifics about what the function should do or take in as parameters, I created a simple function that takes two arguments and returns their sum. The result is then printed out.
-
-The `my_function` function takes in two parameters `a` and `b`. It simply adds these two numbers together and returns the resulting value.

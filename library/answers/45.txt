@@ -1,11 +1,9 @@
-Here is your python function:
-
 ```python
-def my_function():
-    return 42
+def write_function():
+    def inner_function():
+        return "Function has been written"
 
-my_function()
+    return inner_function()
+
+print(write_function())
 ```
-This function simply returns the number '42' when called.
-
-Please remember that it's crucial to understand how this works if you're planning on using it in an actual program, as I've not explained its functionality.

@@ -1,1 +1,1 @@
-Implement quicksort.
+Write a function that computes the sum of a list using a for-loop, another using a while-loop, and another using recursion.

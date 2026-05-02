@@ -1,21 +1,9 @@
-from threading import Condition
-from collections import deque
-
-class BoundedQueue:
-    def __init__(self, capacity):
-        self.cap = capacity
-        self.q = deque()
-        self.cv = Condition()
-
-    def put(self, item):
-        with self.cv:
-            while len(self.q) >= self.cap: self.cv.wait()
-            self.q.append(item)
-            self.cv.notify()
-
-    def get(self):
-        with self.cv:
-            while not self.q: self.cv.wait()
-            item = self.q.popleft()
-            self.cv.notify()
-            return item
+def pair_sum(lst, target):
+    seen = set()
+    pairs = []
+    for x in lst:
+        complement = target - x
+        if complement in seen:
+            pairs.append((complement, x))
+        seen.add(x)
+    return pairs

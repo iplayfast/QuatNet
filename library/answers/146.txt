@@ -1,20 +1,28 @@
-```python
-def solve():
-    def max_sum_subarray(nums):
-        if not nums:
-            return 0
-        
-        current_max = nums[0]
-        global_max = nums[0]
-        
-        for num in nums[1:]:
-            current_max = max(num, current_max + num)
-            global_max = max(global_max, current_max)
-        
-        return global_max
-
-    # Example usage
-    input_nums = [1, -2, 3, 5, -3, 2]
-    result = max_sum_subarray(input_nums)
-    print(result)
-```
+def union_area(rects):
+    if not rects:
+        return 0.0
+    xs = set()
+    for x1, y1, x2, y2 in rects:
+        xs.add(x1); xs.add(x2)
+    xs = sorted(xs)
+    area = 0.0
+    for i in range(len(xs) - 1):
+        x_left, x_right = xs[i], xs[i + 1]
+        if x_right == x_left:
+            continue
+        intervals = []
+        for x1, y1, x2, y2 in rects:
+            if x1 <= x_left and x_right <= x2:
+                intervals.append((y1, y2))
+        if not intervals:
+            continue
+        intervals.sort()
+        merged = [intervals[0]]
+        for y1, y2 in intervals[1:]:
+            if y1 <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], y2))
+            else:
+                merged.append((y1, y2))
+        for y1, y2 in merged:
+            area += (x_right - x_left) * (y2 - y1)
+    return area

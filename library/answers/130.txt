@@ -1,9 +1,5 @@
-Here is your python function:
-
 ```python
-def hello_world():
-    print('Hello, world!')
-
-hello_world()
+def hello_dolphin():
+    print('Hello, Dolphin!')
+hello_dolphin()
 ```
-This script defines a function named 'hello_world' that prints out 'Hello, world!' when called. When the program is run, this message will be displayed in the console.

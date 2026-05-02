@@ -1,6 +1,18 @@
-def fuzzy_match(pattern, text):
-    pi, ti = 0, 0
-    while pi < len(pattern) and ti < len(text):
-        if pattern[pi].lower() == text[ti].lower(): pi += 1
-        ti += 1
-    return pi == len(pattern)
+from collections import deque
+
+def solve_maze(maze, start, end):
+    rows, cols = len(maze), len(maze[0])
+    queue = deque([(start[0], start[1], [start])])
+    visited = {start}
+    while queue:
+        r, c, path = queue.popleft()
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
+                pos = (nr, nc)
+                if pos == end:
+                    return path + [pos]
+                if pos not in visited:
+                    visited.add(pos)
+                    queue.append((nr, nc, path + [pos]))
+    return None
