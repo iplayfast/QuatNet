@@ -2,16 +2,16 @@
 """Validate all servers in servers.json are reachable and respond."""
 import json, urllib.request, urllib.error, sys, time
 
-def test_server(url, model, timeout=25):
+def test_server(url, model, timeout=10):
+    """Check if an Ollama server is alive using /api/tags (model list query, no model load needed)."""
     try:
-        req = urllib.request.Request(f"{url}/api/generate",
-            data=json.dumps({"model": model, "prompt": "return 1", "stream": False}).encode(),
-            headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(f"{url}/api/tags")
         start = time.time()
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read())
             elapsed = time.time() - start
-            return ("OK", f"{elapsed:.1f}s", data.get("response", "")[:40])
+            models = [m["name"] for m in data.get("models", [])]
+            return ("ALIVE", f"{elapsed:.1f}s", f"{len(models)} models")
     except urllib.error.HTTPError as e:
         return ("HTTP_ERR", str(e.code), str(e.reason))
     except urllib.error.URLError as e:
@@ -49,7 +49,9 @@ def main():
                 fail += 1
             print(f"{name:<20} {status:<14} {detail:<8} {response[:40]}")
 
-    print(f"\n{ok} OK, {fail} failed of {len(servers)} total")
+    enabled = sum(1 for s in servers if s.get("enabled", False))
+    disabled = len(servers) - enabled
+    print(f"\n{ok}/{enabled} enabled servers OK, {fail} unreachable, {disabled} disabled")
     return 0 if fail == 0 else 1
 
 if __name__ == "__main__":
