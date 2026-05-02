@@ -523,7 +523,7 @@ def query_teacher_logits(model_url, model_name, prompt, num_samples=1):
                 data=json.dumps({"model": model_name, "prompt": prompt, "stream": False,
                                  "options": {"temperature": 1.0}}).encode(),
                 headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 answer = json.loads(resp.read()).get("response", "").strip()
             if answer:
                 b = answer.encode('utf-8', errors='replace')[0] if answer else 0
