@@ -591,6 +591,12 @@ signal.signal(signal.SIGTERM, signal_handler)
 # ── Main ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
     _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if _device.type == "cuda":
+        # Reserve 85% of available memory, leaving room for other processes
+        free = torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated(0)
+        fraction = min(0.85, free * 0.95 / torch.cuda.get_device_properties(0).total_memory)
+        torch.cuda.set_per_process_memory_fraction(fraction)
+        print(f"[INIT] CUDA memory budget: {fraction*100:.0f}% ({int(free * 0.95 / 1e9)} GiB)")
     print(f"[INIT] Device: {_device}")
 
     _all_text = load_all_text()
