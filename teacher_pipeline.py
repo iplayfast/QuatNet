@@ -133,20 +133,23 @@ class QuaternaryLLM(nn.Module):
         self.output = nn.Linear(d, vocab, bias=False)
 
     def grow(self):
-        """Increase model capacity: geometric growth for small, tapering for large."""
+        """Increase model capacity: double d_model up to cap, then add layers/heads."""
+        MAX_D = 16384
         old_d = self.d_model
-        if old_d >= 2048:
-            print(f"  [GROW] Already at {old_d}d, skipping growth")
-            return self
-        raw = old_d * (2 if old_d < 512 else 1.5 if old_d < 1024 else 1.25)
-        # Round to nearest multiple of n_heads for clean head splits
-        rounded = int(round(raw / self.n_heads)) * self.n_heads
-        factor = rounded / old_d
-        new_d = old_d * factor
-        new_heads = self.n_heads * factor
-        new_kv = self.n_kv_heads * factor
-        new_ff = self.layers[0].ffn.down.in_features * factor
-        new_layers = self.n_layers * factor
+        if old_d < MAX_D:
+            new_d = old_d * 2
+            new_heads = self.n_heads
+            new_kv = self.n_kv_heads
+            new_ff = self.layers[0].ffn.down.in_features * 2
+            new_layers = self.n_layers
+            desc = f"Widening {old_d}d→{new_d}d"
+        else:
+            new_d = old_d
+            new_heads = self.n_heads * 2
+            new_kv = self.n_kv_heads * 2
+            new_ff = self.layers[0].ffn.down.in_features
+            new_layers = self.n_layers + 2
+            desc = f"Adding heads {self.n_heads}→{new_heads}, +2 layers"
         old_vocab = self.vocab_size
 
         new_model = QuaternaryLLM(old_vocab, new_d, new_heads, new_layers, new_ff, self.max_seq, new_kv)
