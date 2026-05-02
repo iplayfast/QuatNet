@@ -767,8 +767,12 @@ if __name__ == "__main__":
                     q_ratio_steps += SAVE_INTERVAL
                 if q_ratio_steps > 0 and q_ratio_steps % 2000 == 0:
                     old_lr = opt.param_groups[0]['lr']
-                    if q_ratio > 95 and (old_lr < 1e-8 or (q_ratio > 98 and loss.item() < 5.0)):
-                        # Model converged → grow (either LR exhausted or loss plateaued)
+                    should_grow = False
+                    if q_ratio > 95 and (old_lr < 1e-8 or q_ratio > 98):
+                        should_grow = True  # Q2_Q converged
+                    elif q_ratio_steps >= 10000 and loss.item() < 5.0:
+                        should_grow = True  # Loss plateaued for 10K steps
+                    if should_grow:
                         _model = _model.grow()
                         opt = torch.optim.AdamW(_model.parameters(), lr=LR)
                         best_q_ratio = 0.0
