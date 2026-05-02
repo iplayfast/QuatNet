@@ -133,13 +133,15 @@ class QuaternaryLLM(nn.Module):
         self.output = nn.Linear(d, vocab, bias=False)
 
     def grow(self):
-        """Increase model capacity: square up to 256, then double."""
+        """Increase model capacity: square when tiny, then linear doubling."""
         MAX_D = 16384
         old_d = self.d_model
-        if old_d < 256:
-            new_d = old_d * old_d  # square: 2→4, 4→16, 16→256
+        if old_d < 16:
+            new_d = old_d * old_d  # square: 2→4, 4→16
+        elif old_d < 64:
+            new_d = old_d * 4      # 16→64
         elif old_d < MAX_D:
-            new_d = old_d * 2      # double: 256→512→1024→...→16384
+            new_d = old_d * 2      # double: 64→128→256→512→1024→...→16384
         else:
             new_d = old_d
         new_heads = min(new_d, max(1, new_d // 16))
