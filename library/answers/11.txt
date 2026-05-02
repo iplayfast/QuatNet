@@ -1,18 +1,10 @@
-def sum_for(lst):
-    total = 0
-    for x in lst:
-        total += x
-    return total
+Here is a simple python function:
 
-def sum_while(lst):
-    total = 0
-    i = 0
-    while i < len(lst):
-        total += lst[i]
-        i += 1
-    return total
+```python
+def hello_world():
+    return "Hello, World!"
 
-def sum_recursive(lst):
-    if not lst:
-        return 0
-    return lst[0] + sum_recursive(lst[1:])
+print(hello_world())
+```
+
+This program defines a function named `hello_world` that returns the string `"Hello, World!"`. Then it calls this function and prints its result to the console.

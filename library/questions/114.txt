@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that converts a floating point number to its IEEE 754 binary representation.

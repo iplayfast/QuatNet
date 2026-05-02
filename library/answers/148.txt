@@ -1,6 +1,19 @@
 ```python
-def my_function():
-    return 'Hello, world!'
-
-my_function()
+def find_max(numbers):
+    """
+    Find the maximum value in a list of numbers.
+    
+    Args:
+        numbers: A list of numeric values
+        
+    Returns:
+        The maximum value in the list, or None if the list is empty
+    """
+    if not numbers:
+        return None
+    max_val = numbers[0]
+    for num in numbers[1:]:
+        if num > max_val:
+            max_val = num
+    return max_val
 ```

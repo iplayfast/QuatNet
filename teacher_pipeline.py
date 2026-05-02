@@ -132,6 +132,47 @@ class QuaternaryLLM(nn.Module):
         self.output_norm = RMSNorm(d)
         self.output = nn.Linear(d, vocab, bias=False)
 
+    def grow(self, factor=2):
+        """Double model capacity: widen d_model, add heads and layers."""
+        old_d = self.d_model
+        new_d = old_d * factor
+        new_heads = self.n_heads * factor
+        new_kv = self.n_kv_heads * factor
+        new_ff = self.layers[0].ffn.down.in_features * factor
+        new_layers = self.n_layers * factor
+        old_vocab = self.vocab_size
+
+        new_model = QuaternaryLLM(old_vocab, new_d, new_heads, new_layers, new_ff, self.max_seq, new_kv)
+        new_model = new_model.to(next(self.parameters()).device)
+
+        # Widen embedding
+        with torch.no_grad():
+            new_model.tok_embd.weight[:old_vocab, :old_d] = self.tok_embd.weight
+            new_model.pos_embd.weight[:, :old_d] = self.pos_embd.weight
+
+        # Copy existing layers, pad new ones
+        for i in range(self.n_layers):
+            old_layer = self.layers[i]
+            new_layer = new_model.layers[i]
+            with torch.no_grad():
+                new_layer.attn_norm.weight[:old_d] = old_layer.attn_norm.weight
+                new_layer.ffn_norm.weight[:old_d] = old_layer.ffn_norm.weight
+                new_layer.attn.q.weight[:old_d, :old_d] = old_layer.attn.q.weight
+                new_layer.attn.k.weight[:old_d, :old_d] = old_layer.attn.k.weight
+                new_layer.attn.v.weight[:old_d, :old_d] = old_layer.attn.v.weight
+                new_layer.attn.o.weight[:old_d, :old_d] = old_layer.attn.o.weight
+                new_layer.ffn.gate.weight[:old_d, :old_d] = old_layer.ffn.gate.weight
+                new_layer.ffn.up.weight[:old_d, :old_d] = old_layer.ffn.up.weight
+                new_layer.ffn.down.weight[:old_d, :old_d] = old_layer.ffn.down.weight
+
+        # Copy output norm and projection
+        with torch.no_grad():
+            new_model.output_norm.weight[:old_d] = self.output_norm.weight
+            new_model.output.weight[:old_vocab, :old_d] = self.output.weight
+
+        print(f"  [GROW] {old_d}d×{self.n_layers}L→{new_d}d×{new_layers}L ({sum(p.numel() for p in new_model.parameters()):,} params)")
+        return new_model
+
     def forward(self, idx):
         B, T = idx.shape
         pos = torch.arange(0, T, device=idx.device).unsqueeze(0)
@@ -207,7 +248,7 @@ class QuaternaryLLM(nn.Module):
             raw = bytes(f.parts[-1])
             vt = f.types[-1]
             if vt == GGUFValueType.STRING:
-                meta[f.name] = raw.decode()
+                meta[f.name] = raw.decode('utf-8', errors='replace')
             elif vt == GGUFValueType.UINT32:
                 meta[f.name] = int(np.frombuffer(raw, dtype=np.uint32)[0])
             elif vt == GGUFValueType.FLOAT32:
@@ -444,7 +485,7 @@ def verify_with_llama(path, prompt="Hello"):
 # ── Ollama Q&A Generator ──────────────────────────────────────────
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "llama3.2"
-GENERATE_EVERY = 1000  # generate new Q&A every N steps
+GENERATE_EVERY = 3000  # generate new Q&A every N steps
 
 def generate_qa():
     """Query Ollama to answer a random question from programmingquestions.txt."""
@@ -457,22 +498,27 @@ def generate_qa():
         questions = ["Write a Python function."]
     question = random.choice(questions)
 
-    # Pick a random Ollama model for variety
+    # Pick a random Ollama server+model, preferring remote machines
     try:
         with open("servers.json") as f:
             servers = json.load(f)
-        models = [s["model"] for s in servers if s.get("enabled", False) and s.get("role", "worker") == "worker"]
+        workers = [s for s in servers if s.get("enabled", False) and s.get("role", "worker") == "worker"]
+        remote = [s for s in workers if "localhost" not in s["url"] and "127.0.0.1" not in s["url"]]
+        server = random.choice(remote) if remote else random.choice(workers) if workers else None
     except:
-        models = [OLLAMA_MODEL]
-    model = random.choice(models)
+        server = None
+    if server is None:
+        server = {"url": OLLAMA_URL, "model": OLLAMA_MODEL}
+    model = server["model"]
+    url = server["url"] + "/api/generate"
 
     prompt = (f"Write a complete working Python solution for this problem. "
               f"Show only the code, no explanation.\n\nProblem: {question}")
     try:
-        req = urllib.request.Request(OLLAMA_URL, data=json.dumps({
+        req = urllib.request.Request(url, data=json.dumps({
             "model": model, "prompt": prompt, "stream": False,
         }).encode(), headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=15) as resp:
             answer = json.loads(resp.read()).get("response", "").strip()
     except Exception as e:
         print(f"  [OLLAMA] Failed ({model}): {e}")
@@ -523,9 +569,10 @@ def generate_qa():
 
 
 # ── Teacher Logits (Distillation) ──────────────────────────────────
-DISTILL_EVERY = 500
+DISTILL_EVERY = 3000
+_distill_busy = False
 
-def query_teacher_logits(model_url, model_name, prompt, num_samples=3):
+def query_teacher_logits(model_url, model_name, prompt, num_samples=1):
     """Get teacher predictions for the next byte after prompt by sampling."""
     counts = torch.zeros(256, device=_device)
     for _ in range(num_samples):
@@ -534,7 +581,7 @@ def query_teacher_logits(model_url, model_name, prompt, num_samples=3):
                 data=json.dumps({"model": model_name, "prompt": prompt, "stream": False,
                                  "options": {"temperature": 1.0}}).encode(),
                 headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with urllib.request.urlopen(req, timeout=10) as resp:
                 answer = json.loads(resp.read()).get("response", "").strip()
             if answer:
                 b = answer.encode('utf-8', errors='replace')[0] if answer else 0
@@ -547,24 +594,37 @@ def query_teacher_logits(model_url, model_name, prompt, num_samples=3):
     return probs
 
 def refresh_teacher_logits():
-    global _teacher_logits, _all_text
+    global _teacher_logits, _all_text, _distill_busy
+    if _distill_busy:
+        print("  [DISTILL] Skipped (previous request still pending)")
+        return
     _teacher_logits = None
+    _distill_busy = True
     try:
         with open("servers.json") as f:
             servers = json.load(f)
+        # Prefer remote machines over localhost (localhost GPU is busy training)
         candidates = [s for s in servers if s.get("enabled", False) and s.get("role") != "judge"]
-        if not candidates:
+        remote = [s for s in candidates if "localhost" not in s["url"] and "127.0.0.1" not in s["url"]]
+        if remote:
+            teacher = random.choice(remote)
+        elif candidates:
+            teacher = random.choice(candidates)
+        else:
+            _distill_busy = False
             return
-        teacher = random.choice(candidates)
     except:
+        _distill_busy = False
         return
 
     if not _all_text or len(_all_text) < MAX_SEQ:
+        _distill_busy = False
         return
     start = random.randint(0, len(_all_text) - MAX_SEQ - 1)
     prompt = _all_text[start:start + MAX_SEQ]
 
     probs = query_teacher_logits(teacher['url'], teacher['model'], prompt)
+    _distill_busy = False
     if probs is None:
         return
     logits = torch.log(probs).unsqueeze(0).unsqueeze(0)  # (1, 1, 256)
@@ -684,15 +744,24 @@ if __name__ == "__main__":
                 else:
                     q_ratio_steps += SAVE_INTERVAL
                 if q_ratio_steps > 0 and q_ratio_steps % 2000 == 0:
-                    for pg in opt.param_groups:
-                        old_lr = pg['lr']
-                        if old_lr < 1e-8:
+                    old_lr = opt.param_groups[0]['lr']
+                    if old_lr < 1e-8 and q_ratio > 95:
+                        # Model fully converged and LR exhausted → grow
+                        _model = _model.grow()
+                        opt = torch.optim.AdamW(_model.parameters(), lr=LR)
+                        best_q_ratio = 0.0
+                        q_ratio_steps = 0
+                        print(f"  [GROW] Reset optimizer, LR={LR:.1e}")
+                    elif old_lr < 1e-8:
+                        for pg in opt.param_groups:
                             pg['lr'] = 5e-4
-                            print(f"  [LR] Reset: {old_lr:.2e} → {pg['lr']:.2e}")
-                        else:
+                        print(f"  [LR] Reset: {old_lr:.2e} → {pg['lr']:.2e}")
+                        q_ratio_steps = 0
+                    else:
+                        for pg in opt.param_groups:
                             pg['lr'] = old_lr / 2
-                            print(f"  [LR] Halved: {old_lr:.2e} → {pg['lr']:.2e}")
-                    q_ratio_steps = 0
+                        print(f"  [LR] Halved: {old_lr:.2e} → {pg['lr']:.2e}")
+                        q_ratio_steps = 0
 
                 elapsed = time.time() - start_time
                 sample = _model.generate_sample("<|Q|>", 30)

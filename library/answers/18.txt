@@ -1,4 +1,8 @@
-```python
-def sum_of_elements(elements):
-    return sum(elements)
-```
+def fibonacci_first_100():
+    fib = [0, 1]
+    for i in range(2, 100):
+        fib.append(fib[i - 1] + fib[i - 2])
+    return fib
+
+result = fibonacci_first_100()
+print(result)

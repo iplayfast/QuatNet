@@ -1,5 +1,4 @@
-def contains(lst, value):
-    for x in lst:
-        if x == value:
-            return True
-    return False
+```python
+def sum_of_elements(elements):
+    return sum(elements)
+```

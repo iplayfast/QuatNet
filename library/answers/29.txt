@@ -1,10 +1,7 @@
-Here is an example of how your Python function might look:
-
-```python
-def greet(name):
-    return f'Hello, {name}!'
-
-# Testing our function
-print(greet('User'))
-```
-This function takes in one parameter `name` and returns a greeting for the person named. For instance if you call this function with 'User', it will print out "Hello, User!".
+def most_frequent(lst):
+    if not lst:
+        return None
+    freq = {}
+    for x in lst:
+        freq[x] = freq.get(x, 0) + 1
+    return max(freq, key=freq.get)

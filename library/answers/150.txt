@@ -1,4 +1,33 @@
-def my_function():
-    pass
+```python
+def calculate_average(numbers):
+    """
+    Calculate the average of a list of numbers.
 
-my_function()
+    Args:
+        numbers (list): A list of numeric values (int or float)
+
+    Returns:
+        float: The arithmetic mean of the numbers
+
+    Raises:
+        TypeError: If the input is not a list or contains non-numeric values
+        ValueError: If the list is empty
+    """
+    if not isinstance(numbers, list):
+        raise TypeError("Input must be a list.")
+    
+    if len(numbers) == 0:
+        raise ValueError("Cannot calculate average of an empty list.")
+    
+    if any(not isinstance(num, (int, float)) for num in numbers):
+        raise TypeError("All elements must be numeric values.")
+    
+    total = sum(numbers)
+    return total / len(numbers)
+
+
+# Example usage:
+if __name__ == "__main__":
+    print(f"Average of [1, 2, 3, 4, 5]: {calculate_average([1, 2, 3, 4, 5])}")
+    print(f"Average of [10.5, 20.3, 30.7]: {calculate_average([10.5, 20.3, 30.7])}")
+```

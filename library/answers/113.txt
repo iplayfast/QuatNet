@@ -1,2 +1,8 @@
-def my_function():
-    return 42
+Sure, here is a simple python function that adds two numbers:
+
+```python
+def add_numbers(a, b):
+    return a + b
+```
+
+You can call this function with two numbers as arguments and it will return their sum. For example, `add_numbers(3, 4)` would return `7`.

@@ -1,11 +1,8 @@
-Sure, here's a Python function that returns the length of a string:
-
 ```python
-def str_len(s):
-    return len(s)
-```
+def example_function():
+    return "This is a function"
 
-You can call it with any string like so:
-```python
-print(str_len("Hello, World!"))  # Outputs: 13
+# Example usage
+if __name__ == "__main__":
+    print(example_function())
 ```

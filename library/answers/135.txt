@@ -1,8 +1,8 @@
-Here is your Python function:
-
 ```python
-def some_function():
+def python_function():
+    # Function implementation here
     pass
-```
 
-I have created a function named "some_function" that currently does nothing (pass). You can modify it to do whatever task you need.
+# Test the function
+python_function()
+```

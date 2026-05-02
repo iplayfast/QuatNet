@@ -1,6 +1,2 @@
-```python
 def my_function():
-    return 'This is a demonstration of an actual Python function.'
-
-my_function()
-```
+    return "Hello, world!"

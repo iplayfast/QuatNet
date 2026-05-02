@@ -1,1 +1,1 @@
-Write a function that computes the shortest common supersequence of two strings.
+Write a function that implements a simple fuzzy string matcher (like fzf's algorithm).

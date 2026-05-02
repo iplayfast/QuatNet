@@ -1,13 +1,13 @@
-import sys
-
-def tee(mode='line'):
-    if mode == 'line':
-        for line in sys.stdin:
-            sys.stdout.write(line)
-            sys.stdout.flush()
-    elif mode == 'char':
-        while True:
-            c = sys.stdin.read(1)
-            if not c: break
-            sys.stdout.write(c)
-            sys.stdout.flush()
+def determinant(mat):
+    n = len(mat)
+    m = [row[:] for row in mat]
+    det = 1.0
+    for i in range(n):
+        pivot = max(range(i, n), key=lambda r: abs(m[r][i]))
+        if abs(m[pivot][i]) < 1e-12: return 0.0
+        if pivot != i: m[i], m[pivot] = m[pivot], m[i]; det = -det
+        det *= m[i][i]
+        for j in range(i + 1, n):
+            factor = m[j][i] / m[i][i]
+            for k in range(i, n): m[j][k] -= factor * m[i][k]
+    return det

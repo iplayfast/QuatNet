@@ -1,6 +1,20 @@
-```python
-def my_function():
-    return 'This is my Function!'
+def expressions_equal_100():
+    results = []
+    operators = ['+', '-', '']
 
-my_function()
-```
+    def dfs(i, expr):
+        if i == 9:
+            try:
+                if eval(expr) == 100:
+                    results.append(expr)
+            except:
+                pass
+            return
+        for op in operators:
+            dfs(i + 1, expr + op + str(i + 1))
+
+    dfs(1, '1')
+    return results
+
+for expr in expressions_equal_100():
+    print(f"{expr} = 100")

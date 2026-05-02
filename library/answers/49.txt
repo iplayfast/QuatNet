@@ -1,22 +1,14 @@
-```python
-def solve_problem(name, input_data):
-    """
-    A sample function demonstrating the typical pattern of a problem-solving approach
-    in Python. Replace the logic with the specific problem requirements as needed.
-    """
-    if input_data is None:
-        raise ValueError("Input is required for solving the problem")
-    result = input_data * 2
-    return result, f"{name}"
+class EventBus:
+    def __init__(self):
+        self.subs = {}
 
-def main():
-    # Example usage of the function
-    try:
-        result = solve_problem("test", [1, 2, 3, 4])
-        print("Result:", result)
-    except Exception as e:
-        print("Error:", e)
+    def subscribe(self, event, callback):
+        self.subs.setdefault(event, []).append(callback)
 
-if __name__ == "__main__":
-    main()
-```
+    def unsubscribe(self, event, callback):
+        if event in self.subs:
+            self.subs[event] = [cb for cb in self.subs[event] if cb != callback]
+
+    def emit(self, event, *args, **kwargs):
+        for cb in self.subs.get(event, []):
+            cb(*args, **kwargs)

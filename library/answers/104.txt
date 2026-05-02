@@ -1,4 +1,20 @@
 ```python
-def sum_of_elements(elements):
-    return sum(elements)
+def find_max(numbers):
+    """
+    Find and return the maximum element in a list of numbers.
+    
+    Parameters:
+    numbers (list): A list of integers or floats.
+    
+    Returns:
+    int: The maximum value found in the list.
+    """
+    max_value = float('-inf')
+    for num in numbers:
+        if num > max_value:
+            max_value = num
+    return max_value
+
+# Example usage:
+# print(find_max([3, 7, 9, 1, 5]))  # Output: 9
 ```

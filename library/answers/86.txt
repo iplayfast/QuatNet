@@ -1,3 +1,11 @@
-n = int(input("Enter a number: "))
-total = n * (n + 1) // 2
-print(f"Sum from 1 to {n} is {total}")
+def game_of_life(grid, steps):
+    h, w = len(grid), len(grid[0])
+    for _ in range(steps):
+        new = [[0] * w for _ in range(h)]
+        for y in range(h):
+            for x in range(w):
+                neighbors = sum(grid[(y+dy)%h][(x+dx)%w] for dy in [-1,0,1] for dx in [-1,0,1] if dy or dx)
+                if grid[y][x]: new[y][x] = 1 if neighbors in (2, 3) else 0
+                else: new[y][x] = 1 if neighbors == 3 else 0
+        grid = new
+    return grid

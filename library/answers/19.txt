@@ -1,28 +1,4 @@
-def myers_diff(a, b):
-    n, m = len(a), len(b)
-    max_d = n + m
-    v = {1: 0}
-    trace = []
-    for d in range(max_d + 1):
-        trace.append(v.copy())
-        for k in range(-d, d + 1, 2):
-            x = v[k - 1] + 1 if k == -d or (k != d and v.get(k - 1, -1) < v.get(k + 1, -1)) else v.get(k + 1, -1)
-            y = x - k
-            while x < n and y < m and a[x] == b[y]: x, y = x + 1, y + 1
-            v[k] = x
-            if x >= n and y >= m:
-                edits = []
-                x, y, k = n, m, d
-                for t in range(d, 0, -1):
-                    prev_v = trace[t - 1]
-                    if k == -t or (k != t and prev_v.get(k - 1, -1) < prev_v.get(k + 1, -1)):
-                        old_x = prev_v[k + 1]
-                        k = k + 1
-                        edits.append(('ins', old_x, y - 1))
-                    else:
-                        old_x = prev_v[k - 1]
-                        k = k - 1
-                        edits.append(('del', old_x, x - 1))
-                    x, y = old_x, x - k
-                return list(reversed(edits))
-    return []
+def my_function():
+    return 42
+
+print(my_function())

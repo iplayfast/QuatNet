@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that serializes a binary tree to a string and deserializes it back to the tree.

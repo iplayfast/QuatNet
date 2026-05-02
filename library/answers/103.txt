@@ -1,5 +1,4 @@
-def solution():
-    pass
+import re
 
-if __name__ == "__main__":
-    print(solution())
+def tokenize(text):
+    return re.findall(r"[A-Za-z']+", text)

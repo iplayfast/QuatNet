@@ -1,7 +1,7 @@
-def apply_to_each(f, lst):
-    return [f(x) for x in lst]
-
-# Print first 20 perfect squares
-squares = apply_to_each(lambda x: x * x, range(1, 21))
-for s in squares:
-    print(s)
+def most_frequent(lst):
+    if not lst:
+        return None
+    freq = {}
+    for x in lst:
+        freq[x] = freq.get(x, 0) + 1
+    return max(freq, key=freq.get)

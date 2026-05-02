@@ -1,13 +1,9 @@
-import sys
-
-def tee(mode='line'):
-    if mode == 'line':
-        for line in sys.stdin:
-            sys.stdout.write(line)
-            sys.stdout.flush()
-    elif mode == 'char':
-        while True:
-            c = sys.stdin.read(1)
-            if not c: break
-            sys.stdout.write(c)
-            sys.stdout.flush()
+def permutations(lst):
+    if len(lst) <= 1:
+        return [lst[:]]
+    result = []
+    for i in range(len(lst)):
+        rest = lst[:i] + lst[i + 1:]
+        for p in permutations(rest):
+            result.append([lst[i]] + p)
+    return result

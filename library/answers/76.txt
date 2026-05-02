@@ -1,5 +1,26 @@
-def solve_problem():
-    # Solution code here
-    pass
+```python
+def reverse_string(s: str) -> str:
+    """
+    Reverses the characters of a given string.
 
-solve_problem()
+    Args:
+        s: The input string.
+
+    Returns:
+        The reversed string.
+    """
+    return s[::-1]
+
+if __name__ == "__main__":
+    # Example Usage
+    test_string_1 = "hello world"
+    reversed_1 = reverse_string(test_string_1)
+    print(f"Original: '{test_string_1}'")
+    print(f"Reversed: '{reversed_1}'")
+    print("-" * 20)
+
+    test_string_2 = "Python"
+    reversed_2 = reverse_string(test_string_2)
+    print(f"Original: '{test_string_2}'")
+    print(f"Reversed: '{reversed_2}'")
+```

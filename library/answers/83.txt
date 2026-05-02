@@ -1,8 +1,1 @@
-```python
-def process_data(data):
-    if not data:
-        return None
-    if isinstance(data, str) and data.strip():
-        return data.strip()
-    return data
-```
+print("Hello World")

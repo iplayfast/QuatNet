@@ -1,6 +1,5 @@
 ```python
 def solve():
-    # Your solution here
-
+    # Your code here
     pass
 ```

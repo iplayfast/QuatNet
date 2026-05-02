@@ -1,42 +1,17 @@
-```python
-def calculate_area_of_rectangle(length: float, width: float) -> float:
-    """
-    Calculates the area of a rectangle given its length and width.
+from urllib.request import urlopen
+from html.parser import HTMLParser
 
-    Args:
-        length: The length of the rectangle (must be non-negative).
-        width: The width of the rectangle (must be non-negative).
+class LinkParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+    def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            for name, val in attrs:
+                if name == 'href': self.links.append(val)
 
-    Returns:
-        The area of the rectangle (length * width).
-
-    Raises:
-        ValueError: If either length or width is negative.
-    """
-    if length < 0 or width < 0:
-        raise ValueError("Length and width must be non-negative numbers.")
-    
-    return length * width
-
-if __name__ == '__main__':
-    try:
-        # Example 1: Standard calculation
-        l1 = 10.5
-        w1 = 5.0
-        area1 = calculate_area_of_rectangle(l1, w1)
-        print(f"The area of a rectangle with length {l1} and width {w1} is: {area1}")
-
-        # Example 2: Zero dimension
-        l2 = 0
-        w2 = 7
-        area2 = calculate_area_of_rectangle(l2, w2)
-        print(f"The area of a rectangle with length {l2} and width {w2} is: {area2}")
-
-        # Example 3: Error handling test
-        l3 = -1
-        w3 = 5
-        area3 = calculate_area_of_rectangle(l3, w3)
-        
-    except ValueError as e:
-        print(f"Error caught: {e}")
-```
+def get_links(url):
+    with urlopen(url) as r:
+        p = LinkParser()
+        p.feed(r.read().decode())
+        return p.links

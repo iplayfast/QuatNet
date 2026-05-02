@@ -1,1 +1,1 @@
-Write a program that implements a simple database index using a B-tree with insert and search.
+Write a Python function.

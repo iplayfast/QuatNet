@@ -1,22 +1,9 @@
 ```python
-def find_maximum(numbers):
-    """
-    Find the maximum value in a list of numbers.
-    Returns None if the list is empty.
-    """
-    if not numbers:
-        return None
-    return max(numbers)
+def solve():
+    x = int(input())
+    y = int(input())
 
-if __name__ == "__main__":
-    test_cases = [
-        [3, 5, 1, 8, 9],
-        [-5, -2, 10, -8],
-        [100],
-        []
-    ]
-    
-    for nums in test_cases:
-        result = find_maximum(nums)
-        print(f"Input: {nums}, Maximum: {result}")
+    result = x * y
+
+    print(result)
 ```

@@ -1,46 +1,76 @@
-```python
-def fibonacci_sequence(n):
-    """
-    Calculates the Fibonacci sequence up to the n-th term.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-    Args:
-        n (int): The number of terms to generate (must be non-negative).
+def serialize(root):
+    """Pre-order traversal with '#' for None, comma-separated."""
+    parts = []
+    def dfs(node):
+        if not node:
+            parts.append('#')
+            return
+        parts.append(str(node.val))
+        dfs(node.left)
+        dfs(node.right)
+    dfs(root)
+    return ','.join(parts)
 
-    Returns:
-        list[int]: A list containing the first n Fibonacci numbers.
+def deserialize(data):
+    """Reconstruct tree from serialized string."""
+    it = iter(data.split(','))
+    def dfs():
+        val = next(it)
+        if val == '#':
+            return None
+        node = TreeNode(int(val))
+        node.left = dfs()
+        node.right = dfs()
+        return node
+    return dfs()
 
-    Raises:
-        ValueError: If n is negative.
-    """
-    if n < 0:
-        raise ValueError("Input must be a non-negative integer.")
-    if n == 0:
-        return []
-    if n == 1:
-        return [0]
+# Alternative: level-order (BFS) serialization
+from collections import deque
 
-    sequence = [0, 1]
-    
-    # We already have 2 terms, so we iterate n - 2 times
-    for i in range(2, n):
-        next_fib = sequence[-1] + sequence[-2]
-        sequence.append(next_fib)
-        
-    return sequence
+def serialize_bfs(root):
+    """Level-order serialization, '#' for missing nodes."""
+    if not root:
+        return '#'
+    parts = []
+    q = deque([root])
+    while q:
+        node = q.popleft()
+        if node:
+            parts.append(str(node.val))
+            q.append(node.left)
+            q.append(node.right)
+        else:
+            parts.append('#')
+    return ','.join(parts)
 
-if __name__ == '__main__':
-    # Example usage: Get the first 10 Fibonacci numbers
-    n_terms = 10
-    try:
-        result = fibonacci_sequence(n_terms)
-        print(f"The first {n_terms} Fibonacci numbers are: {result}")
-        
-        # Example 2: Edge case
-        print(f"Fibonacci for 1 term: {fibonacci_sequence(1)}")
-        
-        # Example 3: Edge case
-        print(f"Fibonacci for 0 terms: {fibonacci_sequence(0)}")
-        
-    except ValueError as e:
-        print(f"Error: {e}")
-```
+def deserialize_bfs(data):
+    """Reconstruct from level-order serialization."""
+    if data == '#':
+        return None
+    vals = data.split(',')
+    root = TreeNode(int(vals[0]))
+    q = deque([root])
+    i = 1
+    while q and i < len(vals):
+        node = q.popleft()
+        if vals[i] != '#':
+            node.left = TreeNode(int(vals[i]))
+            q.append(node.left)
+        i += 1
+        if i < len(vals) and vals[i] != '#':
+            node.right = TreeNode(int(vals[i]))
+            q.append(node.right)
+        i += 1
+    return root
+
+# Usage:
+# root = TreeNode(1, TreeNode(2), TreeNode(3, TreeNode(4), TreeNode(5)))
+# s = serialize(root)
+# t = deserialize(s)
+# assert serialize(t) == s
