@@ -20,7 +20,7 @@ VERIFY_EVERY   = 5000  # run llama-cli verification
 LOG_FILE       = "training_log.csv"  # metrics CSV for plotting
 
 # Model hyperparams (same as train_quaternary.py)
-D_MODEL  = 128
+D_MODEL  = 2
 N_HEADS  = 8
 N_LAYERS = 4
 D_FF     = 256
@@ -133,23 +133,24 @@ class QuaternaryLLM(nn.Module):
         self.output = nn.Linear(d, vocab, bias=False)
 
     def grow(self):
-        """Increase model capacity: double d_model up to cap, then add layers/heads."""
+        """Increase model capacity: square up to 256, then double."""
         MAX_D = 16384
         old_d = self.d_model
-        if old_d < MAX_D:
-            new_d = old_d * 2
-            new_heads = self.n_heads
-            new_kv = self.n_kv_heads
-            new_ff = self.layers[0].ffn.down.in_features * 2
-            new_layers = self.n_layers
-            desc = f"Widening {old_d}d→{new_d}d"
+        if old_d < 256:
+            new_d = old_d * old_d  # square: 2→4, 4→16, 16→256
+        elif old_d < MAX_D:
+            new_d = old_d * 2      # double: 256→512→1024→...→16384
         else:
             new_d = old_d
-            new_heads = self.n_heads * 2
-            new_kv = self.n_kv_heads * 2
-            new_ff = self.layers[0].ffn.down.in_features
+        new_heads = max(1, new_d // 16)
+        new_kv = max(1, new_d // 64)
+        new_ff = new_d * 4
+        new_layers = max(2, new_d // 64)
+        if old_d != new_d:
+            desc = f"Widening {old_d}d→{new_d}d"
+        else:
             new_layers = self.n_layers + 2
-            desc = f"Adding heads {self.n_heads}→{new_heads}, +2 layers"
+            desc = f"Adding layers {self.n_layers}→{new_layers}"
         old_vocab = self.vocab_size
 
         new_model = QuaternaryLLM(old_vocab, new_d, new_heads, new_layers, new_ff, self.max_seq, new_kv)
