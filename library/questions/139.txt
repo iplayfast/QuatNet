@@ -1,1 +1,1 @@
-Write a program that scrapes all links from a given URL using only the standard library.
+Write a function that finds all pairs of numbers in a list that sum to a given target.

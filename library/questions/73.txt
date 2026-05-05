@@ -1,1 +1,1 @@
-Write a function that implements a simple version of git diff (Myers diff algorithm).
+Write a function that finds the longest palindromic substring in a given string efficiently.

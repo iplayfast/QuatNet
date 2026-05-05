@@ -1,1 +1,1 @@
-Write a Python function.
+Implement insertion sort.

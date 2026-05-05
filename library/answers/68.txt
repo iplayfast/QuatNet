@@ -1,1 +1,76 @@
-"The Rock-Paper-Scissors AI tracks the human opponent's move history, predicting their next move through pattern analysis. The algorithm exploits the fact that humans are poor random number generators by detecting repeating sequences of length 2-4, identifying the most frequent follow-up to each pattern. It counters the predicted move by choosing the winning option. The strategy adapts using frequency counting across multiple pattern depths, starting with a random fallback for the first moves."
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def serialize(root):
+    """Pre-order traversal with '#' for None, comma-separated."""
+    parts = []
+    def dfs(node):
+        if not node:
+            parts.append('#')
+            return
+        parts.append(str(node.val))
+        dfs(node.left)
+        dfs(node.right)
+    dfs(root)
+    return ','.join(parts)
+
+def deserialize(data):
+    """Reconstruct tree from serialized string."""
+    it = iter(data.split(','))
+    def dfs():
+        val = next(it)
+        if val == '#':
+            return None
+        node = TreeNode(int(val))
+        node.left = dfs()
+        node.right = dfs()
+        return node
+    return dfs()
+
+# Alternative: level-order (BFS) serialization
+from collections import deque
+
+def serialize_bfs(root):
+    """Level-order serialization, '#' for missing nodes."""
+    if not root:
+        return '#'
+    parts = []
+    q = deque([root])
+    while q:
+        node = q.popleft()
+        if node:
+            parts.append(str(node.val))
+            q.append(node.left)
+            q.append(node.right)
+        else:
+            parts.append('#')
+    return ','.join(parts)
+
+def deserialize_bfs(data):
+    """Reconstruct from level-order serialization."""
+    if data == '#':
+        return None
+    vals = data.split(',')
+    root = TreeNode(int(vals[0]))
+    q = deque([root])
+    i = 1
+    while q and i < len(vals):
+        node = q.popleft()
+        if vals[i] != '#':
+            node.left = TreeNode(int(vals[i]))
+            q.append(node.left)
+        i += 1
+        if i < len(vals) and vals[i] != '#':
+            node.right = TreeNode(int(vals[i]))
+            q.append(node.right)
+        i += 1
+    return root
+
+# Usage:
+# root = TreeNode(1, TreeNode(2), TreeNode(3, TreeNode(4), TreeNode(5)))
+# s = serialize(root)
+# t = deserialize(s)
+# assert serialize(t) == s

@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that implements a basic spell-checker using a dictionary and edit distance.

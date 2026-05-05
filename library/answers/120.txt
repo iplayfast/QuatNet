@@ -1,18 +1,23 @@
-def sum_for(lst):
-    total = 0
-    for x in lst:
-        total += x
-    return total
-
-def sum_while(lst):
-    total = 0
-    i = 0
-    while i < len(lst):
-        total += lst[i]
-        i += 1
-    return total
-
-def sum_recursive(lst):
-    if not lst:
-        return 0
-    return lst[0] + sum_recursive(lst[1:])
+def adventure():
+    rooms = {
+        'start': {'desc': 'You are in a dark room.', 'exits': {'n': 'hall'}, 'items': []},
+        'hall': {'desc': 'A long hallway with paintings.', 'exits': {'s': 'start', 'e': 'treasury'}, 'items': ['key']},
+        'treasury': {'desc': 'A room full of gold!', 'exits': {'w': 'hall'}, 'items': ['treasure']},
+    }
+    cur, inv = 'start', []
+    while True:
+        r = rooms[cur]
+        print(r['desc'])
+        for item in r['items']: print(f'You see a {item} here.')
+        cmd = input('> ').strip().split()
+        if not cmd: continue
+        if cmd[0] in ('n','s','e','w'):
+            if cmd[0] in r['exits']: cur = r['exits'][cmd[0]]
+            else: print('Cannot go that way.')
+        elif cmd[0] == 'take' and len(cmd) > 1:
+            item = cmd[1]
+            if item in r['items']: r['items'].remove(item); inv.append(item); print(f'Taken {item}.')
+            else: print('Not here.')
+        elif cmd[0] == 'inv': print(f'Inventory: {inv}')
+        elif cmd[0] == 'quit': break
+        else: print('Unknown command.')

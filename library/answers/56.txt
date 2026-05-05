@@ -1,16 +1,8 @@
-Performance comparison (insertion, search, deletion):
-- Sorted list: O(n) insert, O(log n) search (binary search), O(n) delete
-- Unbalanced BST: O(n) worst case (degenerate to linked list), O(log n) avg
-- Balanced BST (AVL, Red-Black, 2-3): O(log n) all operations, guaranteed
+n = int(input("Enter a number: "))
+choice = input("Do you want to compute the sum (s) or the product (p)? ").lower()
+result = 1 if choice == 'p' else 0
 
-Good input sequences for stress testing:
-- Sorted ascending (worst for unbalanced BST)
-- Sorted descending
-- Alternating high/low
-- Random insertions
+for i in range(1, n + 1):
+    result += i if choice != 'p' else result * i
 
-For (a,b)-trees, good values depend on memory hierarchy:
-- In-memory: (2,3) or (2,4) work well (2-3 tree, 2-3-4 tree)
-- Disk-based: larger b (100-1000) to match block/page size
-- Higher a increases fan-out, reducing tree height
-- Balance parameter: (2,b) gives minimum redundancy; (b/2,b) gives symmetric split
+print(result)

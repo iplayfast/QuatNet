@@ -1,1 +1,1 @@
-Write a function that finds all pairs of numbers in a list that sum to a given target.
+Write a program that plays Tic-Tac-Toe against a minimax AI opponent.

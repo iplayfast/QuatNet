@@ -1,1 +1,1 @@
-70: Write a program that reads a CSV file and prints the min, max, mean, and median of a specified column.
+137: Write a function that implements the Winnowing algorithm for document fingerprinting (plagiarism detection).

@@ -1,9 +1,17 @@
-```python
-def solve():
-    x = int(input())
-    y = int(input())
+import math
 
-    result = x * y
+def compute_pi(num_terms):
+    pi_approx = 0.0
+    sign = 1.0
+    denominator = 1.0
+    
+    for _ in range(num_terms):
+        pi_approx += sign / denominator
+        sign *= -1
+        denominator += 2.0
+    
+    return 4 * pi_approx
 
+if __name__ == "__main__":
+    result = compute_pi(1000000)
     print(result)
-```

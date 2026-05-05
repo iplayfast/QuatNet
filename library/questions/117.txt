@@ -1,1 +1,1 @@
-Write a function that solves a maze using breadth-first search, returning the shortest path.
+124: Write a program that reads a JSON file, pretty-prints it with configurable indentation, and validates it.

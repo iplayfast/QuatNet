@@ -1,7 +1,10 @@
-def reverse_in_place(lst):
-    left, right = 0, len(lst) - 1
-    while left < right:
-        lst[left], lst[right] = lst[right], lst[left]
-        left += 1
-        right -= 1
-    return lst
+def calculator():
+    memory = 0
+    while True:
+        expr = input('> ').strip()
+        if expr == 'exit': break
+        elif expr == 'MC': memory = 0
+        elif expr == 'MR': print(memory)
+        elif expr.startswith('M+'): memory += eval(expr[2:])
+        elif expr.startswith('M-'): memory -= eval(expr[2:])
+        else: print(eval(expr))

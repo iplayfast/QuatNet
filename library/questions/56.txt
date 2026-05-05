@@ -1,1 +1,1 @@
-Write a function that detects if a graph contains a cycle.
+Write a program that asks for a number n and computes either the sum or the product of 1 to n based on user choice.

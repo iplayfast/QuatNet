@@ -1,23 +1,12 @@
-def nearest_larger(arr):
-    n=len(arr)
-    # Preprocess: for each position, find nearest larger on left and right
-    left=[-1]*n; right=[-1]*n
-    stack=[]
-    for i in range(n):
-        while stack and arr[stack[-1]]<=arr[i]:
-            stack.pop()
-        left[i]=stack[-1] if stack else -1
-        stack.append(i)
-    stack=[]
-    for i in range(n-1,-1,-1):
-        while stack and arr[stack[-1]]<=arr[i]:
-            stack.pop()
-        right[i]=stack[-1] if stack else -1
-        stack.append(i)
-    def query(i):
-        if left[i]==-1 and right[i]==-1: return -1
-        if left[i]==-1: return right[i]
-        if right[i]==-1: return left[i]
-        return left[i] if i-left[i]<=right[i]-i else right[i]
-    return query
-# O(n) preprocessing, O(1) per query
+def intersect_and_union(set1, set2):
+    # Convert lists to dictionaries with values as True
+    dict1 = {x: True for x in set1}
+    dict2 = {x: True for x in set2}
+
+    # Intersection: elements present in both sets
+    intersection = [k for k in dict1 if k in dict2]
+
+    # Union: all unique elements from both sets
+    union = list(dict1.keys() | dict2.keys())
+
+    return intersection, union

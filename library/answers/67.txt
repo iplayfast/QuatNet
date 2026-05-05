@@ -1,1 +1,13 @@
-"The Hangman bot optimizes guessing by maintaining a pool of candidate words from a dictionary. Each turn, it selects the letter that appears in the most remaining candidates, eliminating the largest possible number of incorrect words. It tracks revealed letters and partial word patterns, narrowing the dictionary at each step. The algorithm achieves optimal play using frequency analysis and pattern matching across all remaining possible solutions."
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val; self.left = left; self.right = right
+
+def all_binary_trees(n):
+    if n == 0: return [None]
+    if n == 1: return [TreeNode()]
+    result = []
+    for i in range(n):
+        for left in all_binary_trees(i):
+            for right in all_binary_trees(n - 1 - i):
+                result.append(TreeNode(0, left, right))
+    return result

@@ -1,2 +1,83 @@
-def solve_problem():
-    return "Hi"
+```python
+import random
+import string
+from collections import defaultdict
+
+# Sample word list (you can expand this list)
+words = [
+    "apple", "banana", "cherry", "date", "elderberry",
+    "fig", "grape", "honeydew", "kiwi", "lemon",
+    "mango", "nectarine", "orange", "papaya", "quince",
+    "watermelon", "blackberry", "blueberry", "raspberry"
+]
+
+def load_words():
+    """Load words from a text file."""
+    with open('words.txt', 'r') as f:
+        return [line.strip().lower() for line in f if line.strip()]
+
+def get_word_list():
+    """Return a list of valid words."""
+    try:
+        return load_words()
+    except FileNotFoundError:
+        print("Using default word list...")
+        return words
+
+def choose_best_letter(word_set, used_letters):
+    """Choose the letter that eliminates the most words."""
+    best_letter = None
+    max_elimination = 0
+    
+    for letter in set(string.ascii_lowercase) - set(used_letters):
+        eliminated = sum(w.count(letter) > 0 for w in word_set)
+        if eliminated > max_elimination:
+            best_letter = letter
+            max_elimination = eliminated
+
+    return best_letter
+
+def play_hangman():
+    word_list = get_word_list()
+    word_to_guess = random.choice(word_list)
+
+    guessed_letters = set()
+    wrong_attempts = 0
+    MAX_ATTEMPTS = 6
+    display_word = ['_' for _ in word_to_guess]
+
+    print("Let's play Hangman!")
+    print(' '.join(display_word))
+    print('\n')
+
+    while wrong_attempts < MAX_ATTEMPTS and '_' in display_word:
+        guess = input("Enter a letter: ").lower()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter a single alphabetical character.")
+            continue
+
+        if guess in guessed_letters:
+            print("You already guessed that letter. Try again.")
+            continue
+
+        guessed_letters.add(guess)
+
+        if guess in word_to_guess:
+            for idx, letter in enumerate(word_to_guess):
+                if letter == guess:
+                    display_word[idx] = guess
+            print(' '.join(display_word))
+        else:
+            wrong_attempts += 1
+            print(f"Wrong guess! You have {MAX_ATTEMPTS - wrong_attempts} attempts left.\n")
+
+    if '_' not in display_word:
+        print("Congratulations, you guessed the word!")
+        print(f"The word was: {word_to_guess}")
+    else:
+        print("Game over. The word was:", word_to_guess)
+
+if __name__ == "__main__":
+    play_hangman()
+```

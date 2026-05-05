@@ -1,3 +1,92 @@
-n = int(input())
-total = sum(i for i in range(1, n + 1) if i % 3 == 0 or i % 5 == 0)
-print(total)
+```python
+import random
+
+# Constants
+BOARD_WIDTH = 5
+BOARD_HEIGHT = 5
+SHIP_SIZE = 2
+
+def print_board(board):
+    for row in board:
+        print(" ".join(str(cell) for cell in row))
+
+def place_ship(board, ship_pos):
+    x, y = ship_pos
+    if any(board[x + i][y] != 0 for i in range(SHIP_SIZE)) or \
+       any(board[x][y + i] != 0 for i in range(SHIP_SIZE)):
+        return False
+    return True
+
+def place_random_ship(board):
+    while True:
+        x, y = random.randint(0, BOARD_HEIGHT - 1), random.randint(0, BOARD_WIDTH - 1)
+        direction = random.choice(['h', 'v'])
+        if (direction == 'h' and all(board[x][y + i] == 0 for i in range(SHIP_SIZE)) or
+            direction == 'v' and all(board[x + i][y] == 0 for i in range(SHIP_SIZE))):
+            return x, y
+
+def ai_guess(board):
+    while True:
+        row = random.randint(0, BOARD_HEIGHT - 1)
+        col = random.randint(0, BOARD_WIDTH - 1)
+        if board[row][col] == 0:
+            return row, col
+
+def player_turn(board, player_name):
+    print(f"\n{player_name}'s turn.")
+    while True:
+        try:
+            x, y = map(int, input("Enter your guess (row and column): ").split())
+            if not (0 <= x < BOARD_HEIGHT and 0 <= y < BOARD_WIDTH):
+                raise ValueError
+            break
+        except ValueError:
+            print("Invalid coordinates. Try again.")
+    return x, y
+
+def hit_ship(board, pos):
+    x, y = pos
+    board[x][y] = -1
+    print(f"Hit at ({x}, {y})!")
+
+def miss_ship(board, pos):
+    x, y = pos
+    board[x][y] = 0
+    print(f"Miss at ({x}, {y})!")
+
+def check_win(board):
+    return sum(cell == -1 for row in board for cell in row) == len(board) * len(board[0])
+
+def play_game():
+    # Initialize boards and ships
+    player_board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
+    ai_board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
+
+    place_ship(ai_board, place_random_ship(ai_board))
+
+    while True:
+        print("\nPlayer's Board:")
+        print_board(player_board)
+
+        if check_win(player_board):
+            print("Congratulations! You've sunk the AI's ship!")
+            break
+
+        # Player turn
+        player_guess = player_turn(player_board, "Player")
+        hit_ship(player_board, player_guess)
+
+        if check_win(player_board):
+            print("Congratulations! You've sunk the AI's ship!")
+            break
+
+        # AI turn
+        ai_guess = ai_guess(ai_board)
+        result = random.choice(['hit', 'miss'])
+        hit_ship(ai_board, ai_guess) if result == 'hit' else miss_ship(ai_board, ai_guess)
+
+        print("AI guessed:", "Hit" if result == 'hit' else "Miss")
+
+if __name__ == "__main__":
+    play_game()
+```

@@ -1,1 +1,27 @@
-"The Battleship game implementation features a 10x10 grid where ships are randomly placed with random orientations. On each turn, the program requests coordinates from the human opponent, reports hits or misses, and maintains a probability map for its own shots using a density-based targeting strategy. After a hit, it switches to a hunt mode that systematically explores adjacent cells in a cross pattern until the ship is sunk, then returns to the density search pattern. The game tracks hits, misses, and sunk ships for both players."
+```python
+import time
+
+def exponential_backoff_retry(func, max_retries=3, base_delay=1):
+    def wrapper(*args, **kwargs):
+        retries = 0
+        while retries < max_retries:
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                retry_after = base_delay * (2 ** retries)
+                print(f"Attempt {retries + 1} failed with error: {e}. Retrying in {retry_after} seconds...")
+                time.sleep(retry_after)
+                retries += 1
+        raise Exception(f"Max retries ({max_retries}) exceeded for function {func.__name__}")
+    return wrapper
+
+# Example usage:
+@exponential_backoff_retry
+def flaky_operation():
+    import random
+    if random.choice([True, False]):
+        raise Exception("Flaky operation failed")
+    return "Success"
+
+print(flaky_operation())
+```

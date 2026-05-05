@@ -1,4 +1,54 @@
-import re
+```python
+import threading
 
-def tokenize(text):
-    return re.findall(r"[A-Za-z']+", text)
+class BoundedQueue:
+    def __init__(self, maxsize):
+        self.maxsize = maxsize
+        self.queue = []
+        self.not_full = threading.Semaphore(0)
+        self.not_empty = threading.Semaphore(0)
+
+    def enqueue(self, item):
+        self.not_full.acquire()
+        try:
+            self.queue.append(item)
+        finally:
+            self.not_empty.release()
+
+    def dequeue(self):
+        self.not_empty.acquire()
+        try:
+            return self.queue.pop(0)
+        finally:
+            self.not_full.release()
+
+    def __len__(self):
+        return len(self.queue)
+
+# Example usage
+if __name__ == "__main__":
+    bq = BoundedQueue(maxsize=3)
+
+    def producer(q, items):
+        for item in items:
+            q.enqueue(item)
+            print(f"Enqueued: {item}")
+
+    def consumer(q):
+        while True:
+            item = q.dequeue()
+            print(f"Dequeued: {item}")
+            # Simulate processing time
+            import time
+            time.sleep(1)
+
+    # Start producer and consumers in separate threads
+    prod_items = [1, 2, 3, 4]
+    t1 = threading.Thread(target=producer, args=(bq, prod_items))
+    t2 = threading.Thread(target=lambda: None)  # Placeholder for consumer loop; actual consumer logic would run here
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+```

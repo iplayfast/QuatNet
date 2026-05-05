@@ -1,1 +1,1 @@
-Write a class that implements a dynamic array (similar to Python's list) with amortized O(1) append.
+Write a function that applies another function to every element of a list, then uses it to print the first 20 perfect squares.

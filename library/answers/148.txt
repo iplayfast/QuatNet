@@ -1,19 +1,12 @@
-```python
-def find_max(numbers):
-    """
-    Find the maximum value in a list of numbers.
-    
-    Args:
-        numbers: A list of numeric values
-        
-    Returns:
-        The maximum value in the list, or None if the list is empty
-    """
-    if not numbers:
-        return None
-    max_val = numbers[0]
-    for num in numbers[1:]:
-        if num > max_val:
-            max_val = num
-    return max_val
-```
+def bwt_encode(s):
+    s = s + '\0'
+    rotations = [s[i:] + s[:i] for i in range(len(s))]
+    rotations.sort()
+    return ''.join(r[-1] for r in rotations)
+
+def bwt_decode(s):
+    n = len(s)
+    table = [''] * n
+    for _ in range(n):
+        table = sorted(s[i] + table[i] for i in range(n))
+    return [r for r in table if r.endswith('\0')][0][:-1]

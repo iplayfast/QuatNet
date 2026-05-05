@@ -1,1 +1,1 @@
-Write a function that returns the largest element in a list.
+Write a program that simulates a bouncing ball inside a rectangular window.

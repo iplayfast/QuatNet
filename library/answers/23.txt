@@ -1,8 +1,43 @@
-def rotate(lst,k):
-    n=len(lst); k%=n
-    def rev(l,r):
-        while l<r:
-            lst[l],lst[r]=lst[r],lst[l]; l+=1; r-=1
-    rev(0,k-1); rev(k,n-1); rev(0,n-1)
-    return lst
-# Uses at most n swaps (3 reversals, each reversal costs ~len/2 swaps)
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def insert(self, val):
+        node = ListNode(val)
+        node.next = self.head
+        self.head = node
+
+    def delete(self, val):
+        curr = self.head
+        prev = None
+        while curr:
+            if curr.val == val:
+                if prev:
+                    prev.next = curr.next
+                else:
+                    self.head = curr.next
+                return True
+            prev = curr
+            curr = curr.next
+        return False
+
+    def search(self, val):
+        curr = self.head
+        while curr:
+            if curr.val == val:
+                return curr
+            curr = curr.next
+        return None
+
+    def to_list(self):
+        result = []
+        curr = self.head
+        while curr:
+            result.append(curr.val)
+            curr = curr.next
+        return result

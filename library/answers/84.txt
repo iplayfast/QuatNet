@@ -1,9 +1,52 @@
-def pair_sum(lst, target):
-    seen = set()
-    pairs = []
-    for x in lst:
-        complement = target - x
-        if complement in seen:
-            pairs.append((complement, x))
-        seen.add(x)
-    return pairs
+```python
+import threading
+
+class LockFreeRingBuffer:
+    def __init__(self, size):
+        self.buffer = [None] * size
+        self.size = size
+        self.head = 0
+        self.tail = 0
+        self.count = 0
+        self.lock = threading.Lock()
+
+    def produce(self, item):
+        with self.lock:
+            while self.count == self.size:
+                continue
+            index = (self.tail + self.count) % self.size
+            self.buffer[index] = item
+            self.count += 1
+
+    def consume(self):
+        with self.lock:
+            while self.count == 0:
+                continue
+            index = self.head
+            item = self.buffer[index]
+            self.buffer[index] = None
+            self.head = (self.head + 1) % self.size
+            self.count -= 1
+            return item
+
+# Example usage:
+buffer = LockFreeRingBuffer(3)
+
+def producer():
+    for i in range(5):
+        buffer.produce(i)
+
+def consumer():
+    for _ in range(5):
+        item = buffer.consume()
+        print(f"Consumed: {item}")
+
+t1 = threading.Thread(target=producer)
+t2 = threading.Thread(target=consumer)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+```

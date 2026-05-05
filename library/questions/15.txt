@@ -1,1 +1,1 @@
-Write a function that returns the elements at odd indices in a list.
+Write a function that implements a simple text-based progress bar.

@@ -1,33 +1,39 @@
 ```python
-import csv
-import statistics
+def winnowing(text, pattern, w=3, delta=2):
+    def hash_function(substring):
+        return sum(1 << (ord(c) - 32) for c in substring) % (10**6)
 
-def main():
-    filename = input().strip()
-    column_index = int(input().strip()) - 1
-    
-    values = []
-    
-    with open(filename, newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            try:
-                value = float(row[column_index])
-                values.append(value)
-            except ValueError:
-                continue  # Skip rows where conversion to float fails
-    
-    if not values:
-        print("No valid numeric data found.")
-        return
-    
-    min_val = min(values)
-    max_val = max(values)
-    mean_val = statistics.mean(values)
-    median_val = statistics.median(values)
-    
-    print(f"{min_val} {max_val} {mean_val} {median_val}")
+    pat_len = len(pattern)
+    text_len = len(text)
+    fingerprint_size = pat_len + w * (pat_len - 1)
 
+    if fingerprint_size > text_len:
+        return []
+
+    fingerprints = {}
+    for i in range(fingerprint_size):
+        start = i
+        end = start + pat_len
+        substr = text[start:end]
+        h = hash_function(substr)
+        if h not in fingerprints:
+            fingerprints[h] = [i, 0]
+        else:
+            fp_info = fingerprints[h]
+            if end - start == pattern.count('*'):
+                fp_info[1] += delta
+            elif end - start < pattern.count('*'):
+                del fingerprints[h]
+        if fp_info[1] >= delta:
+            yield substr
+
+def detect_plagiarism(main_text, other_text, window=3, threshold=2):
+    return set(winnowing(main_text, '***')) & set(winnowing(other_text, '***'))
+
+# Example usage:
 if __name__ == "__main__":
-    main()
+    main = "This is a sample text to detect plagiarism."
+    other = "Another sample text with similar phrases for testing."
+    common = detect_plagiarism(main, other)
+    print("Common phrases:", common)
 ```

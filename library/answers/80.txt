@@ -1,27 +1,9 @@
-def articulation_points(graph):
+def floyd_warshall(graph):
     n = len(graph)
-    visited = [False] * n
-    disc = [0] * n
-    low = [0] * n
-    parent = [-1] * n
-    ap = [False] * n
-    time = 0
-
-    def dfs(u):
-        nonlocal time
-        children = 0
-        visited[u] = True
-        disc[u] = low[u] = time; time += 1
-        for v in graph[u]:
-            if not visited[v]:
-                parent[v] = u; children += 1
-                dfs(v)
-                low[u] = min(low[u], low[v])
-                if parent[u] == -1 and children > 1: ap[u] = True
-                if parent[u] != -1 and low[v] >= disc[u]: ap[u] = True
-            elif v != parent[u]:
-                low[u] = min(low[u], disc[v])
-
-    for i in range(n):
-        if not visited[i]: dfs(i)
-    return [i for i in range(n) if ap[i]]
+    dist = [row[:] for row in graph]
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    return dist

@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that finds the median of two sorted arrays in O(log(min(m,n))) time.

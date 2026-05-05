@@ -1,37 +1,37 @@
 ```python
-def vigenere(text, key, mode='encrypt'):
-    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    result = []
+class LoadBalancer:
+    def __init__(self):
+        self.workers = []
+        self.current_worker_index = 0
 
-    k_idx = 0
-    for char in text:
-        if char.isalpha():
-            is_upper = char.isupper()
-            char = char.upper()
-            offset = alphabet.find(char)
-            key_char = key[k_idx % len(key)].upper()
-            key_offset = alphabet.find(key_char)
+    def add_worker(self, worker):
+        self.workers.append(worker)
 
-            if mode == 'encrypt':
-                new_offset = (offset + key_offset) % 26
-            elif mode == 'decrypt':
-                new_offset = (offset - key_offset) % 26
+    def distribute_request(self):
+        if not self.workers:
+            raise Exception("No workers available")
 
-            result.append(alphabet[new_offset])
-            k_idx += 1
-        else:
-            result.append(char)
+        worker = self.workers[self.current_worker_index]
+        self.current_worker_index = (self.current_worker_index + 1) % len(self.workers)
+        return worker.handle_request()
 
-    return ''.join(result)
+class Worker:
+    def __init__(self, id):
+        self.id = id
 
+    def handle_request(self, request):
+        print(f"Worker {self.id} received a request: {request}")
+        # Process the request here
+        return True
 
-# Example usage:
-original_text = "ATTACKATDAWN"
-key = "LEMON"
-encrypted = vigenere(original_text, key)
-decrypted = vigenere(encrypted, key, mode='decrypt')
+# Example usage
+if __name__ == "__main__":
+    balancer = LoadBalancer()
 
-print("Original:", original_text)
-print("Encrypted:", encrypted)
-print("Decrypted:", decrypted)
+    for i in range(3):
+        balancer.add_worker(Worker(i))
+
+    requests = ["req1", "req2", "req3", "req4"]
+    for req in requests:
+        balancer.distribute_request()
 ```

@@ -1,1 +1,37 @@
-Please provide the problem you would like solved.
+```python
+def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, max_iter):
+    img = [[0] * width for _ in range(height)]
+    for x in range(width):
+        real = xmin + (xmax - xmin) * x / width
+        for y in range(height):
+            imag = ymin + (ymax - ymin) * y / height
+            c_real, c_imag = complex(real, imag)
+            z_real, z_imag = 0.0, 0.0
+            iter = 0
+            while abs(z_real + z_imag*1j) <= 2 and iter < max_iter:
+                temp = z_real*z_real - z_imag*z_imag + c_real
+                z_imag = 2*z_real*z_imag + c_imag
+                z_real = temp
+                iter += 1
+            img[y][x] = iter
+    return img
+
+import numpy as np
+from PIL import Image
+
+def display_mandelbrot(img):
+    im = Image.new('L', (len(img[0]), len(img)))
+    for y in range(len(img)):
+        for x in range(len(img[0])):
+            im.putpixel((x, y), img[y][x])
+    im.show()
+
+if __name__ == "__main__":
+    xmin, xmax = -2.0, 1.0
+    ymin, ymax = -1.5, 1.5
+    width, height = 800, 600
+    max_iter = 100
+
+    img = mandelbrot_set(xmin, xmax, ymin, ymax, width, height, max_iter)
+    display_mandelbrot(img)
+```

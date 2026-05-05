@@ -1,1 +1,1 @@
-Write a function that returns the largest element in a list.
+Write a program that simulates the Game of Life (Conway's cellular automaton) with a toroidal grid.

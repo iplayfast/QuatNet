@@ -1,8 +1,1 @@
-```python
-def python_function():
-    # Function implementation here
-    pass
-
-# Test the function
-python_function()
-```
+print("Hello World")

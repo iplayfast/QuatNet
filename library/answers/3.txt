@@ -1,3 +1,77 @@
-name = input('Enter your name: ')
-if name in ('Alice', 'Bob'):
-    print(f'Hello {name}')
+```python
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.children = {}
+
+class BKTree:
+    def __init__(self, distance_func):
+        self.root = Node(None)
+        self.distance_func = distance_func
+
+    def insert(self, value):
+        def _insert(node, value):
+            if node is None:
+                return Node(value)
+
+            distance = self.distance_func(value, node.value)
+            child_node = node.children.get(distance)
+            if child_node is None:
+                node.children[distance] = Node(value)
+            else:
+                node.children[distance] = _insert(child_node, value)
+            return node
+
+        _insert(self.root, value)
+
+    def search(self, value, max_distance):
+        results = []
+        def _search(node, value, max_distance):
+            if node is None:
+                return
+
+            distance = self.distance_func(value, node.value)
+            if distance <= max_distance:
+                results.append(node.value)
+
+            min_distance = self.distance_func(value, node.value) - 1
+            for child_distance in node.children:
+                if min_distance <= child_distance <= max_distance + 1:
+                    _search(node.children[child_distance], value, max_distance)
+
+            return node
+
+        _search(self.root, value, max_distance)
+        return results
+
+def levenshtein_distance(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_distance(s2, s1)
+
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1
+            deletions = current_row[j] + 1
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+
+    return previous_row[-1]
+
+def create_bk_tree(words):
+    tree = BKTree(levenshtein_distance)
+    for word in words:
+        tree.insert(word)
+    return tree
+
+# Example usage
+words = ["kitten", "sitting", "flamingo", "flying"]
+tree = create_bk_tree(words)
+
+print(tree.search("kittne", 2))  # Output: ['kitten']
+```

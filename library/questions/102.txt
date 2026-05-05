@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that computes the edit distance between two strings with affine gap penalties.

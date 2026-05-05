@@ -1,1 +1,11 @@
-"The memory game implementation creates a shuffled deck of card pairs arranged in a grid, where players reveal two cards each turn via click or coordinate input. Matching pairs stay visible, non-matching pairs flip back after a brief delay. The game tracks total turns and ends when all pairs are revealed."
+import random
+
+def quickselect(arr, k):
+    if len(arr) == 1: return arr[0]
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    if k < len(left): return quickselect(left, k)
+    elif k < len(left) + len(mid): return mid[0]
+    else: return quickselect(right, k - len(left) - len(mid))

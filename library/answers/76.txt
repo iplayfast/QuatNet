@@ -1,26 +1,37 @@
 ```python
-def reverse_string(s: str) -> str:
-    """
-    Reverses the characters of a given string.
+def winnowing(text, pattern, m, w):
+    n = len(text)
+    dft = [0] * n
 
-    Args:
-        s: The input string.
+    # Step 1: Calculate DFT of text
+    for i in range(n):
+        if text[i:i+m] == pattern:
+            dft[i] = 1
 
-    Returns:
-        The reversed string.
-    """
-    return s[::-1]
+    # Step 2: Initialize output array and counters
+    output = []
+    max_count = 0
+    count = [0] * n
 
-if __name__ == "__main__":
-    # Example Usage
-    test_string_1 = "hello world"
-    reversed_1 = reverse_string(test_string_1)
-    print(f"Original: '{test_string_1}'")
-    print(f"Reversed: '{reversed_1}'")
-    print("-" * 20)
+    # Step 3: Slide the window across DFT
+    for i in range(n - m + 1):
+        if dft[i]:
+            count[i] += w
+            if count[i] > max_count:
+                max_count = count[i]
+                output.append(i)
+        else:
+            count[i] += 1
+            if count[i] == max_count:
+                output.append(i)
 
-    test_string_2 = "Python"
-    reversed_2 = reverse_string(test_string_2)
-    print(f"Original: '{test_string_2}'")
-    print(f"Reversed: '{reversed_2}'")
+    return [text[j:j+m] for j in output]
+
+# Example usage:
+text = "this is a sample text used for demonstrating the winnowing algorithm"
+pattern = "sample"
+m = len(pattern)
+w = 2
+
+print(winnowing(text, pattern, m, w))
 ```

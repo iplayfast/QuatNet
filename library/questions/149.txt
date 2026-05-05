@@ -1,1 +1,1 @@
-Write a Python function.
+Write a function that implements a basic rate limiter (e.g. max N requests per minute).
