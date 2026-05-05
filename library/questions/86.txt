@@ -1,1 +1,1 @@
-Write a program that simulates the Game of Life (Conway's cellular automaton) with a toroidal grid.
+Write a function that serializes an object to a Python-like repr string and deserializes it back.

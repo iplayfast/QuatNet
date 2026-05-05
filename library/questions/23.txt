@@ -1,1 +1,1 @@
-Write a function that rotates a list by k positions to the left using only O(1) extra space.
+Write a class that implements a singly linked list with insert, delete, and search operations.

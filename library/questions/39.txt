@@ -1,1 +1,1 @@
-Write a function that removes duplicate elements from a list while preserving order.
+Write a function that generates all valid combinations of n pairs of parentheses.

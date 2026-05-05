@@ -1,11 +1,45 @@
-def game_of_life(grid, steps):
-    h, w = len(grid), len(grid[0])
-    for _ in range(steps):
-        new = [[0] * w for _ in range(h)]
-        for y in range(h):
-            for x in range(w):
-                neighbors = sum(grid[(y+dy)%h][(x+dx)%w] for dy in [-1,0,1] for dx in [-1,0,1] if dy or dx)
-                if grid[y][x]: new[y][x] = 1 if neighbors in (2, 3) else 0
-                else: new[y][x] = 1 if neighbors == 3 else 0
-        grid = new
-    return grid
+```python
+def tarjan_scc(graph):
+    index = [0]
+    indices = {}
+    lowlinks = {}
+    on_stack = set()
+    sccs = []
+
+    def strongconnect(node):
+        indices[node] = index[0]
+        lowlinks[node] = index[0]
+        index[0] += 1
+        on_stack.add(node)
+        
+        for neighbor in graph.get(node, []):
+            if neighbor not in indices:
+                strongconnect(neighbor)
+            if neighbor in on_stack:
+                lowlinks[node] = min(lowlinks[node], indices[neighbor])
+
+        if lowlinks[node] == indices[node]:
+            scc = set()
+            loop = True
+            while loop:
+                stack_node = on_stack.pop()
+                scc.add(stack_node)
+                loop = node not in indices[stack_node]
+            sccs.append(scc)
+
+    for node in graph:
+        if node not in indices:
+            strongconnect(node)
+
+    return sccs
+
+# Example usage:
+# graph = {
+#     'A': ['B'],
+#     'B': ['C'],
+#     'C': ['A', 'D'],
+#     'D': ['E'],
+#     'E': ['D']
+# }
+# print(tarjan_scc(graph))
+```

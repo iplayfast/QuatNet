@@ -1,3 +1,19 @@
-def find_anagrams(word, dictionary):
-    key = sorted(word)
-    return [w for w in dictionary if sorted(w) == key]
+import unittest
+
+def run_tests():
+    loader = unittest.TestLoader()
+    suite = unittest.TestSuite()
+
+    for func_name in dir(unittest):
+        if func_name.startswith('test_'):
+            func = getattr(unittest, func_name)
+            if callable(func):
+                test_case = type(func.__self__.__class__.__name__ + '_test', (unittest.TestCase,), {})
+                test_func = func.__self__()
+                suite.addTest(test_case(test_func))
+
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+
+if __name__ == '__main__':
+    run_tests()

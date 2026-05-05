@@ -1,31 +1,39 @@
-def tarjan_scc(graph):
-    n = len(graph)
-    index = 0
-    indices = [-1] * n
-    lowlink = [0] * n
-    on_stack = [False] * n
-    stack = []
-    sccs = []
+import random
 
-    def strongconnect(v):
-        nonlocal index
-        indices[v] = lowlink[v] = index; index += 1
-        stack.append(v); on_stack[v] = True
-        for w in graph[v]:
-            if indices[w] == -1:
-                strongconnect(w)
-                lowlink[v] = min(lowlink[v], lowlink[w])
-            elif on_stack[w]:
-                lowlink[v] = min(lowlink[v], indices[w])
-        if lowlink[v] == indices[v]:
-            comp = []
-            while True:
-                w = stack.pop(); on_stack[w] = False
-                comp.append(w)
-                if w == v: break
-            sccs.append(comp)
+moves = ['rock', 'paper', 'scissors']
+history = []
 
-    for v in range(n):
-        if indices[v] == -1:
-            strongconnect(v)
-    return sccs
+def beats(a, b):
+    return (a == 'rock' and b == 'scissors') or \
+           (a == 'scissors' and b == 'paper') or \
+           (a == 'paper' and b == 'rock')
+
+def counter(move):
+    return {'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock'}[move]
+
+def adapt_move():
+    if len(history) < 3:
+        return random.choice(moves)
+    freq = {}
+    for m in history[-5:]:
+        freq[m] = freq.get(m, 0) + 1
+    most_common = max(freq, key=freq.get)
+    return counter(most_common)
+
+print("Rock-Paper-Scissors (q to quit)")
+while True:
+    user = input("Your move: ").lower()
+    if user == 'q':
+        break
+    if user not in moves:
+        print("Invalid")
+        continue
+    comp = adapt_move()
+    history.append(user)
+    print(f"Computer: {comp}")
+    if beats(user, comp):
+        print("You win!")
+    elif beats(comp, user):
+        print("Computer wins!")
+    else:
+        print("Tie!")

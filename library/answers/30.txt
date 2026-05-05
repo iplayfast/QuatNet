@@ -1,6 +1,9 @@
-def print_frame(words):
-    w=max(len(w) for w in words)+4
-    print('*'*w)
-    for wd in words:
-        print(f'* {wd:<{w-4}} *')
-    print('*'*w)
+def interleave(a, b):
+    result = []
+    min_len = min(len(a), len(b))
+    for i in range(min_len):
+        result.append(a[i])
+        result.append(b[i])
+    result.extend(a[min_len:])
+    result.extend(b[min_len:])
+    return result

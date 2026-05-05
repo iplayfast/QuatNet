@@ -1,1 +1,1 @@
-Write a function that reverses a list in place without creating a copy.
+Write a function that simulates a simple calculator with memory (M+, M-, MR, MC) via a REPL loop.

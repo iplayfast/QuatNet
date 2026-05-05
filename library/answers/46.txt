@@ -1,13 +1,71 @@
-def random_walk(graph,steps=20):
-    import random
-    nodes=list(graph.adj.keys())
-    current=random.choice(nodes)
-    result=[current]
-    for _ in range(steps):
-        neighbors=graph.adj.get(current,[])
-        if neighbors:
-            current=random.choice(neighbors)[0]
+```python
+import random
+import string
+from collections import defaultdict
+
+# Sample word list (you can expand this list)
+words = [
+    "apple", "banana", "cherry", "date", "elderberry",
+    "fig", "grape", "honeydew", "kiwi", "lemon",
+    "mango", "nectarine", "orange", "papaya", "quince",
+    "watermelon", "blueberry", "blackberry", "raspberry"
+]
+
+def load_words(filename):
+    with open(filename, 'r') as f:
+        return [line.strip().lower() for line in f]
+
+def choose_best_letter(letters_remaining, word_list):
+    best_letter = max(
+        letters_remaining,
+        key=lambda letter: sum(letter in word for word in word_list)
+    )
+    return best_letter
+
+def play_hangman():
+    available_words = load_words('words.txt')
+    
+    while True:
+        word_to_guess = random.choice(available_words).upper()
+        guessed_word = ['_'] * len(word_to_guess)
+        
+        letters_remaining = set(string.ascii_uppercase)
+        attempts = 6
+        
+        print("Let's play Hangman!")
+        print(f"{' '.join(guessed_word)}")
+        print(f"You have {attempts} guesses left.\n")
+        
+        while '_' in guessed_word and attempts > 0:
+            guess = input("Guess a letter: ").upper()
+            
+            if len(guess) != 1:
+                print("Please enter a single letter.")
+                continue
+            if guess not in string.ascii_uppercase:
+                print("Invalid character. Please enter a letter.")
+                continue
+            if guess in guessed_word:
+                print(f"You already guessed the letter '{guess}'. Try again.\n")
+                continue
+            
+            letters_remaining.discard(guess)
+            
+            if guess not in word_to_guess:
+                attempts -= 1
+                print(f"{''.join(guessed_word)}\nWrong guess. You have {attempts} guesses left.\n")
+            
+            # Update guessed_word with the correct letter positions
+            for idx, letter in enumerate(word_to_guess):
+                if letter == guess:
+                    guessed_word[idx] = guess
+            
+            print(f"{' '.join(guessed_word)}\n")
+        
+        if '_' not in guessed_word:
+            print("Congratulations! You've guessed the word correctly.\n")
         else:
-            current=random.choice(nodes)
-        result.append(current)
-    return ' '.join(result)
+            print(f"Game over. The word was '{word_to_guess}'.\n")
+
+play_hangman()
+```

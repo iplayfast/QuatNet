@@ -1,2 +1,2 @@
-def to_digits(n):
-    return [int(d) for d in str(n)]
+def odd_indices(lst):
+    return lst[1::2]

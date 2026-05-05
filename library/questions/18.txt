@@ -1,1 +1,1 @@
-Write a function that computes the sum of a list using a for-loop, another using a while-loop, and another using recursion.
+Write a function that serializes an object to a Python-like repr string and deserializes it back.

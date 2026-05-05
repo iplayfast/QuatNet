@@ -1,31 +1,32 @@
-def tarjan_scc(graph):
-    n = len(graph)
-    index = 0
-    indices = [-1] * n
-    lowlink = [0] * n
-    on_stack = [False] * n
-    stack = []
-    sccs = []
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
 
-    def strongconnect(v):
-        nonlocal index
-        indices[v] = lowlink[v] = index; index += 1
-        stack.append(v); on_stack[v] = True
-        for w in graph[v]:
-            if indices[w] == -1:
-                strongconnect(w)
-                lowlink[v] = min(lowlink[v], lowlink[w])
-            elif on_stack[w]:
-                lowlink[v] = min(lowlink[v], indices[w])
-        if lowlink[v] == indices[v]:
-            comp = []
-            while True:
-                w = stack.pop(); on_stack[w] = False
-                comp.append(w)
-                if w == v: break
-            sccs.append(comp)
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
 
-    for v in range(n):
-        if indices[v] == -1:
-            strongconnect(v)
-    return sccs
+    def insert(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_end_of_word
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+        for char in prefix:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return True

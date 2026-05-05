@@ -1,1 +1,1 @@
-Write a function that removes duplicate elements from a list while preserving order.
+Write a function that implements the Knuth-Morris-Pratt (KMP) substring search algorithm.

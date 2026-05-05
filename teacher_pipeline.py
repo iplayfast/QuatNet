@@ -224,7 +224,7 @@ class QuaternaryLLM(nn.Module):
         w.add_uint32("quaternary_nn.block_count", n_layer)
         w.add_uint32("quaternary_nn.feed_forward_length", d_ff)
         w.add_uint32("quaternary_nn.attention.head_count", n_head)
-        w.add_uint32("quaternary_nn.attention.head_count_kv", n_head)
+        w.add_uint32("quaternary_nn.attention.head_count_kv", self.n_kv_heads)
         w.add_uint32("quaternary_nn.attention.key_length", d_head)
         w.add_uint32("quaternary_nn.attention.value_length", d_head)
         w.add_uint32("quaternary_nn.vocab_size", vocab)
@@ -317,10 +317,7 @@ class QuaternaryLLM(nn.Module):
             # fp32 weights + optimizer states (2x) + activations (~1x) = 4x
             est_mem = param_count * 4 * 4
             print(f"  [LOAD] Model: {param_count/1e6:.0f}M params, est ~{est_mem//(1024**3)} GiB needed, ~{free//(1024**3)} GiB free")
-            if param_count > 100_000_000:
-                print(f"  [LOAD] Large model detected, forcing CPU to avoid OOM")
-                device = torch.device("cpu")
-            elif est_mem > free * 0.8:
+            if est_mem > free * 0.8:
                 print(f"  [LOAD] Model too large for GPU, falling back to CPU")
                 device = torch.device("cpu")
 

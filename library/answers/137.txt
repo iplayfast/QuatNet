@@ -1,27 +1,9 @@
-```python
-def count_vowels(text):
-    """
-    Counts the number of vowels (a, e, i, o, u) in a given string,
-    case-insensitively.
-    """
-    vowels = "aeiou"
-    text = text.lower()
-    count = 0
-    for char in text:
-        if char in vowels:
-            count += 1
-    return count
-
-if __name__ == '__main__':
-    test_string_1 = "Hello World"
-    result_1 = count_vowels(test_string_1)
-    print(f"'{test_string_1}' has {result_1} vowels.") # Expected: 3
-
-    test_string_2 = "Rhythm"
-    result_2 = count_vowels(test_string_2)
-    print(f"'{test_string_2}' has {result_2} vowels.") # Expected: 0
-
-    test_string_3 = "AEIOUaeiou"
-    result_3 = count_vowels(test_string_3)
-    print(f"'{test_string_3}' has {result_3} vowels.") # Expected: 10
-```
+def find_pairs(nums, target):
+    seen = set()
+    result = []
+    for num in nums:
+        complement = target - num
+        if complement in seen:
+            result.append((complement, num))
+        seen.add(num)
+    return result

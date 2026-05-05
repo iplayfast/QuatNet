@@ -1,33 +1,43 @@
 ```python
-def calculate_average(numbers):
-    """
-    Calculate the average of a list of numbers.
+import random
 
-    Args:
-        numbers (list): A list of numeric values (int or float)
+choices = ['rock', 'paper', 'scissors']
 
-    Returns:
-        float: The arithmetic mean of the numbers
+def get_human_choice():
+    while True:
+        choice = input("Enter your choice (rock/paper/scissors): ").lower()
+        if choice in choices:
+            return choice
+        else:
+            print("Invalid choice. Please enter rock, paper, or scissors.")
 
-    Raises:
-        TypeError: If the input is not a list or contains non-numeric values
-        ValueError: If the list is empty
-    """
-    if not isinstance(numbers, list):
-        raise TypeError("Input must be a list.")
-    
-    if len(numbers) == 0:
-        raise ValueError("Cannot calculate average of an empty list.")
-    
-    if any(not isinstance(num, (int, float)) for num in numbers):
-        raise TypeError("All elements must be numeric values.")
-    
-    total = sum(numbers)
-    return total / len(numbers)
+def get_computer_choice(history):
+    most_common = max(set(history), key=history.count) if history else random.choice(choices)
+    return most_common
 
+def determine_winner(player, computer):
+    if player == computer:
+        return "It's a tie!"
+    elif (player == 'rock' and computer == 'scissors') or \
+         (player == 'scissors' and computer == 'paper') or \
+         (player == 'paper' and computer == 'rock'):
+        return "You win!"
+    else:
+        return "Computer wins."
 
-# Example usage:
+def play_game():
+    history = []
+    while True:
+        human_choice = get_human_choice()
+        computer_choice = get_computer_choice(history)
+        history.append(computer_choice)
+
+        print(f"You chose: {human_choice}")
+        print(f"Computer chose: {computer_choice}")
+
+        result = determine_winner(human_choice, computer_choice)
+        print(result)
+
 if __name__ == "__main__":
-    print(f"Average of [1, 2, 3, 4, 5]: {calculate_average([1, 2, 3, 4, 5])}")
-    print(f"Average of [10.5, 20.3, 30.7]: {calculate_average([10.5, 20.3, 30.7])}")
+    play_game()
 ```

@@ -1,11 +1,15 @@
-def bfs(graph, start):
-    visited = set()
-    queue = [start]
-    
-    while queue:
-        vertex = queue.pop(0)
-        if vertex not in visited:
-            visited.add(vertex)
-            queue.extend([neighbor for neighbor in graph[vertex] if neighbor not in visited])
-    
-    return visited
+import sys
+
+def run_tests(module):
+    passed = failed = 0
+    for name in dir(module):
+        if name.startswith('test_'):
+            try:
+                getattr(module, name)()
+                print(f'  PASS {name}')
+                passed += 1
+            except Exception as e:
+                print(f'  FAIL {name}: {e}')
+                failed += 1
+    print(f'{passed} passed, {failed} failed')
+    return failed == 0

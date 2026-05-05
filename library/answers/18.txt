@@ -1,14 +1,7 @@
-def sum_for(lst):
-    s=0
-    for x in lst: s+=x
-    return s
+def serialize(obj):
+    return repr(obj)
 
-def sum_while(lst):
-    s,i=0,0
-    while i<len(lst):
-        s+=lst[i]; i+=1
-    return s
+def deserialize(s):
+    return eval(s)
 
-def sum_rec(lst):
-    if not lst: return 0
-    return lst[0]+sum_rec(lst[1:])
+# Note: Only safe for basic types. Use ast.literal_eval for untrusted input.

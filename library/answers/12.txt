@@ -1,2 +1,62 @@
-def max_in_list(lst):
-    return max(lst) if lst else None
+```python
+import pygame
+import math
+
+# Initialize Pygame
+pygame.init()
+
+# Screen dimensions and ball properties
+WIDTH, HEIGHT = 800, 600
+WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+BALL_RADIUS = 20
+GRAVITY = 0.5
+REFLECT_ANGLE = 0.9
+
+def draw_ball(x, y):
+    pygame.draw.circle(WINDOW, (255, 0, 0), (int(x), int(y)), BALL_RADIUS)
+
+def bounce(ball_x, ball_y, speed_x, speed_y):
+    # Reflect off the ground and walls
+    global REFLECT_ANGLE
+    if ball_y + BALL_RADIUS >= HEIGHT:
+        speed_y = -speed_y * REFLECT_ANGLE
+    elif ball_y <= 0:
+        speed_y = -speed_y * REFLECT_ANGLE
+    if ball_x + BALL_RADIUS >= WIDTH or ball_x <= 0:
+        speed_x = -speed_x * REFLECT_ANGLE
+
+def simulate_ball(speed_x, speed_y):
+    global ball_x, ball_y
+    dt = 0.01  # Time step for simulation (adjust as needed)
+    while True:
+        bounce(ball_x, ball_y, speed_x, speed_y)
+        yield
+        ball_x += speed_x * dt
+        ball_y += speed_y * dt
+        GRAVITY -= 0.001
+
+# Initial positions and velocity
+ball_x = WIDTH // 2 - BALL_RADIUS
+ball_y = HEIGHT // 2 - BALL_RADIUS
+speed_x, speed_y = 200, -300
+
+# Game loop
+running = True
+clock = pygame.time.Clock()
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Update ball position based on simulation
+    for update in simulate_ball(100, 80):
+        pass
+
+    WINDOW.fill((0, 0, 0))
+    draw_ball(ball_x, ball_y)
+
+    pygame.display.flip()
+    clock.tick(60)  # Limit the frame rate to 60 FPS
+
+pygame.quit()
+```

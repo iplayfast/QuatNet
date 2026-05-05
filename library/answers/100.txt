@@ -1,26 +1,45 @@
-import json, os
+```python
+def myers_diff(old, new):
+    def backtrack(a, b):
+        if a == 0:
+            return [[(i, j) for i, j in zip(range(len(new)), range(b, len(new)))]]
+        if b == 0:
+            return [[(i, j) for i, j in zip(range(a, len(old)), range(a, len(old)))]]
+        
+        k = (a + b - 1) // 2
+        D = {i: float('inf') for i in range(b)}
+        D[0] = 0
+        vmin = float('inf')
+        for i in range(a):
+            di = old[i]
+            si_plus_1 = set()
+            for j in range(b, -1, -1):
+                if di == new[j]:
+                    si = backtrack(a - i - 1, b - j)[0]
+                    si_plus_1.update((x + i, y + j) for x, y in si)
+                    D[j] = min(D[j], D[j - 1] + 1, (i + j) if di == new[j] else (i + j + 1))
+                elif D[j - 1] < D[j]:
+                    break
+            pmin = vmin
+            vmin = min(vmin, D[b])
+            for j in range(pmin, b + 1):
+                if D[j] == vmin:
+                    backtrack(a - i - 1, b - j).each(lambda x: x.insert(0, (i, j)))
+    
+        return backtrack(a, b)
 
-class KVStore:
-    def __init__(self, path='kvstore.json'):
-        self.path = path
-        self.data = {}
-        if os.path.exists(path):
-            with open(path) as f:
-                try: self.data = json.load(f)
-                except: self.data = {}
+    def each(f):
+        result = f(backtrack(len(old), len(new))[0])
+        for seq in result:
+            yield seq
 
-    def put(self, key, value):
-        self.data[key] = value
-        self._flush()
+    return list(each)
 
-    def get(self, key):
-        return self.data.get(key, None)
 
-    def delete(self, key):
-        self.data.pop(key, None)
-        self._flush()
-
-    def _flush(self):
-        tmp = self.path + '.tmp'
-        with open(tmp, 'w') as f: json.dump(self.data, f)
-        os.replace(tmp, self.path)
+# Example usage
+old_str = "abcdef"
+new_str = "azced"
+diffs = myers_diff(old_str, new_str)
+for diff in diffs:
+    print([(i, j) for i, j in diff])
+```

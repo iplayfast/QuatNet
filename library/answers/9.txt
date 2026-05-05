@@ -1,11 +1,8 @@
-import random
-n=random.randint(1,100)
-guesses=set()
-tries=0
-while True:
-    g=int(input('Guess: '))
-    if g not in guesses: tries+=1
-    guesses.add(g)
-    if g<n: print('Too low')
-    elif g>n: print('Too high')
-    else: print(f'Correct in {tries} tries'); break
+def make_change(amount, coins):
+    ways = [[] for _ in range(amount + 1)]
+    ways[0] = [[]]
+    for coin in coins:
+        for a in range(coin, amount + 1):
+            for w in ways[a - coin]:
+                ways[a].append(w + [coin])
+    return ways[amount]

@@ -1,1 +1,14 @@
-"The bouncing ball simulation renders a circle moving diagonally across a canvas, reversing direction each time it reaches a boundary. The animation loop updates position, clears the screen, and redraws the ball at each frame"
+```python
+import sys
+
+def main():
+    mode = input().strip()  # Read mode ('L' for linewise, 'C' for charwise)
+    
+    if mode.upper() == 'LIN':
+        print('\n'.join(sys.stdin.read().splitlines()), end='')
+    elif mode.upper() == 'CHAR':
+        print(''.join(sys.stdin.read()), end='')
+
+if __name__ == '__main__':
+    main()
+```

@@ -1,5 +1,7 @@
-```python
-def my_function():
-    # Your code goes here
-    pass
-```
+def running_total(lst):
+    result = []
+    total = 0
+    for x in lst:
+        total += x
+        result.append(total)
+    return result

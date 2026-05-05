@@ -1,1 +1,1 @@
-Write a class that implements a binary search tree with insert, search, and delete.
+Write a program that asks for a number n and prints the sum of all multiples of 3 or 5 from 1 to n.

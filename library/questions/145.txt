@@ -1,1 +1,1 @@
-Write a function that finds the k-th smallest element in an unsorted array in O(n) average time (quickselect).
+141: Write a function that implements the discrete Fourier transform (DFT) naively.

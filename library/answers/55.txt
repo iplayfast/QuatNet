@@ -1,47 +1,31 @@
-class Node23:
-    def __init__(self):
-        self.keys=[]; self.children=[]; self.leaf=True
+```python
+def to_pig_latin(word):
+    vowels = 'aeiouAEIOU'
+    if word[0] in vowels:
+        return word + 'yay'
+    else:
+        for i, letter in enumerate(word):
+            if letter in vowels:
+                return word[i:] + word[:i] + 'ay'
+        return word + 'ay'  # In case the word has no vowels
 
-class Tree23:
-    def __init__(self): self.root=Node23()
-    
-    def insert(self,k):
-        r=self.root
-        if len(r.keys)==2:  # root full, split
-            new=Node23()
-            new.leaf=False
-            new.children.append(r)
-            self._split_child(new,0)
-            self.root=new
-            self._insert_nonfull(new,k)
-        else:
-            self._insert_nonfull(r,k)
-    
-    def _insert_nonfull(self,node,k):
-        i=len(node.keys)-1
-        if node.leaf:
-            node.keys.append(None)
-            while i>=0 and k<node.keys[i]:
-                node.keys[i+1]=node.keys[i]; i-=1
-            node.keys[i+1]=k
-        else:
-            while i>=0 and k<node.keys[i]: i-=1
-            i+=1
-            if len(node.children[i].keys)==2:
-                self._split_child(node,i)
-                if k>node.keys[i]: i+=1
-            self._insert_nonfull(node.children[i],k)
-    
-    def _split_child(self,p,i):
-        c=p.children[i]
-        new=Node23(); new.leaf=c.leaf
-        new.keys.append(c.keys[1])
-        if not c.leaf:
-            new.children=[c.children[1],c.children[2]]
-            c.children=[c.children[0],c.children[1]]
-        p.keys.insert(i,c.keys[0])
-        p.children.insert(i+1,new)
-        c.keys=[c.keys[0]]
-# (a,b)-trees (also called B-trees) store a-1 to b-1 keys per node.
-# Good values: a=2,b=3 (2-3 tree), a=2,b=5, a=3,b=7 depending on disk block sizes.
-# Higher b reduces tree height, better for disk-based storage.
+def from_pig_latin(word):
+    vowels = 'aeiouAEIOU'
+    if word.endswith('yay'):
+        return word[:-4] + word[-1] + 'ay'
+    elif word.endswith('ay'):
+        for i, letter in enumerate(word):
+            if letter in vowels:
+                return word[i:] + word[:i]
+    return ''  # Return empty string if not a valid Pig Latin word
+
+def translate(text):
+    words = text.split()
+    translated = [to_pig_latin(word) for word in words]
+    return ' '.join(translated)
+
+def reverse_translate(pig_text):
+    words = pig_text.split()
+    reversed = [from_pig_latin(word) for word in words]
+    return ' '.join(reversed)
+```

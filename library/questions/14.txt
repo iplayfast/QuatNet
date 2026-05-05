@@ -1,1 +1,1 @@
-Write a function that checks whether a given value exists in a list.
+Write a program that plays Rock-Paper-Scissors against a human, adapting to their patterns.

@@ -1,1 +1,1 @@
-Write a function that performs a depth-first search on a graph represented as an adjacency list.
+Write a class that implements a singly linked list with insert, delete, and search operations.

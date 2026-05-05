@@ -1,1 +1,1 @@
-Write a function that removes duplicate elements from a list while preserving order.
+Write a program that translates English text to Pig Latin and back.

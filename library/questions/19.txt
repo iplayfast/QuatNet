@@ -1,1 +1,1 @@
-Write a function that implements the Winnowing algorithm for document fingerprinting (plagiarism detection).
+Write a function that implements a simple fuzzy string matcher (like fzf's algorithm).

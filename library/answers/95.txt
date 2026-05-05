@@ -1,10 +1,7 @@
-import itertools, time, sys
-
-def spinner(duration=10):
-    chars = itertools.cycle('|/-\\')
-    start = time.time()
-    while time.time() - start < duration:
-        sys.stdout.write(f'\r{next(chars)} {time.time() - start:.1f}s')
-        sys.stdout.flush()
-        time.sleep(0.1)
-    print()
+def fibonacci(n, memo={}):
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return n
+    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
+    return memo[n]

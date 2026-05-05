@@ -1,8 +1,3 @@
-```python
-def calculate_total(items):
-    return sum(item for item in items if item > 0)
-
-if __name__ == "__main__":
-    result = calculate_total([1, 2, 3, 4, 5])
-    print(f"Total: {result}")
-```
+n = int(input("Enter a number: "))
+total = (n * (n + 1)) // 2
+print(total)

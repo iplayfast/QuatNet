@@ -1,17 +1,7 @@
-def to_base10(digits,b1):
-    n=0
-    for d in digits:
-        n=n*b1+d
-    return n
-
-def from_base10(n,b2):
-    if n==0: return [0]
-    r=[]
-    while n:
-        r.append(n%b2); n//=b2
-    return r[::-1]
-
-def convert(digits,b1,b2):
-    n=to_base10(digits,b1)
-    return from_base10(n,b2)
-# Example: convert([2,1,0],3,10) -> [2,1]
+def fisher_yates_shuffle(arr):
+    import random
+    n = len(arr)
+    for i in range(n - 1, 0, -1):
+        j = random.randint(0, i)
+        arr[i], arr[j] = arr[j], arr[i]
+    return arr

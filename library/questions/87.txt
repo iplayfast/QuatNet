@@ -1,1 +1,1 @@
-Write a function that computes the edit distance between two strings with affine gap penalties.
+76: Write a function that implements the Sieve of Eratosthenes as a generator yielding primes lazily.

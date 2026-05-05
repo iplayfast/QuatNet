@@ -1,12 +1,23 @@
-```python
-def main():
-    # Example usage:
-    print(solution(2))  # Output: [1, 2]
-    print(solution(3))  # Output: [1, 2, 3]
+from array import array
 
-def solution(n):
-    return list(range(1, n + 1))
+def ring_buffer(capacity):
+    buf = [None] * capacity
+    read_pos = 0
+    write_pos = 0
 
-if __name__ == "__main__":
-    main()
-```
+    def push(item):
+        nonlocal write_pos
+        nxt = (write_pos + 1) % capacity
+        if nxt == read_pos: return False
+        buf[write_pos] = item
+        write_pos = nxt
+        return True
+
+    def pop():
+        nonlocal read_pos
+        if read_pos == write_pos: return None
+        item = buf[read_pos]
+        read_pos = (read_pos + 1) % capacity
+        return item
+
+    return push, pop
