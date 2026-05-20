@@ -31,6 +31,14 @@ else
     ARCH_FLAG=""
 fi
 
+# Clear stale cache if architecture flags changed
+if [ -f build/CMakeCache.txt ]; then
+    if grep -q 'compute_120a\|compute_120' build/CMakeCache.txt 2>/dev/null; then
+        echo "Removing stale CMake cache with unsupported architectures"
+        rm -rf build
+    fi
+fi
+
 cmake -B build -DCMAKE_BUILD_TYPE=Release $CUDA_FLAG $ARCH_FLAG
 cmake --build build --config Release -j$(nproc)
 
