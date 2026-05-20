@@ -19,6 +19,13 @@ echo "--- Checking system dependencies ---"
 
 MISSING=()
 
+if command -v uv &>/dev/null; then
+    ok "uv: $(uv --version)"
+else
+    fail "uv not found — install from https://docs.astral.sh/uv/"
+    MISSING+=("uv")
+fi
+
 if command -v python3 &>/dev/null; then
     PYVER=$(python3 --version 2>&1)
     ok "Python: $PYVER"
@@ -70,15 +77,14 @@ echo ""
 echo "--- Setting up Python virtualenv ---"
 
 if [ ! -d ".venv" ]; then
-    python3 -m venv .venv
+    uv venv
     ok "Created .venv"
 else
     ok ".venv already exists"
 fi
 
 source .venv/bin/activate
-pip install --upgrade pip -q
-pip install -r requirements.txt -q
+uv pip install -r requirements.txt
 ok "Python dependencies installed"
 
 # ── Build llama.cpp ──────────────────────────────────────────────
