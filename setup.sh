@@ -104,6 +104,11 @@ echo "--- Creating directories ---"
 mkdir -p models images
 ok "models/ and images/ ready"
 
+# ── Download reference models ────────────────────────────────────
+echo ""
+echo "--- Downloading models ---"
+./download_models.sh
+
 # ── Ollama check ─────────────────────────────────────────────────
 echo ""
 echo "--- Checking Ollama ---"
