@@ -487,9 +487,11 @@ def verify_with_llama(path, prompt="Hello"):
     if not os.path.exists(binary):
         subprocess.run(["make", "-C", "llama.cpp/build", "llama-simple"], capture_output=True)
     try:
+        env = os.environ.copy()
+        env["LD_LIBRARY_PATH"] = "./llama.cpp/build/bin:" + env.get("LD_LIBRARY_PATH", "")
         result = subprocess.run([binary, "-m", path, "--no-warmup", "-p", "a", "-n", "1",
                                  "-ngl", "0"],
-                                capture_output=True, timeout=15)
+                                capture_output=True, timeout=15, env=env)
         if result.returncode == 0:
             print(f"[VERIFY] llama.cpp runs OK")
         elif b"CUDA error" in result.stderr or b"out of memory" in result.stderr:
