@@ -201,7 +201,7 @@ def convert(src_path, dst_path=None):
             deq = dequantize(t)
             packed = quantize_to_q2q(deq)
             w.add_tensor(f'blk.{i}.{part}.weight', packed,
-                         raw_shape=(ne[1], ne[0]), raw_dtype=GGMLQuantizationType.Q2_Q)
+                         raw_shape=(ne[0], ne[1]), raw_dtype=GGMLQuantizationType.Q2_Q)
             converted += 1
 
         for suf in ['weight', 'bias']:

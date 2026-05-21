@@ -243,10 +243,10 @@ class QuaternaryLLM(nn.Module):
 
         for i, layer in enumerate(self.layers):
             w.add_tensor(f"blk.{i}.attn_norm.weight", layer.attn_norm.weight.detach().cpu().numpy().astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().T.astype(np.float32))
-            w.add_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().T.astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_q.weight", layer.attn.q.get_quantized_weight().astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_k.weight", layer.attn.k.get_quantized_weight().astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_v.weight", layer.attn.v.get_quantized_weight().astype(np.float32))
+            w.add_tensor(f"blk.{i}.attn_output.weight", layer.attn.o.get_quantized_weight().astype(np.float32))
             w.add_tensor(f"blk.{i}.ffn_norm.weight", layer.ffn_norm.weight.detach().cpu().numpy().astype(np.float32))
             w.add_tensor(f"blk.{i}.ffn_gate.weight", layer.ffn.gate.weight.detach().cpu().numpy().astype(np.float32))
             w.add_tensor(f"blk.{i}.ffn_down.weight", layer.ffn.down.weight.detach().cpu().numpy().astype(np.float32))

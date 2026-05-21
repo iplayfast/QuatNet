@@ -28,7 +28,27 @@ llm_build_quaternary_nn::llm_build_quaternary_nn(const llama_model & model, cons
             }
 
             if (layer.wq && layer.wo) {
-                auto [Qcur, Kcur, Vcur] = build_qkv(layer, cur, n_embd_head, n_head_i, n_head_kv_i, il);
+                const int64_t n_embd = hparams.n_embd;
+
+                auto build_qkv_proj = [&](ggml_tensor * w, ggml_tensor * w_s) -> ggml_tensor * {
+                    if (w->ne[0] != n_embd && w->ne[1] == n_embd) {
+                        w = ggml_cont(ctx0, ggml_transpose(ctx0, w));
+                    }
+                    return build_lora_mm(w, cur, w_s);
+                };
+
+                ggml_tensor * Qcur = build_qkv_proj(layer.wq, layer.wq_s);
+                ggml_tensor * Kcur = build_qkv_proj(layer.wk, layer.wk_s);
+                ggml_tensor * Vcur = build_qkv_proj(layer.wv, layer.wv_s);
+
+                Qcur = ggml_reshape_3d(ctx0, Qcur, n_embd_head, n_head_i,    n_tokens);
+                Kcur = ggml_reshape_3d(ctx0, Kcur, n_embd_head, n_head_kv_i, n_tokens);
+                Vcur = ggml_reshape_3d(ctx0, Vcur, n_embd_head, n_head_kv_i, n_tokens);
+
+                cb(Qcur, "Qcur", il);
+                cb(Kcur, "Kcur", il);
+                cb(Vcur, "Vcur", il);
+
                 cur = build_attn(inp_attn, layer.wo, layer.wo_b, nullptr,
                         Qcur, Kcur, Vcur, nullptr, nullptr, nullptr,
                         1.0f / sqrtf((float) n_embd_head), il);
