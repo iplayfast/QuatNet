@@ -1,0 +1,1 @@
+116: Write a function that implements the Reservoir sampling algorithm (select k random items from a stream).

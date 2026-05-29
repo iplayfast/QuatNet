@@ -1,28 +1,6 @@
-def union_area(rects):
-    if not rects:
-        return 0.0
-    xs = set()
-    for x1, y1, x2, y2 in rects:
-        xs.add(x1); xs.add(x2)
-    xs = sorted(xs)
-    area = 0.0
-    for i in range(len(xs) - 1):
-        x_left, x_right = xs[i], xs[i + 1]
-        if x_right == x_left:
-            continue
-        intervals = []
-        for x1, y1, x2, y2 in rects:
-            if x1 <= x_left and x_right <= x2:
-                intervals.append((y1, y2))
-        if not intervals:
-            continue
-        intervals.sort()
-        merged = [intervals[0]]
-        for y1, y2 in intervals[1:]:
-            if y1 <= merged[-1][1]:
-                merged[-1] = (merged[-1][0], max(merged[-1][1], y2))
-            else:
-                merged.append((y1, y2))
-        for y1, y2 in merged:
-            area += (x_right - x_left) * (y2 - y1)
-    return area
+MORSE = {'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':'/'}
+REV_MORSE={v:k for k,v in MORSE.items()}
+def to_morse(text):
+    return ' '.join(MORSE.get(c.upper(),c) for c in text)
+def from_morse(morse):
+    return ''.join(REV_MORSE.get(c,'?') for c in morse.split())

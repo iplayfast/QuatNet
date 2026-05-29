@@ -1,21 +1,3 @@
-def sum_for(lst):
-    total = 0
-    for num in lst:
-        total += num
-    return total
-
-def sum_while(lst):
-    total = 0
-    i = 0
-    while i < len(lst):
-        total += lst[i]
-        i += 1
-    return total
-
-def sum_recursive(lst, n=None):
-    if n is None:
-        n = len(lst) - 1
-    if n < 0:
-        return 0
-    else:
-        return lst[n] + sum_recursive(lst, n - 1)
+def digits(n):
+    return [int(d) for d in str(abs(n))]
+# Or: [n//10**i%10 for i in range(len(str(n))-1,-1,-1)]

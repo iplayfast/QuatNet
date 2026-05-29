@@ -1,6 +1,6 @@
-def fuzzy_match(pattern, text):
-    pi, ti = 0, 0
-    while pi < len(pattern) and ti < len(text):
-        if pattern[pi].lower() == text[ti].lower(): pi += 1
-        ti += 1
-    return pi == len(pattern)
+def on_all(f,lst):
+    return [f(x) for x in lst]
+
+squares = on_all(lambda x: x*x, range(1,21))
+print(squares)
+# Output: [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225,256,289,324,361,400]

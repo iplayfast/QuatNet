@@ -1,1 +1,1 @@
-Write a program that implements a simple DNS resolver that queries authoritative nameservers.
+Write a function that merges two sorted lists into a single sorted list efficiently.

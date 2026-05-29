@@ -12,8 +12,7 @@ Shape conventions:
 import sys, os, numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'llama.cpp/gguf-py'))
 
-from gguf import GGUFWriter, GGMLQuantizationType
-from gguf.quants import Q2_Q
+from gguf import GGUFWriter
 
 ARCH = "quaternary_nn"
 OUTPUT = "minimal_test.gguf"
@@ -30,13 +29,6 @@ n_embd_v_gqa = n_embd_head_v * n_head_kv  # 32
 n_ff = n_embd * 8  # 256
 vocab_size = 256
 
-# SSM params (non-zero to avoid divide-by-zero, but no SSM tensors)
-ssm_d_conv = 4
-ssm_d_state = 4
-ssm_n_group = 4
-ssm_dt_rank = 4
-ssm_d_inner = 48
-
 print(f"Creating test model: n_embd={n_embd}, n_layer={n_layer}, n_head={n_head}")
 
 w = GGUFWriter(OUTPUT, ARCH)
@@ -52,13 +44,6 @@ w.add_uint32(f"{ARCH}.attention.head_count_kv", n_head_kv)
 w.add_uint32(f"{ARCH}.attention.key_length", n_embd_head_k)
 w.add_uint32(f"{ARCH}.attention.value_length", n_embd_head_v)
 w.add_uint32(f"{ARCH}.vocab_size", vocab_size)
-
-# SSM params (to appease n_embd_r/s calc)
-w.add_uint32(f"{ARCH}.ssm.conv_kernel", ssm_d_conv)
-w.add_uint32(f"{ARCH}.ssm.state_size", ssm_d_state)
-w.add_uint32(f"{ARCH}.ssm.group_count", ssm_n_group)
-w.add_uint32(f"{ARCH}.ssm.time_step_rank", ssm_dt_rank)
-w.add_uint32(f"{ARCH}.ssm.inner_size", ssm_d_inner)
 
 # full_attention_interval=1: all layers are attention (not recurrent)
 w.add_uint32(f"{ARCH}.full_attention_interval", 1)

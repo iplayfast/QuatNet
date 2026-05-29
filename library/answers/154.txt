@@ -1,0 +1,66 @@
+```python
+from collections import defaultdict, deque
+
+def find_topological_order(graph):
+    in_degree = defaultdict(int)
+    for node in graph:
+        for neighbor in graph[node]:
+            in_degree[neighbor] += 1
+    
+    queue = deque([node for node in in_degree if in_degree[node] == 0])
+    
+    order = []
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+                
+    return order if len(order) == len(graph) else None
+
+def get_all_orders(graph):
+    in_degree = defaultdict(int)
+    for node in graph:
+        for neighbor in graph[node]:
+            in_degree[neighbor] += 1
+    
+    orders = []
+    
+    def backtrack(node, current_order):
+        nonlocal orders
+        if not current_order:
+            orders.append(current_order[:])
+        
+        for neighbor in graph.get(node, []):
+            if in_degree[neighbor] > 0:
+                continue
+            
+            current_order.append(neighbor)
+            new_orders = get_all_orders(graph)
+            
+            for order in new_orders:
+                order[:] = order.copy()
+                order.insert(order.index(neighbor) + 1, node)
+                orders.append(order)
+            
+            current_order.pop()
+    
+    backtrack(None, [])
+    
+    return [order for order in orders if len(order) == len(graph)]
+
+# Example usage
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D'],
+    'C': ['D'],
+    'D': []
+}
+
+orders = get_all_orders(graph)
+for i, order in enumerate(orders):
+    print(f"Order {i+1}: {order}")
+```

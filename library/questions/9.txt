@@ -1,1 +1,1 @@
-Write a function that computes all possible ways to make change for a given amount using given coin denominations.
+Write a number guessing game where the computer picks a random number and the user guesses until correct, with hints for too high/too low.

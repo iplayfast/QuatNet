@@ -47,29 +47,14 @@ def generate_one():
     os.makedirs(q_dir, exist_ok=True)
     os.makedirs(a_dir, exist_ok=True)
 
-    existing = sorted([f for f in os.listdir(q_dir) if f.endswith(".txt")])
-    n = random.choice(existing).replace(".txt", "") if existing else str(len(os.listdir(q_dir)) + 1)
+    existing = sorted(int(f[:-4]) for f in os.listdir(q_dir) if f.endswith(".txt"))
+    next_n = str(max(existing) + 1 if existing else 1)
 
-    with open(os.path.join(q_dir, f"{n}.txt"), "w") as f:
+    with open(os.path.join(q_dir, f"{next_n}.txt"), "w") as f:
         f.write(question + "\n")
-    with open(os.path.join(a_dir, f"{n}.txt"), "w") as f:
+    with open(os.path.join(a_dir, f"{next_n}.txt"), "w") as f:
         f.write(answer + "\n")
-    print(f"  [POP] Q&A #{n} from {model}: {question[:60]}...")
-
-    # Seed with a best Q&A pair
-    best_q_dir = os.path.join(LIBRARY_DIR, "questions", "bestquestions")
-    best_a_dir = os.path.join(LIBRARY_DIR, "answers", "bestanswers")
-    best_files = sorted([f for f in os.listdir(best_q_dir) if f.endswith(".txt")])
-    if best_files:
-        bf = random.choice(best_files)
-        bq_path, ba_path = os.path.join(best_q_dir, bf), os.path.join(best_a_dir, bf)
-        if os.path.exists(bq_path) and os.path.exists(ba_path):
-            dst_n = random.choice(existing).replace(".txt", "") if existing else str(len(os.listdir(q_dir)) + 1)
-            with open(bq_path) as f: best_q = f.read()
-            with open(ba_path) as f: best_a = f.read()
-            with open(os.path.join(q_dir, f"{dst_n}.txt"), "w") as f: f.write(best_q)
-            with open(os.path.join(a_dir, f"{dst_n}.txt"), "w") as f: f.write(best_a)
-            print(f"  [POP] Seeded #{dst_n}: {best_q[:60].strip()}...")
+    print(f"  [POP] Q&A #{next_n} from {model}: {question[:60]}...")
 
     return True
 
@@ -80,4 +65,4 @@ if __name__ == "__main__":
             generate_one()
         except Exception as e:
             print(f"  [POP] Error: {e}")
-        time.sleep(random.uniform(5, 15))
+        time.sleep(random.uniform(2, 5))

@@ -1,0 +1,23 @@
+import json
+
+def read_and_validate_json(file_path):
+    try:
+        # Read the JSON file
+        with open(file_path) as f:
+            data = json.load(f)
+
+        # Pretty-print the JSON data
+        print(json.dumps(data, indent=4))
+
+        # Validate the JSON data
+        jsonschema.validate(instance=data)
+        print("JSON is valid")
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON format: {e}")
+    except jsonschema.exceptions.ValidationError as e:
+        print(f"Validation error: {e}")
+
+# Example usage
+read_and_validate_json('data.json')

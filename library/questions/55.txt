@@ -1,1 +1,1 @@
-Write a program that translates English text to Pig Latin and back.
+Write a function that finds the shortest path between two nodes in an unweighted graph using BFS.

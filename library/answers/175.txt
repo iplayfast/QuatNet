@@ -1,0 +1,140 @@
+```python
+import random
+import sys
+
+# Increase recursion limit for potential deep searches
+sys.setrecursionlimit(2000)
+
+class MazeGenerator:
+    """
+    Generates a random maze using Depth-First Search (DFS) backtracking.
+    The maze is represented on a grid where '#' is a wall and ' ' is a path.
+    """
+
+    def __init__(self, width, height):
+        """
+        Initializes the grid dimensions.
+        The resulting grid size will be (width * 2 + 1) x (height * 2 + 1)
+        to accommodate walls between cells.
+        (Example: 1 cell wide/tall requires 3 grid units: # # #)
+        """
+        self.width = width
+        self.height = height
+        self.grid_width = width * 2 + 1
+        self.grid_height = height * 2 + 1
+        
+        # Initialize the grid entirely with walls ('#')
+        self.grid = [['#' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+
+    def _is_valid(self, x, y):
+        """Checks if coordinates are within grid bounds."""
+        return 0 <= x < self.grid_width and 0 <= y < self.grid_height
+
+    def _carve_path(self, cx, cy, dx, dy):
+        """
+        Carves a passage into the grid at the given offset (dx, dy).
+        (cx, cy) are the current cell coordinates.
+        (dx, dy) are the coordinates of the adjacent cell (potential next path).
+        """
+        # The wall to carve is exactly between (cx, cy) and (dx, dy)
+        wall_x = (cx + dx + 1) // 2
+        wall_y = (cy + dy + 1) // 2
+        
+        # Determine the center coordinates of the path cell
+        path_x = cx + 2 * (dx % 2)
+        path_y = cy + 2 * (dy % 2)
+
+        # Simple path carving logic (based on odd/even grid coordinates):
+        # The core cells are at (1, 1), (1, 3), (3, 1), etc.
+        
+        # 1. Carve the destination cell (dx, dy)
+        self.grid[cy + dy][cx + dx] = ' '
+        
+        # 2. Carve the wall between the cells
+        # Calculate the wall coordinate by averaging the center coordinates
+        wall_x = (cx + dx) // 2
+        wall_y = (cy + dy) // 2
+        self.grid[wall_y][wall_x] = ' '
+        
+        # Overwrite the starting cell if it hasn't been done
+        self.grid[cy][cx] = ' '
+
+
+    def generate(self, start_x=1, start_y=1):
+        """
+        Executes the Depth-First Search (DFS) backtracking algorithm
+        to carve paths starting from (start_x, start_y).
+        """
+        stack = [(start_x, start_y)]
+        visited = set([(start_x, start_y)])
+        
+        # Carve the starting cell
+        self.grid[start_y][start_x] = ' '
+        
+        while stack:
+            cx, cy = stack[-1]
+            
+            neighbors = []
+            # Check neighbors at (x+2, y), (x-2, y), (x, y+2), (x, y-2)
+            # We move in steps of 2 to ensure we are jumping over a wall
+            directions = [(2, 0), (-2, 0), (0, 2), (0, -2)]
+            
+            for dx, dy in directions:
+                nx, ny = cx + dx, cy + dy
+                
+                if (nx, ny) not in visited:
+                    # Check if the neighbor is in a core path cell location (odd/odd coordinates)
+                    # This ensures we don't jump over walls or outside the boundary
+                    if self._is_valid(nx, ny) and (nx % 2 == 1 and ny % 2 == 1):
+                        neighbors.append((nx, ny, dx, dy))
+            
+            if neighbors:
+                # Pick a random unvisited neighbor
+                nx, ny, dx, dy = random.choice(neighbors)
+                
+                # 1. Carve the wall between (cx, cy) and (nx, ny)
+                wall_x = (cx + nx) // 2
+                wall_y = (cy + ny) // 2
+                
+                # 2. Carve the destination cell
+                self.grid[ny][nx] = ' '
+                
+                # 3. Carve the wall
+                self.grid[wall_y][wall_x] = ' '
+                
+                # Move to the next cell
+                visited.add((nx, ny))
+                stack.append((nx, ny))
+            else:
+                # Backtrack
+                stack.pop()
+        
+        return self.grid
+
+    def print_maze(self):
+        """Prints the generated maze structure."""
+        for row in self.grid:
+            print("".join(row))
+
+
+def solve_maze():
+    """
+    Main function to create and print the maze.
+    """
+    # Define the size of the maze in terms of cells (not grid units)
+    # e.g., A 10x10 maze means 10 internal corridors, resulting in 21x21 grid size
+    CELL_WIDTH = 20
+    CELL_HEIGHT = 15
+    
+    generator = MazeGenerator(CELL_WIDTH, CELL_HEIGHT)
+    
+    # Generate the maze
+    # We start at the top-left accessible cell (1, 1)
+    maze_grid = generator.generate(start_x=1, start_y=1)
+    
+    # Print the result
+    generator.print_maze()
+
+if __name__ == "__main__":
+    solve_maze()
+```

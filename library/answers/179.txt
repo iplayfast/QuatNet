@@ -1,0 +1,84 @@
+```python
+import random
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = [None]*random.randint(1, 16)
+
+class SkipList:
+    def __init__(self, maxLevel=16, p=0.5):
+        self.maxLevel = maxLevel
+        self.p = p
+        self.root = Node(None)
+
+    def _random_level(self):
+        level = 1
+        while random.random() < self.p and level < self.maxLevel:
+            level += 1
+        return level
+
+    def insert(self, value):
+        level = self._random_level()
+        update = [None]*level
+        current = self.root
+        for i in range(level-1, -1, -1):
+            while current.next[i] and current.next[i].value < value:
+                current = current.next[i]
+            update[i] = current
+
+        if current.next[0] is None or current.next[0].value > value:
+            new_node = Node(value)
+            for i in range(level-1, -1, -1):
+                new_node.next[i] = update[i].next[i]
+                update[i].next[i] = new_node
+
+    def search(self, value):
+        current = self.root
+        for i in range(self._random_level(), -1, -1):
+            while current.next[i] and current.next[i].value < value:
+                current = current.next[i]
+        return current.next[0] is not None and current.next[0].value == value
+
+    def delete(self, value):
+        update = [None]*self._random_level()
+        current = self.root
+        for i in range(self._random_level(), -1, -1):
+            while current.next[i] and current.next[i].value < value:
+                update[i] = current
+                current = current.next[i]
+        if current.next[0] is not None and current.next[0].value == value:
+            for i in range(self._random_level(), -1, -1):
+                if update[i].next[i] and update[i].next[i].value == value:
+                    update[i].next[i] = update[i].next[i].next[i]
+
+    def display(self):
+        for i in range(self._random_level(), -1, -1):
+            current = self.root.next[i]
+            level = []
+            while current:
+                level.append(current.value)
+                current = current.next[i]
+            print(level)
+
+# Testing the Skip List
+sl = SkipList()
+sl.insert(3)
+sl.insert(6)
+sl.insert(7)
+sl.insert(9)
+sl.insert(12)
+sl.insert(19)
+sl.insert(17)
+sl.insert(26)
+sl.insert(21)
+sl.insert(25)
+print("Displaying the skip list:")
+sl.display()
+
+print("\nSearch 16:", sl.search(16))
+print("Search 3:", sl.search(3))
+
+sl.delete(7)
+sl.display()
+```

@@ -1,1 +1,1 @@
-117: Write a function that computes the determinant of a matrix using Gaussian elimination.
+Write a program that translates English text to Pig Latin and back.

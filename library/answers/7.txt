@@ -1,20 +1,4 @@
-```python
-def matrix_multiply_optimized(A, B):
-    rows_A, cols_A = len(A), len(A[0])
-    rows_B, cols_B = len(B), len(B[0])
-    
-    if cols_A != rows_B:
-        raise ValueError("Cannot multiply the matrices: dimensions do not align.")
-    
-    C = [[0] * cols_B for _ in range(rows_A)]
-    
-    for i in range(rows_A):
-        for j in range(cols_B):
-            total = 0
-            # Accessing elements of B row by row improves cache performance
-            for k in range(rows_B):
-                total += A[i][k] * B[k][j]
-            C[i][j] = total
-            
-    return C
-```
+for i in range(1,13):
+    for j in range(1,13):
+        print(f'{i*j:4}', end='')
+    print()

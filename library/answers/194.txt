@@ -1,0 +1,71 @@
+```python
+import math
+
+class Vertex:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+class Edge:
+    def __init__(self, v1, v2, normal=None, tangent=None, binormal=None):
+        self.v1 = v1
+        self.v2 = v2
+        self.normal = normal
+        self.tangent = tangent
+        self.binormal = binormal
+
+class HalfEdge:
+    def __init__(self, edge=None, vertex=None):
+        if edge is not None:
+            self.edge = edge
+            self.v1 = edge.v1
+            self.v2 = edge.v2
+        else:
+            self.vertex = vertex
+            self.v1 = vertex
+            self.v2 = None
+
+class Polyhedron:
+    def __init__(self):
+        self.vertices = []
+        self.edges = []
+
+    def add_vertex(self, v):
+        self.vertices.append(v)
+
+    def add_edge(self, e):
+        self.edges.append(e)
+
+    def get_half_edges(self):
+        return [HalfEdge(e) for e in self.edges]
+
+# Example usage:
+
+polyhedron = Polyhedron()
+
+vertex1 = Vertex(0, 0, 0)
+vertex2 = Vertex(1, 0, 0)
+vertex3 = Vertex(0.5, 1, 0)
+
+edge1 = Edge(vertex1, vertex2)
+edge2 = Edge(vertex2, vertex3)
+edge3 = Edge(vertex3, vertex1)
+
+polyhedron.add_vertex(vertex1)
+polyhedron.add_vertex(vertex2)
+polyhedron.add_vertex(vertex3)
+polyhedron.add_edge(edge1)
+polyhedron.add_edge(edge2)
+polyhedron.add_edge(edge3)
+
+half_edges = polyhedron.get_half_edges()
+
+for he in half_edges:
+    print("V1: ({}, {}, {}), V2: ({}, {}, {}), Normal: {}".format(
+        he.v1.x, he.v1.y, he.v1.z,
+        he.v2.x if he.v2 is not None else "None",
+        he.v2.y if he.v2 is not None else "None",
+        he.v2.z if he.v2 is not None else "None",
+        he.normal)
+```

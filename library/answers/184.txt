@@ -1,0 +1,30 @@
+```python
+import time
+
+def exponential_backoff_retry(operation, max_retries=5):
+    """
+    Wraps an operation with exponential backoff retries.
+    
+    :param operation: A callable representing the flaky operation to be retried.
+    :param max_retries: Maximum number of retry attempts.
+    :return: The result of the operation if successful, or None after all retries fail.
+    """
+    for attempt in range(max_retries):
+        try:
+            return operation()
+        except Exception as e:
+            wait_time = 2 ** attempt
+            print(f"Attempt {attempt + 1} failed with error: {e}. Retrying in {wait_time} seconds...")
+            time.sleep(wait_time)
+    
+    print("All retry attempts have failed.")
+    return None
+
+# Example usage:
+def flaky_operation():
+    if random.choice([True, False]):
+        raise Exception("Random failure")
+    return "Success"
+
+result = exponential_backoff_retry(flaky_operation)
+```

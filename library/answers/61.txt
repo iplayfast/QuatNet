@@ -1,13 +1,30 @@
-def convex_hull(points):
-    pts = sorted(set(points))
-    if len(pts) <= 1: return pts
-    def cross(o, a, b): return (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0])
-    lower = []
-    for p in pts:
-        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0: lower.pop()
-        lower.append(p)
-    upper = []
-    for p in reversed(pts):
-        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0: upper.pop()
-        upper.append(p)
-    return lower[:-1] + upper[:-1]
+import time
+def mul_naive(A,B):
+    n,m,k=len(A),len(A[0]),len(B[0])
+    C=[[0]*k for _ in range(n)]
+    for i in range(n):
+        for j in range(k):
+            s=0
+            for p in range(m):
+                s+=A[i][p]*B[p][j]
+            C[i][j]=s
+    return C
+
+def mul_transposed(A,B):
+    # Transpose B for better cache locality
+    BT=list(zip(*B))
+    n,m=len(A),len(A[0])
+    k=len(BT)
+    C=[[0]*k for _ in range(n)]
+    for i in range(n):
+        for j in range(k):
+            s=0
+            rowA=A[i]
+            colB=BT[j]
+            for p in range(m):
+                s+=rowA[p]*colB[p]
+            C[i][j]=s
+    return C
+# For large matrices, use numpy.dot() which uses BLAS.
+# Strassen's algorithm: O(n^2.807) vs O(n^3) naive, beneficial for n>100.
+# Cache effects: row-major access is faster. Transpose second matrix for better locality.

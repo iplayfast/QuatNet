@@ -1,1 +1,1 @@
-Write a function that generates all possible binary trees with n nodes.
+Write a program that reads a text file, counts word frequencies, and displays the top 10 most common words.

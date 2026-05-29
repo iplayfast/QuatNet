@@ -1,1 +1,1 @@
-Write a program that sends a notification when a watched file or directory changes (like inotify in pure Python).
+Write a program that generates and displays a multiplication quiz with random numbers.

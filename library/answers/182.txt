@@ -1,0 +1,15 @@
+```python
+def find_pairs(nums, target):
+    seen = set()
+    pairs = set()
+    
+    for num in nums:
+        complement = target - num
+        if complement in seen:
+            # Use sorted tuple to avoid duplicate pairs like (2, 3) and (3, 2)
+            pair = tuple(sorted((num, complement)))
+            pairs.add(pair)
+        seen.add(num)
+    
+    return list(pairs)
+```

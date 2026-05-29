@@ -1,37 +1,6 @@
-```python
-import requests
-import time
-import heapq
-
-class HttpLoadTester:
-    def __init__(self, url, num_requests=100):
-        self.url = url
-        self.num_requests = num_requests
-        self.response_times = []
-
-    def run(self):
-        start_time = time.time()
-        for _ in range(self.num_requests):
-            response = requests.get(self.url)
-            elapsed_time = (time.time() - start_time) * 1000  # milliseconds
-            self.response_times.append(elapsed_time)
-
-        self._print_summary()
-
-    def _print_summary(self):
-        total_time = sum(self.response_times)
-        avg_time = total_time / self.num_requests
-
-        sorted_times = sorted(self.response_times)
-        n = len(sorted_times)
-        p50 = sorted_times[n // 2] if n % 2 == 1 else (sorted_times[n // 2 - 1] + sorted_times[n // 2]) / 2
-        p95 = sorted_times[int(0.95 * n)] if int(0.95 * n) < n else sorted_times[-1]
-
-        print(f"Average response time: {avg_time:.2f} ms")
-        print(f"50th percentile (median): {p50:.2f} ms")
-        print(f"95th percentile: {p95:.2f} ms")
-
-if __name__ == "__main__":
-    tester = HttpLoadTester("http://example.com")
-    tester.run()
-```
+import math
+pi=0
+for k in range(1,10**6+1):
+    pi+=(-1)**(k+1)/(2*k-1)
+print(4*pi)
+# Converges to ~3.14159 (π)

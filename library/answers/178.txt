@@ -1,0 +1,38 @@
+```python
+import random
+import time
+from functools import wraps
+
+def exponential_backoff(max_retries=10, initial_delay=1, max_delay=30):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            delay = initial_delay
+            for attempt in range(max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt < max_retries:
+                        print(f"Attempt {attempt+1} failed with error: {e}. Retrying in {delay} seconds...")
+                        delay = min(delay * 2, max_delay)
+                        time.sleep(delay)
+                    else:
+                        raise
+        return wrapper
+    return decorator
+
+
+@exponential_backoff(max_retries=5, initial_delay=1, max_delay=10)
+def flaky_operation():
+    # Simulate a flaky operation
+    if random.random() < 0.5:
+        raise Exception("Operation failed")
+    else:
+        print("Operation succeeded")
+
+
+try:
+    flaky_operation()
+except Exception as e:
+    print(f"Final error: {e}")
+```

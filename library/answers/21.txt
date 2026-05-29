@@ -1,9 +1,6 @@
-def floyd_warshall(graph):
-    n = len(graph)
-    dist = [row[:] for row in graph]
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-                if dist[i][k] + dist[k][j] < dist[i][j]:
-                    dist[i][j] = dist[i][k] + dist[k][j]
-    return dist
+def interleave(a,b):
+    r=[]
+    for x,y in zip(a,b):
+        r.extend([x,y])
+    r.extend(a[len(b):] if len(a)>len(b) else b[len(a):])
+    return r

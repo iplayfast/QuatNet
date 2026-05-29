@@ -1,0 +1,43 @@
+```python
+from collections import defaultdict
+
+def find_anagrams(word, dictionary):
+    # Create a hashmap to store frequency of characters in the word
+    word_freq = defaultdict(int)
+    
+    # Populate the hashmap with the frequency of each character in the word
+    for char in word:
+        word_freq[char] += 1
+    
+    # Initialize an empty list to store anagrams
+    anagrams = []
+    
+    # Iterate over each word in the dictionary
+    for dict_word in dictionary:
+        # Create a temporary hashmap to store frequency of characters in the current word
+        temp_freq = defaultdict(int)
+        
+        # Populate the temporary hashmap with the frequency of each character in the current word
+        for char in dict_word:
+            temp_freq[char] += 1
+        
+        # Initialize a flag to check if the current word is an anagram
+        is_anagram = True
+        
+        # Check if the frequency of characters in the current word is equal to the frequency of characters in the given word
+        for key, value in word_freq.items():
+            if key not in temp_freq or temp_freq[key] < value:
+                is_anagram = False
+                break
+        
+        # If the current word is an anagram, add it to the list of anagrams
+        if is_anagram:
+            anagrams.append(dict_word)
+    
+    return anagrams
+
+# Example usage
+dictionary = ["cat", "dog", "tac", "god", "good"]
+word = "cat"
+print(find_anagrams(word, dictionary))  # Output: ['cat', 'tac']
+```

@@ -1,0 +1,16 @@
+```python
+def number_to_digits(n):
+    # Handle negative numbers by taking absolute value
+    n = abs(n)
+    # Handle special case of 0
+    if n == 0:
+        return [0]
+    
+    digits = []
+    while n > 0:
+        digits.append(n % 10)
+        n //= 10
+    
+    # Reverse to get digits in correct order
+    return digits[::-1]
+```

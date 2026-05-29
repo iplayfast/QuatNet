@@ -1,0 +1,14 @@
+```python
+def apply_and_print_squares(func):
+    # Define a helper function to get the next square number
+    def next_square(n):
+        return n * n
+
+    # Generate and print the first 20 perfect squares using the provided function
+    for i in range(1, 21):
+        result = func(i)
+        print(result)
+
+# Call the main function with the next_square helper as an argument
+apply_and_print_squares(next_square)
+```

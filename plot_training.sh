@@ -180,27 +180,34 @@ def save_to_png(canvas, out):
         return False
 
 
-def build_ui(root, log):
-    chart_h = 140
-    margin = {'left': 80, 'right': 60, 'top': 25, 'bottom': 25}
-    canvas_w = 900
-    n_charts = 5
-    total_h = n_charts * (chart_h + margin['top'] + margin['bottom'] + 10) + 30
+_resize_timer = None
 
-    # Frame with scrollbar
+def build_ui(root, log):
+    margin = {'left': 80, 'right': 60, 'top': 25, 'bottom': 25}
+    n_charts = 5
+
     frame = tk.Frame(root)
     frame.pack(fill='both', expand=True)
 
-    canvas = Canvas(frame, width=canvas_w, height=total_h, bg='#f5f5f5')
+    canvas = Canvas(frame, bg='#f5f5f5')
     canvas.pack(fill='both', expand=True)
 
     def refresh():
+        global _resize_timer
+        _resize_timer = None
         canvas.delete('all')
         try:
             steps, loss, lr, q2q, data_bytes, elapsed, d_model, n_layers = read_data(log)
         except Exception as e:
-            canvas.create_text(canvas_w // 2, 50, text=f"Error reading {log}: {e}", fill='red')
+            canvas.create_text(400, 50, text=f"Error reading {log}: {e}", fill='red')
             return
+
+        canvas.update_idletasks()
+        canvas_w = max(canvas.winfo_width(), 400)
+        canvas_h = max(canvas.winfo_height(), 400)
+
+        chart_h = max(120, (canvas_h - 30) // n_charts - margin['top'] - margin['bottom'] - 10)
+        full_h = chart_h + margin['top'] + margin['bottom']
 
         charts = [
             {'y': loss, 'title': 'Training Loss', 'ylabel': 'Loss', 'color': COLORS['loss']},
@@ -210,7 +217,6 @@ def build_ui(root, log):
         ]
 
         y_offset = 5
-        full_h = chart_h + margin['top'] + margin['bottom']
         for ch in charts:
             sub = Canvas(canvas, width=canvas_w, height=full_h, bg='#f5f5f5', highlightthickness=0)
             canvas.create_window(0, y_offset, anchor='nw', window=sub)
@@ -221,15 +227,14 @@ def build_ui(root, log):
             y_offset += full_h + 5
 
         # Architecture chart with dual axis
-        arch_full_h = full_h
-        sub = Canvas(canvas, width=canvas_w, height=arch_full_h, bg='#f5f5f5', highlightthickness=0)
+        sub = Canvas(canvas, width=canvas_w, height=full_h, bg='#f5f5f5', highlightthickness=0)
         canvas.create_window(0, y_offset, anchor='nw', window=sub)
         arch_annot = list(zip(steps, d_model, n_layers))
         draw_chart(sub, steps, d_model, 'Model Architecture', 'd_model', COLORS['d_model'],
-                   margin, canvas_w, arch_full_h,
+                   margin, canvas_w, full_h,
                    right_y_data=n_layers, right_ylabel='n_layers', right_color=COLORS['n_layers'],
                    arch_annotations=arch_annot)
-        y_offset += arch_full_h + 5
+        y_offset += full_h + 5
 
         canvas.config(scrollregion=(0, 0, canvas_w, y_offset))
 
@@ -238,6 +243,12 @@ def build_ui(root, log):
         name = os.path.splitext(os.path.basename(log))[0]
         out = os.path.join("images", f"{name}.png")
         save_to_png(canvas, out)
+
+    def on_resize(event):
+        global _resize_timer
+        if _resize_timer is not None:
+            root.after_cancel(_resize_timer)
+        _resize_timer = root.after(150, refresh)
 
     refresh()
 
@@ -249,12 +260,13 @@ def build_ui(root, log):
 
     root.bind('r', lambda e: refresh())
     root.bind('q', lambda e: root.destroy())
+    frame.bind('<Configure>', on_resize)
 
     return canvas
 
 
 root = tk.Tk()
 root.title(f"Training Metrics — {log}")
-root.geometry("920x800")
+root.geometry("1400x900")
 build_ui(root, log)
 root.mainloop()

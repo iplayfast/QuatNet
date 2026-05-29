@@ -1,24 +1,12 @@
-```python
-import json
-
-def read_and_validate_json(file_path, indent=4):
-    try:
-        with open(file_path, 'r') as f:
-            data = json.load(f)
-        
-        # Validate the JSON structure (simple check: must be a dict at root level)
-        if not isinstance(data, dict):
-            raise ValueError("JSON does not represent a valid object at the top level.")
-        
-        print(json.dumps(data, indent=indent))
-    
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-    except json.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-    except ValueError as ve:
-        print(ve)
-
-# Example usage
-# read_and_validate_json('example.json', indent=2)
-```
+def to_dot(graph,digraph=True):
+    e='->' if digraph else '--'
+    s='digraph G {' if digraph else 'graph G {'
+    s+='
+'
+    for u in graph.adj:
+        for v,val in graph.adj[u]:
+            label=f' [label="{val}"]' if val else ''
+            s+=f'  "{u}" {e} "{v}"{label};
+'
+    s+='}'
+    return s

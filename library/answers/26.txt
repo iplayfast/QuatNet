@@ -1,43 +1,34 @@
-```python
-import numpy as np
+def add_digits(a,b,base=10):
+    carry=0; r=[]
+    i=len(a)-1; j=len(b)-1
+    while i>=0 or j>=0 or carry:
+        s=carry
+        if i>=0: s+=a[i]; i-=1
+        if j>=0: s+=b[j]; j-=1
+        r.append(s%base); carry=s//base
+    return r[::-1]
 
-def catmull_rom_spline(points, num_points):
-    """
-    Interpolates points using Catmull-Rom spline.
-    
-    :param points: List of (x, y) tuples representing the control points.
-    :param num_points: Number of interpolated points to generate.
-    :return: List of (x, y) tuples representing the interpolated points.
-    """
-    def basis(t):
-        return 2 * (t ** 3) - 3 * (t ** 2) + 1
+def sub_digits(a,b,base=10):
+    # assumes a>=b
+    borrow=0; r=[]
+    i=len(a)-1; j=len(b)-1
+    while i>=0:
+        d=a[i]-borrow
+        if j>=0: d-=b[j]; j-=1
+        if d<0: d+=base; borrow=1
+        else: borrow=0
+        r.append(d); i-=1
+    while r and r[-1]==0: r.pop()
+    return r[::-1] or [0]
 
-    def derivative_basis(t):
-        return 6 * (t ** 2) - 6 * t
-
-    interpolated_points = []
-    for i in range(1, len(points) - 1):
-        p0, p1, p2, p3 = points[i-1], points[i], points[i+1], points[i+2]
-        dx0, dy0 = p1[0] - p0[0], p1[1] - p0[1]
-        dx1, dy1 = p2[0] - p1[0], p2[1] - p1[1]
-        dx2, dy2 = p3[0] - p2[0], p3[1] - p2[1]
-
-        for j in range(num_points):
-            t = j / (num_points - 1)
-            basis_0 = basis(t)
-            basis_1 = derivative_basis(t)
-
-            x = (basis_0 * p1[0] + 
-                 basis_1 * dx0 * t +
-                 (-basis_0 + basis_1) * dx1 *
-                 ((t ** 2) - t) +
-                 (basis_0 - 2 * basis_1 + basis_2) * dx2 * (1 - t))
-            y = (basis_0 * p1[1] + 
-                 basis_1 * dy0 * t +
-                 (-basis_0 + basis_1) * dy1 *
-                 ((t ** 2) - t) +
-                 (basis_0 - 2 * basis_1 + basis_2) * dy2 * (1 - t))
-
-            interpolated_points.append((x, y))
-    return interpolated_points
-```
+def mul_digits(a,b,base=10):
+    r=[0]*(len(a)+len(b))
+    for i in range(len(a)-1,-1,-1):
+        carry=0
+        for j in range(len(b)-1,-1,-1):
+            p=a[i]*b[j]+r[i+j+1]+carry
+            r[i+j+1]=p%base; carry=p//base
+        r[i]+=carry
+    while len(r)>1 and r[0]==0: r.pop(0)
+    return r
+# Best base for speed: 2^32 or 2^64 (fits in machine word, natural multiplication)

@@ -1,0 +1,21 @@
+```python
+def intersection(set1, set2):
+    return [value for value in set1 if value in set2]
+
+def union(set1, set2):
+    unique_values = list(set(set1) | set(set2))
+    return unique_values
+
+def main():
+    set1 = input("Enter first set elements separated by space: ")
+    set2 = input("Enter second set elements separated by space: ")
+
+    set1 = [int(value) for value in set1.split()]
+    set2 = [int(value) for value in set2.split()]
+
+    print("Intersection of sets is:", intersection(set1, set2))
+    print("Union of sets is:", union(set1, set2))
+
+if __name__ == "__main__":
+    main()
+```

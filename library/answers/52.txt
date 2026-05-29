@@ -1,34 +1,25 @@
-```python
-class RingBuffer:
-    def __init__(self, size):
-        self.size = size
-        self.buffer = [None] * size
-        self.head = 0
-        self.tail = 0
-        self.count = 0
-
-    def produce(self, item):
-        index = (self.head + self.count) % self.size
-        self.buffer[index] = item
-        self.count += 1
-
-    def consume(self):
-        if self.count == 0:
-            return None
-        index = self.tail
-        item = self.buffer[index]
-        self.buffer[index] = None
-        self.tail = (self.tail + 1) % self.size
-        self.count -= 1
-        return item
-
-
-# Example usage:
-rb = RingBuffer(5)
-
-rb.produce(1)
-rb.produce(2)
-rb.produce(3)
-print(rb.consume())  # Output: 1
-print(rb.consume())  # Output: 2
-```
+class ChunkedList:
+    CHUNK=100
+    def __init__(self):
+        self.chunks=[]; self.size=0
+    def add(self,x):
+        if not self.chunks or len(self.chunks[-1])>=self.CHUNK:
+            self.chunks.append([])
+        self.chunks[-1].append(x); self.size+=1
+    def get(self,i):
+        for chunk in self.chunks:
+            if i<len(chunk): return chunk[i]
+            i-=len(chunk)
+        raise IndexError
+    def remove(self,i):
+        for ci,chunk in enumerate(self.chunks):
+            if i<len(chunk):
+                chunk.pop(i); self.size-=1
+                if not chunk:
+                    self.chunks.pop(ci)
+                return
+            i-=len(chunk)
+        raise IndexError
+    def __len__(self): return self.size
+# Chunked: no copying on growth. O(n) get/remove due to chunk scanning.
+# Trade-offs: bookkeeping overhead varies. Can use index array mapping chunk[i]->offset for O(1) access.

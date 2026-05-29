@@ -1382,38 +1382,26 @@ class Q2_Q(__Quant, qtype=GGMLQuantizationType.Q2_Q):
 
     block_size = 32
 
+    _VALUE_MAP = np.array([1.0, 0.5, -0.5, -1.0], dtype=np.float32)
+
     @classmethod
     def quantize_blocks(cls, blocks: np.ndarray) -> np.ndarray:
         n_blocks = blocks.shape[0]
-        m = np.array([0x00, 0x55, 0xAA, 0xFF], dtype=np.uint8)
-        out = np.zeros((n_blocks, cls.block_size // 4), dtype=np.uint8)
-        for i in range(n_blocks):
-            for j in range(cls.block_size // 4):
-                b = blocks[i, j * 4:(j + 1) * 4]
-                packed = np.uint8(0)
-                for k in range(4):
-                    val = b[k]
-                    if val >= 0.75:
-                        bits = np.uint8(0)
-                    elif val >= 0.0:
-                        bits = np.uint8(1)
-                    elif val >= -0.75:
-                        bits = np.uint8(2)
-                    else:
-                        bits = np.uint8(3)
-                    packed |= bits << (6 - k * 2)
-                out[i, j] = packed
-        return out
+        flat = blocks.ravel()
+        codes = np.select(
+            [flat >= 0.75, flat >= 0.0, flat >= -0.75],
+            [0, 1, 2], default=3
+        ).astype(np.uint8)
+        codes = codes.reshape(n_blocks, cls.block_size)
+        packed = np.zeros((n_blocks, cls.block_size // 4), dtype=np.uint8)
+        for k in range(4):
+            packed |= (codes[:, k::4] << (6 - k * 2))
+        return packed
 
     @classmethod
     def dequantize_blocks(cls, blocks: np.ndarray) -> np.ndarray:
         n_blocks = blocks.shape[0]
-        values = {0: 1.0, 1: 0.5, 2: -0.5, 3: -1.0}
-        out = np.zeros((n_blocks, cls.block_size), dtype=np.float32)
-        for i in range(n_blocks):
-            for j in range(cls.block_size // 4):
-                packed = int(blocks[i, j])
-                for k in range(4):
-                    bits = (packed >> (6 - k * 2)) & 0x03
-                    out[i, j * 4 + k] = values[bits]
-        return out
+        codes = np.zeros((n_blocks, cls.block_size), dtype=np.uint8)
+        for k in range(4):
+            codes[:, k::4] = (blocks >> (6 - k * 2)) & 0x03
+        return cls._VALUE_MAP[codes.astype(np.uint8)]

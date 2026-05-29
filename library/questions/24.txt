@@ -1,1 +1,1 @@
-Write a function that implements a simple pub/sub event bus with subscribe, unsubscribe, and emit.
+Write a function that generates the first 100 Fibonacci numbers.

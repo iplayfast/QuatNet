@@ -1,1 +1,1 @@
-120: Write a function that implements the Catmull-Rom spline interpolation between points.
+Write functions for addition, subtraction, and multiplication of numbers represented as digit lists (big integer arithmetic).

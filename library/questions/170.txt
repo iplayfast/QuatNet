@@ -1,0 +1,1 @@
+143: Write a program that implements a simple bitmap image renderer (PBM/PPM format).

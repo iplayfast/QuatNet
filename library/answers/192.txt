@@ -1,0 +1,85 @@
+```python
+import numpy as np
+
+def calculate_pivot_matrix(coefficients, right_hand_side):
+    n = coefficients.shape[0]
+    pivot_row = []
+    
+    # Calculate the values to be used in the pivot operation
+    for j in range(n):
+        numerator = coefficients[j][j]
+        denominator = coefficients[-1][j] if j != 0 else 1
+        
+        # Check if the pivot element is non-zero
+        if numerator != 0 and denominator != 0:
+            pivot_row.append(denominator)
+            
+            # Update the values of other rows to be made zero
+            for i in range(n):
+                if i == j:
+                    continue
+                ratio = coefficients[i][j] / numerator
+                coefficients[i] -= ratio * pivot_row[0]
+                
+    return np.array(pivot_row)
+
+def simplex_algorithm(coefficients, right_hand_side):
+    n = coefficients.shape[1] - 2
+    num_iterations = 0
+    
+    while True:
+        num_iterations += 1
+        
+        # Find the row with a negative coefficient in the 'right hand side'
+        pivot_index = np.argmin(right_hand_side)
+        
+        # If all values are positive, we've reached an optimal solution
+        if right_hand_side[pivot_index] <= 0:
+            return num_iterations, coefficients
+        
+        # Swap rows of the coefficients matrix so that the pivot element is in the first row
+        if pivot_index != 0:
+            coefficients[[pivot_index, 0]], coefficients[[0, pivot_index]] = coefficients[[0, pivot_index]], coefficients[[pivot_index, 0]]
+        
+        right_hand_side[0] -= coefficients[0][pivot_index]
+        
+        # Find the minimum ratio for each row
+        min_ratio = np.inf
+        pivot_column = 1
+        
+        for j in range(1, n):
+            ratio = right_hand_side[j] / coefficients[j][j]
+            if ratio < min_ratio:
+                min_ratio = ratio
+                pivot_column = j
+        
+        # If no solution exists for any column, we've reached a dead end
+        if np.isnan(min_ratio) or min_ratio == -np.inf:
+            return 0, coefficients
+        
+        # Swap rows of the coefficients and right hand side so that the pivot element is in the second row
+        coefficients[[pivot_column, 1]], coefficients[[1, pivot_column]] = coefficients[[1, pivot_column]], coefficients[[pivot_column, 1]]
+        right_hand_side[1] -= coefficients[1][pivot_column]
+        
+        # Update values of other rows to be made zero by adding a multiple of the current row
+        for i in range(n + 2):
+            if i == pivot_column or i == 0:
+                continue
+            
+            multiplier = coefficients[i][pivot_column]
+            pivot_row_index = calculate_pivot_matrix(coefficients, right_hand_side)[i-1]
+            
+            # Update values by subtracting the product of the current row and the multiplier
+            for j in range(n + 2):
+                if i != pivot_column:
+                    coefficients[j] -= multiplier * coefficients[j][pivot_row_index]
+                    right_hand_side[j] -= multiplier * right_hand_side[pivot_row_index]
+
+def solve_linear_program(coefficients, right_hand_side):
+    iterations = simplex_algorithm(coefficients, right_hand_side)
+    
+    if isinstance(iterations, tuple) and iterations[0] == 0:
+        return "No solution"
+    
+    return iterations[1]
+```

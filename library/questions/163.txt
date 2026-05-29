@@ -1,0 +1,1 @@
+98: Write a function that computes the Mandelbrot set for a given region of the complex plane.

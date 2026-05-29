@@ -6,14 +6,16 @@ Create a neural network architecture that uses **2-bit quaternary weights** stor
 
 | Bits | Symbol | Value | Role |
 |------|--------|-------|------|
-| 01 | +1.0 | 1.0 | Strong positive |
-| 00 | +0.01 | 0.01 | Small positive (bit off zero) |
-| 10 | -0.01 | -0.01 | Small negative (bit off zero) |
+| 00 | +1.0 | 1.0 | Strong positive |
+| 01 | +0.5 | 0.5 | Small positive |
+| 10 | -0.5 | -0.5 | Small negative |
 | 11 | -1.0 | -1.0 | Strong negative |
 
-This enables efficient inference using primarily integer operations (shift for ±1.0, small add for ±0.01). The architecture integrates into llama.cpp as a first-class model that can participate in attention layers.
+The architecture integrates into llama.cpp as a first-class model that can participate in attention layers.
 
-**Core insight**: 2-bit ternary (1, 0, -1) is standard. 2-bit quaternary (1, +0, -0, -1) adds a 4th state that gives "a bit more discretion" around zero - a small nudge either way without needing full floating point.
+**Core insight**: 2-bit ternary (1, 0, -1) is standard. 2-bit quaternary (1, +0.5, -0.5, -1) adds a 4th state that gives "a bit more discretion" around zero - a small nudge either way without needing full floating point.
+
+**First attempt** used {1.0, 0.01, -0.01, -1.0} aiming for integer-only shift operations. Switched to {1.0, 0.5, -0.5, -1.0} because 0.01 was too small to carry meaningful gradient signal through the straight-through estimator.
 
 ## Project Structure
 
@@ -46,7 +48,7 @@ fourBitState/
 
 1. **quaternary_nn standalone**: Full training and inference cycle works
    - Binary compiled, trains via stdin, saves GGUF
-   - Current values: +1.0, +0.01, -0.01, -1.0
+    - Current values: +1.0, +0.5, -0.5, -1.0 (second attempt; first attempt used ±0.01)
    - Gradient-based training with STE (straight-through estimator)
    - Dynamic growth: widening vectors + adding heads at plateaus
 
@@ -68,7 +70,7 @@ fourBitState/
    - GGML_TYPE_Q2_Q = 99 added
    - C++ quantize/dequantize: ggml-quants.c
    - Python: gguf-py/gguf/quants.py
-   - Both updated to use {1.0, 0.01, -0.01, -1.0}
+    - Both updated to use {1.0, 0.5, -0.5, -1.0} (second attempt)
 
 5. **Full llama.cpp integration (Phase 1 complete)**: Model loads, builds graph, runs forward pass, produces output through llama.cpp
    - LLM_ARCH_QUATERNARY_NN enum, name mapping, tensor enums all wired
@@ -85,8 +87,10 @@ fourBitState/
 
 ## Decisions Made
 
-### 1. Weight values: +1.0, +0.01, -0.01, -1.0
-Rejected {+0.8, +0.2, -0.2, -0.8} because it requires floating point even for "identity" case. Current values allow ±1.0 to be computed with bit operations.
+### 1. Weight values: +1.0, +0.5, -0.5, -1.0
+**First attempt**: {+1.0, +0.01, -0.01, -1.0}. Rejected {+0.8, +0.2, -0.2, -0.8} because it requires floating point even for "identity" case. The ±0.01 values allow ±1.0 to be computed with bit operations.
+
+**Second attempt (current)**: {+1.0, +0.5, -0.5, -1.0}. Switched because 0.01 was too small for meaningful weight contribution — gradients through the STE could not reliably push weights across the 0.75 quantization boundary. The 0.5 values provide a genuine middle ground that carries usable gradient signal while still allowing efficient packed 2-bit storage.
 
 ### 2. Q2_Q quantization type (99)
 Uses existing ggml quantization infrastructure rather than creating a new type. 2 bits per weight, 32 weights per block, no scale factor.
@@ -174,7 +178,7 @@ fourBitState/
 ## Open Questions / Worries
 
 ### 1. Attention Quality
-**Worry**: {±1.0, ±0.01} may be too coarse for fine-grained attention patterns. 
+**Worry**: {±1.0, ±0.5} may be too coarse for fine-grained attention patterns. 
 **To test**: Train on text corpus, measure perplexity vs float baseline.
 
 ### 2. Error Accumulation  
@@ -196,8 +200,8 @@ How to start training? Options:
 - Train base model with standard weights, then quantize → requires HF model
 - Train directly with quaternary weights → harder convergence
 
-### 7. ±0.01 vs ±0.1
-0.01 may be too small for meaningful weight contribution. 0.1 may work better. Needs empirical testing.
+### 7. Value selection: ±0.01 vs ±0.5
+**RESOLVED**: First attempt with ±0.01 was too small — weights could not traverse the quantization boundaries via STE gradients. Second attempt with ±0.5 works: the Q2_Q convergence metric climbs steadily as training progresses (from ~5% to ~70% on d=64 over 50K steps in the training log). The ±0.5 values provide enough room for meaningful gradient updates while maintaining the 2-bit packing benefit.
 
 ## Timeline Estimate
 

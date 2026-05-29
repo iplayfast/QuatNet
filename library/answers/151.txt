@@ -1,0 +1,4 @@
+```python
+def num_to_digits(num):
+    return [int(d) for d in str(num)]
+```

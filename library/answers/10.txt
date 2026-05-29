@@ -1,49 +1,7 @@
-class MinHeap:
-    def __init__(self):
-        self.heap = []
-
-    def parent(self, i):
-        return (i - 1) // 2
-
-    def left_child(self, i):
-        return 2 * i + 1
-
-    def right_child(self, i):
-        return 2 * i + 2
-
-    def push(self, value):
-        self.heap.append(value)
-        self._bubble_up(len(self.heap) - 1)
-
-    def pop(self):
-        if len(self.heap) == 0:
-            raise IndexError("pop from an empty heap")
-        root = self.heap[0]
-        last = self.heap.pop()
-        if self.heap:
-            self.heap[0] = last
-            self._bubble_down(0)
-        return root
-
-    def _bubble_up(self, index):
-        while index > 0 and self.heap[self.parent(index)] > self.heap[index]:
-            self.heap[self.parent(index)], self.heap[index] = self.heap[index], self.heap[self.parent(index)]
-            index = self.parent(index)
-
-    def _bubble_down(self, index):
-        while True:
-            left = self.left_child(index)
-            right = self.right_child(index)
-            smallest = index
-
-            if left < len(self.heap) and self.heap[left] < self.heap[smallest]:
-                smallest = left
-
-            if right < len(self.heap) and self.heap[right] < self.heap[smallest]:
-                smallest = right
-
-            if smallest == index:
-                break
-
-            self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
-            index = smallest
+import calendar
+y=int(input('Current year: '))
+count=0
+while count<20:
+    if calendar.isleap(y):
+        print(y); count+=1
+    y+=1

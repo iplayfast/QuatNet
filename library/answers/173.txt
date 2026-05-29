@@ -1,0 +1,84 @@
+```python
+from typing import List, Tuple
+
+def fuzzy_search(query: str, haystack: List[str]) -> List[str]:
+    """
+    Implements a simple fuzzy string matcher.
+    Matches a query against a list of target strings (haystack) 
+    by calculating how many characters of the query appear 
+    in order within the target string (greedy sequential match).
+
+    The results are returned sorted by match score (highest first).
+    """
+    if not haystack:
+        return []
+    if not query:
+        # If the query is empty, all items match perfectly (score 0 or length)
+        return haystack[:] 
+
+    scored_results: List[Tuple[int, str]] = []
+
+    for target in haystack:
+        query_idx = 0
+        target_idx = 0
+        match_count = 0
+
+        # Two-pointer greedy match
+        while query_idx < len(query) and target_idx < len(target):
+            if query[query_idx] == target[target_idx]:
+                match_count += 1
+                query_idx += 1
+            
+            target_idx += 1
+        
+        # Store the score (match_count) and the target string
+        scored_results.append((match_count, target))
+
+    # Sort the results: 
+    # 1. Primary sort key: match_count (descending)
+    # 2. Secondary sort key: The target string itself (alphabetical, for stability)
+    scored_results.sort(key=lambda x: x[0], reverse=True)
+
+    # Return only the strings, in sorted order
+    return [target for score, target in scored_results]
+
+if __name__ == '__main__':
+    # --- Test Case 1: Basic functionality ---
+    dictionary = ["apple", "banana", "apricot", "zebra", "applepie"]
+    query1 = "app"
+    print(f"Query: '{query1}'")
+    results1 = fuzzy_search(query1, dictionary)
+    print(f"Results: {results1}") 
+    # Expected: ["apple", "applepie", "apricot"] (Order might vary based on score tie-breaking, 
+    # but "apple" and "applepie" match the most characters)
+
+    print("-" * 20)
+
+    # --- Test Case 2: Longer query, non-contiguous match ---
+    dictionary = ["framework", "dataframe", "management", "machine"]
+    query2 = "man"
+    print(f"Query: '{query2}'")
+    results2 = fuzzy_search(query2, dictionary)
+    print(f"Results: {results2}") 
+    # Expected: ["management", "dataframe"]
+
+    print("-" * 20)
+    
+    # --- Test Case 3: Full match ---
+    dictionary = ["hello", "world"]
+    query3 = "hello"
+    print(f"Query: '{query3}'")
+    results3 = fuzzy_search(query3, dictionary)
+    print(f"Results: {results3}") 
+    # Expected: ["hello"]
+
+    print("-" * 20)
+
+    # --- Test Case 4: Empty query ---
+    dictionary = ["test", "data"]
+    query4 = ""
+    print(f"Query: '{query4}'")
+    results4 = fuzzy_search(query4, dictionary)
+    print(f"Results: {results4}")
+    # Expected: ["test", "data"] (The order might be arbitrary if scores are equal)
+```

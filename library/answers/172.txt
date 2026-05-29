@@ -1,0 +1,142 @@
+```python
+class Node:
+    """Represents a node in the Binary Search Tree."""
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class BinarySearchTree:
+    """Implements a Binary Search Tree structure."""
+    def __init__(self):
+        self.root = None
+
+    # --- Insertion ---
+    def insert(self, data):
+        """Public method to start the insertion process."""
+        if self.root is None:
+            self.root = Node(data)
+            return
+        
+        self.root = self._insert_recursive(self.root, data)
+
+    def _insert_recursive(self, current_node, data):
+        """Helper function for recursive insertion."""
+        if current_node is None:
+            return Node(data)
+        
+        if data < current_node.data:
+            current_node.left = self._insert_recursive(current_node.left, data)
+        elif data > current_node.data:
+            current_node.right = self._insert_recursive(current_node.right, data)
+        # If data == current_node.data, we usually ignore it in a BST
+        
+        return current_node
+
+    # --- Search ---
+    def search(self, data):
+        """Public method to check if a data value exists in the tree."""
+        return self._search_recursive(self.root, data)
+
+    def _search_recursive(self, current_node, data):
+        """Helper function for recursive search."""
+        if current_node is None:
+            return False
+        
+        if data == current_node.data:
+            return True
+        elif data < current_node.data:
+            return self._search_recursive(current_node.left, data)
+        else:
+            return self._search_recursive(current_node.right, data)
+
+    # --- Deletion ---
+    def delete(self, data):
+        """Public method to start the deletion process."""
+        self.root = self._delete_recursive(self.root, data)
+
+    def _get_min_value_node(self, node):
+        """Helper function to find the node with the minimum value (used for successor)."""
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def _delete_recursive(self, current_node, data):
+        """Helper function for recursive deletion."""
+        if current_node is None:
+            return None
+
+        # 1. Traverse to find the node
+        if data < current_node.data:
+            current_node.left = self._delete_recursive(current_node.left, data)
+        elif data > current_node.data:
+            current_node.right = self._delete_recursive(current_node.right, data)
+        
+        # 2. If the current node is the target for deletion
+        else:
+            # Case 1 & 2: Node with one child or no child
+            if current_node.left is None:
+                return current_node.right
+            elif current_node.right is None:
+                return current_node.left
+
+            # Case 3: Node with two children
+            # Find the inorder successor (smallest in the right subtree)
+            temp = self._get_min_value_node(current_node.right)
+            
+            # Copy the successor's data to the current node
+            current_node.data = temp.data
+            
+            # Delete the successor from the right subtree
+            current_node.right = self._delete_recursive(current_node.right, temp.data)
+            
+        return current_node
+
+    # --- Utility (Optional: for verification/testing) ---
+    def inorder_traversal(self):
+        """Returns a list of elements in sorted order."""
+        result = []
+        def inorder(node):
+            if node:
+                inorder(node.left)
+                result.append(node.data)
+                inorder(node.right)
+        inorder(self.root)
+        return result
+
+# Example Usage (Demonstrates that the class functions correctly)
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    
+    # Insert elements
+    elements = [50, 30, 70, 20, 40, 60, 80]
+    for el in elements:
+        bst.insert(el)
+
+    print("Initial BST structure (Inorder):", bst.inorder_traversal()) # Expected: [20, 30, 40, 50, 60, 70, 80]
+
+    # Search test
+    print(f"Search for 40: {bst.search(40)}")
+    print(f"Search for 99: {bst.search(99)}")
+
+    # Delete test 1: Leaf node (20)
+    bst.delete(20)
+    print("\nAfter deleting 20 (Leaf):", bst.inorder_traversal()) 
+    # Expected: [30, 40, 50, 60, 70, 80]
+
+    # Delete test 2: Node with one child (30, assuming 40 is its only remaining child)
+    bst.delete(30) 
+    print("After deleting 30 (One child):", bst.inorder_traversal()) 
+    # Expected: [40, 50, 60, 70, 80]
+
+    # Delete test 3: Node with two children (50)
+    bst.delete(50)
+    print("After deleting 50 (Two children - replaced by successor 60):", bst.inorder_traversal()) 
+    # Note: The successor of 50 was 60. 60 takes 50's place.
+    # Current tree: [40, 60, 70, 80]
+    
+    # Delete test 4: Deleting the remaining root/anchor (40)
+    bst.delete(40)
+    print("After deleting 40:", bst.inorder_traversal())
+```

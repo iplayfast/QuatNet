@@ -1,0 +1,68 @@
+```python
+def sum_list_methods(data_list):
+    """
+    Computes the sum of a list using three different methods:
+    1. For loop
+    2. While loop
+    3. Recursion
+    
+    Args:
+        data_list (list): The list of numbers to sum.
+        
+    Returns:
+        dict: A dictionary containing the sum from each method.
+    """
+
+    # --- 1. Using a For Loop ---
+    def sum_for_loop(lst):
+        total = 0
+        for item in lst:
+            total += item
+        return total
+
+    # --- 2. Using a While Loop ---
+    def sum_while_loop(lst):
+        if not lst:
+            return 0
+        
+        total = 0
+        index = 0
+        while index < len(lst):
+            total += lst[index]
+            index += 1
+        return total
+
+    # --- 3. Using Recursion ---
+    def sum_recursive(lst):
+        if not lst:
+            return 0
+        # Base case: sum of a list with one element
+        if len(lst) == 1:
+            return lst[0]
+        # Recursive step: first element + sum of the rest of the list
+        return lst[0] + sum_recursive(lst[1:])
+
+    return {
+        "for_loop_sum": sum_for_loop(data_list),
+        "while_loop_sum": sum_while_loop(data_list),
+        "recursive_sum": sum_recursive(data_list)
+    }
+
+if __name__ == '__main__':
+    # Example usage
+    numbers = [1, 5, 10, 2]
+    results = sum_list_methods(numbers)
+    
+    print(f"Input List: {numbers}")
+    print("-" * 30)
+    print(f"Sum using For Loop:      {results['for_loop_sum']}")
+    print(f"Sum using While Loop:   {results['while_loop_sum']}")
+    print(f"Sum using Recursion:    {results['recursive_sum']}")
+
+    # Test case for an empty list
+    empty_list = []
+    empty_results = sum_list_methods(empty_list)
+    print("\n" + "=" * 30)
+    print(f"Input List: {empty_list}")
+    print(f"Sum (all methods):      {empty_results}")
+```

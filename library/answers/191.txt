@@ -1,0 +1,132 @@
+```python
+class Room:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.items = []
+        self.exits = {}
+        self.current_item = None
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    def set_current_item(self, item_name):
+        for item in self.items:
+            if item.name == item_name:
+                self.current_item = item
+                break
+
+class Item:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+class GameEngine:
+    def __init__(self):
+        self.rooms = {}
+
+    def add_room(self, room_name, room_description):
+        self.rooms[room_name] = Room(room_name, room_description)
+
+    def add_exit(self, room_name, direction, connected_room_name):
+        if room_name in self.rooms and direction == 'N' or direction == 'S':
+            self.rooms[room_name].exits[direction] = connected_room_name
+        elif direction == 'E' or direction == 'W':
+            if 'east' not in self.rooms[room_name].exits:
+                self.rooms[room_name].exits['east'] = connected_room_name
+            elif 'west' not in self.rooms[room_name].exits:
+                self.rooms[room_name].exits['west'] = connected_room_name
+
+    def move(self, room_name, direction):
+        if room_name in self.rooms and direction == 'N' or direction == 'S':
+            connected_room_name = self.rooms[room_name].exits.get(direction)
+            if connected_room_name:
+                return f"You moved to {connected_room_name}."
+            else:
+                return f"There is no way to go that direction."
+        elif direction == 'E' or direction == 'W':
+            connected_room_name = self.rooms[room_name].exits.get('east') or self.rooms[room_name].exits.get('west')
+            if connected_room_name:
+                return f"You moved to {connected_room_name}."
+            else:
+                return "There is no way to go that direction."
+
+    def take(self, room_name, item_name):
+        for item in self.rooms[room_name].items:
+            if item.name == item_name:
+                self.rooms[room_name].set_current_item(item)
+                return f"You took the {item_name}."
+        return "There is no way to take that."
+
+    def drop(self, room_name, item_name):
+        for item in self.rooms[room_name].items:
+            if item.name == item_name and item == self.rooms[room_name].current_item:
+                self.rooms[room_name].set_current_item(None)
+                return f"You dropped the {item_name}."
+        return "There is no way to drop that."
+
+    def inventory(self, room_name):
+        if self.rooms[room_name].current_item:
+            return f"You are holding a {self.rooms[room_name].current_item.name}."
+        else:
+            return f"There is nothing in your inventory."
+
+def main():
+    engine = GameEngine()
+
+    # Create rooms
+    kitchen = Room("Kitchen", "A room with a table and chairs.")
+    hallway = Room("Hallway", "A long, dark hallway.")
+
+    # Add exits
+    engine.add_exit('kitchen', 'N', 'hallway')
+    engine.add_exit('kitchen', 'E', 'living_room')
+    engine.add_exit('kitchen', 'W', 'garden')
+    engine.add_exit('hallway', 'S', 'kitchen')
+
+    # Add items
+    sword = Item("Sword", "A sharp sword.")
+    apple = Item("Apple", "A juicy apple.")
+
+    kitchen.add_item(sword)
+    hallway.add_item(apple)
+
+    # Start game
+    room_name = 'kitchen'
+    while True:
+        print(f"\nYou are in the {room_name}.")
+        print(room_name.upper() + "'S DESCRIPTION:")
+        print(room_name.upper() + ":\n" + engine.rooms[room_name].description)
+        
+        if not engine.rooms[room_name].current_item:
+            print("You see a table and chairs.\n")
+            commands = ["take", "drop", "inventory"]
+        else:
+            print(f"You are holding a {engine.rooms[room_name].current_item.name}.\n")
+            commands = ["take", "drop", "move", "inventory"]
+
+        print("Available Commands:")
+        for command in commands:
+            print(command + ": ")
+
+        command = input().upper()
+        if command == 'QUIT':
+            break
+        elif command == 'TAKE' or command == 'DROP':
+            item_name = input("What item do you want to take or drop? ")
+            result = engine.take(room_name, item_name)
+        elif command == 'INVENTORY':
+            print(engine.inventory(room_name))
+        elif command == 'MOVE':
+            direction = input("Which way do you want to go (N/S/E/W)? ").upper()
+            result = engine.move(room_name, direction)
+
+        # Print response
+        if command in ['TAKE', 'DROP']:
+            print(result)
+        elif command == 'INVENTORY' or command == 'MOVE':
+            print(result)
+
+if __name__ == "__main__":
+    main()
+```

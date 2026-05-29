@@ -1,1 +1,1 @@
-Write a program that plays Tic-Tac-Toe against a minimax AI opponent.
+Write a program that finds all ways to insert +, -, or nothing between the digits 1 through 9 so the result equals 100.

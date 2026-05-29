@@ -7,12 +7,13 @@ cd llama.cpp
 
 # Auto-detect CUDA
 if command -v nvcc &>/dev/null; then
-    echo "CUDA detected, building with GPU support"
-    CUDA_FLAG="-DGGML_CUDA=ON"
+    NVCC_BIN=$(command -v nvcc)
+    echo "CUDA detected ($NVCC_BIN), building with GPU support"
+    CUDA_FLAG="-DGGML_CUDA=ON -DCMAKE_CUDA_COMPILER=$NVCC_BIN"
 
     # Detect nvcc version and set safe architecture targets
     # Older CUDA toolkits don't support newest GPU architectures
-    NVCC_VER=$(nvcc --version | grep -oP 'release \K[0-9]+\.[0-9]+')
+    NVCC_VER=$("$NVCC_BIN" --version | grep -oP 'release \K[0-9]+\.[0-9]+')
     NVCC_MAJOR=$(echo "$NVCC_VER" | cut -d. -f1)
     NVCC_MINOR=$(echo "$NVCC_VER" | cut -d. -f2)
 

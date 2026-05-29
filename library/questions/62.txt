@@ -1,1 +1,1 @@
-Write a function that implements the Floyd-Warshall all-pairs shortest path algorithm.
+Write a function that implements a basic rate limiter (e.g. max N requests per minute).

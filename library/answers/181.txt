@@ -1,0 +1,49 @@
+```python
+import inspect
+import sys
+import traceback
+
+def run_tests(module=None):
+    if module is None:
+        module = sys.modules[__name__]
+    
+    tests = []
+    for name, obj in inspect.getmembers(module, inspect.isfunction):
+        if name.startswith('test_'):
+            tests.append((name, obj))
+    
+    tests.sort()
+    
+    passed = 0
+    failed = 0
+    
+    for test_name, test_func in tests:
+        try:
+            test_func()
+            print(f"PASS: {test_name}")
+            passed += 1
+        except AssertionError as e:
+            print(f"FAIL: {test_name} - {e}")
+            failed += 1
+        except Exception as e:
+            print(f"ERROR: {test_name} - {e}")
+            traceback.print_exc()
+            failed += 1
+    
+    print(f"\nResults: {passed} passed, {failed} failed")
+    return failed == 0
+
+# Example usage (not part of the solution)
+if __name__ == "__main__":
+    # Example test functions
+    def test_true():
+        assert True
+    
+    def test_addition():
+        assert 1 + 1 == 2
+    
+    def test_failure():
+        assert False, "This is a failure"
+    
+    run_tests()
+```

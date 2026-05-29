@@ -1,13 +1,15 @@
-def generate_parentheses(n):
-    def backtrack(open_count, close_count, current_string):
-        if open_count == close_count == n:
-            result.append(current_string)
-            return
-        if open_count < n:
-            backtrack(open_count + 1, close_count, current_string + '(')
-        if close_count < open_count:
-            backtrack(open_count, close_count + 1, current_string + ')')
-    
-    result = []
-    backtrack(0, 0, '')
-    return result
+def to_pig_latin(text):
+    r=[]
+    for w in text.split():
+        if w[0].isalpha():
+            r.append(w[1:]+w[0]+'ay')
+        else: r.append(w)
+    return ' '.join(r)
+
+def from_pig_latin(text):
+    r=[]
+    for w in text.split():
+        if w.endswith('ay') and len(w)>2:
+            r.append(w[-3]+w[:-3])
+        else: r.append(w)
+    return ' '.join(r)

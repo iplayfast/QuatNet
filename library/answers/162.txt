@@ -1,0 +1,6 @@
+```python
+def stirling(n, k):
+    if n == 0 or k == 0:
+        return 1 if n == k == 0 else 0
+    return k * stirling(n - 1, k) + (n % k) * stirling(n - 1, k - 1)
+```

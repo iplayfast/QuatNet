@@ -1,14 +1,3 @@
-class EventBus:
-    def __init__(self):
-        self.subs = {}
-
-    def subscribe(self, event, callback):
-        self.subs.setdefault(event, []).append(callback)
-
-    def unsubscribe(self, event, callback):
-        if event in self.subs:
-            self.subs[event] = [cb for cb in self.subs[event] if cb != callback]
-
-    def emit(self, event, *args, **kwargs):
-        for cb in self.subs.get(event, []):
-            cb(*args, **kwargs)
+def is_palindrome(s):
+    s=''.join(c.lower() for c in s if c.isalnum())
+    return s==s[::-1]

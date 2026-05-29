@@ -1,0 +1,49 @@
+```python
+import time
+import sys
+
+def format_time(seconds):
+    minutes = int(seconds // 60)
+    seconds = seconds % 60
+    milliseconds = int((seconds % 1) * 100)
+    seconds = int(seconds)
+    return f"{minutes:02d}:{seconds:02d}.{milliseconds:02d}"
+
+def main():
+    print("Press ENTER to start stopwatch.")
+    print("Press ENTER again to record a lap.")
+    print("Press Ctrl+C to exit.")
+    
+    while True:
+        try:
+            input()
+            break
+        except KeyboardInterrupt:
+            return
+    
+    start_time = time.time()
+    last_time = start_time
+    lap_count = 0
+    total_lap_time = 0
+    
+    try:
+        while True:
+            current_time = time.time()
+            total_elapsed = current_time - start_time
+            lap_elapsed = current_time - last_time
+            last_time = current_time
+            lap_count += 1
+            
+            print(f"Lap {lap_count}: {format_time(lap_elapsed)} | Total: {format_time(total_elapsed)}")
+            
+            input()
+            
+    except KeyboardInterrupt:
+        total_elapsed = time.time() - start_time
+        print(f"\nFinal Time: {format_time(total_elapsed)}")
+        print(f"Total Laps: {lap_count}")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+```

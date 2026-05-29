@@ -1,0 +1,57 @@
+```python
+import inspect
+from unittest import TestCase
+
+def run_tests(tests):
+    tests_found = []
+    results = []
+
+    for name in dir(tests):
+        if name.startswith('test_'):
+            obj = getattr(tests, name)
+            if inspect.isfunction(obj) and not inspect.ismethod(obj):
+                test_found = {
+                    'name': name,
+                    'obj': obj,
+                    'result': None
+                }
+                tests_found.append(test_found)
+
+    for test in tests_found:
+        try:
+            result = test['obj']()
+            test['result'] = result
+        except Exception as e:
+            print(f"Error running {test['name']}: {e}")
+
+    return tests_found, results
+
+
+class TestRunner:
+    def __init__(self, tests):
+        self.tests = run_tests(tests)
+
+    def run(self):
+        for i, test in enumerate(self.tests):
+            print(f"Test {i+1} of {len(self.tests)}: {test['name']}")
+            if test['result'] is None:
+                result = "Failed"
+            else:
+                result = str(test['result'])
+            print(f"Result: {result}")
+
+
+# Example usage:
+
+class TestExample(TestCase):
+
+    def test_test_example1(self):
+        self.assertEqual(1, 1)
+
+    def test_test_example2(self):
+        raise Exception("Test failed")
+
+if __name__ == "__main__":
+    runner = TestRunner(TestExample)
+    runner.run()
+```

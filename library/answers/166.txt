@@ -1,0 +1,11 @@
+```python
+def find_pairs(nums, target):
+    pairs = []
+    seen = set()
+    for num in nums:
+        complement = target - num
+        if complement in seen:
+            pairs.append((complement, num))
+        seen.add(num)
+    return pairs
+```

@@ -1,18 +1,7 @@
 [
   {"name": "judge",    "url": "http://localhost:11434", "model": "llama3.2",        "role": "judge",  "enabled": true,  "active": true},
   {"name": "llama3.2", "url": "http://localhost:11434", "model": "llama3.2",        "role": "worker", "enabled": true,  "active": true},
-  {"name": "llama3.2-3b", "url": "http://localhost:11434", "model": "llama3.2:3b", "role": "worker", "enabled": false,  "active": true},
-  {"name": "wizard",   "url": "http://localhost:11434", "model": "wizard",          "role": "worker", "enabled": false,  "active": true},
-  {"name": "qwen3.5-0.8b", "url": "http://localhost:11434", "model": "qwen3.5:0.8b", "role": "worker", "enabled": false,  "active": true},
-  {"name": "qwen3.5-9b", "url": "http://localhost:11434", "model": "qwen3.5:9b",   "role": "worker", "enabled": false,  "active": true},
-  {"name": "gemma4",   "url": "http://localhost:11434", "model": "gemma4",          "role": "worker", "enabled": false,  "active": true},
-  {"name": "granite4", "url": "http://localhost:11434", "model": "granite4",        "role": "worker", "enabled": false,  "active": true},
-  {"name": "dolphin",  "url": "http://localhost:11434", "model": "dolphin-llama3",  "role": "worker", "enabled": true,  "active": true},
-  {"name": "ghost",    "url": "http://localhost:11434", "model": "GhostWriter",     "role": "worker", "enabled": false,  "active": true},
-  {"name": "redteam",  "url": "http://localhost:11434", "model": "RedTeamAI",       "role": "worker", "enabled": false,  "active": true},
-  {"name": "glm-ocr",  "url": "http://localhost:11434", "model": "glm-ocr",         "role": "worker", "enabled": false,  "active": true},
-  {"name": "rnj",      "url": "http://localhost:11434", "model": "rnj-1",           "role": "worker", "enabled": false, "active": true},
-  {"name": "gemma4-26b","url": "http://localhost:11434", "model": "gemma4:26b",      "role": "worker", "enabled": false, "active": false},
-  {"name": "devstral", "url": "http://localhost:11434", "model": "devstral-small-2","role": "worker", "enabled": false, "active": false},
-  {"name": "alfred",   "url": "http://localhost:11434", "model": "alfred",          "role": "worker", "enabled": false, "active": false},
+  {"name": "gemma4", "url": "http://localhost:11434", "model": "gemma4",        "role": "worker", "enabled": true,  "active": true},
+  {"name": "qwen3-coder-next", "url": "http://localhost:11434", "model": "qwen3-coder-next",        "role": "worker", "enabled": true,  "active": true},
+  {"name": "granite4", "url": "http://localhost:11434", "model": "granite4",        "role": "worker", "enabled": true,  "active": true}
 ]

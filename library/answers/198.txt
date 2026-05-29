@@ -1,0 +1,126 @@
+```python
+import sys
+
+# Increase recursion limit for potentially deep DFS calls
+sys.setrecursionlimit(2000)
+
+def find_sccs(graph):
+    """
+    Finds the Strongly Connected Components (SCCs) of a directed graph 
+    using Tarjan's algorithm.
+
+    Args:
+        graph (dict): Adjacency list representation of the graph. 
+                       Keys are nodes (integers), values are lists of neighbors.
+
+    Returns:
+        list: A list of sets, where each set contains the nodes 
+              belonging to one SCC.
+    """
+    
+    # Initialization
+    nodes = list(graph.keys())
+    
+    # disc[u]: Discovery time of node u
+    disc = {}
+    # low[u]: Lowest discovery time reachable from u (including u)
+    low = {}
+    
+    # Stack for tracking nodes currently in the DFS recursion path
+    stack = []
+    # on_stack[u]: Boolean indicating if node u is currently on the stack
+    on_stack = {}
+    
+    # Global timer for discovery times
+    time = 0
+    
+    # List to store the resulting SCCs
+    sccs = []
+
+    # Initialize structures for all nodes in the graph
+    for node in nodes:
+        disc[node] = -1
+        low[node] = -1
+        on_stack[node] = False
+
+    def tarjan_dfs(u):
+        nonlocal time
+        
+        # 1. Set discovery time and low-link value for u
+        disc[u] = low[u] = time
+        time += 1
+        
+        # Push u onto the stack
+        stack.append(u)
+        on_stack[u] = True
+        
+        # 2. Recurse on neighbors v
+        for v in graph.get(u, []):
+            if disc[v] == -1:
+                # Case 1: v has not been visited (Tree Edge)
+                tarjan_dfs(v)
+                
+                # Update low[u] based on the subtree rooted at v
+                low[u] = min(low[u], low[v])
+            
+            elif on_stack[v]:
+                # Case 2: v is visited and currently on the stack (Back Edge)
+                # Use disc[v] because it represents the potential cycle length/ancestor relationship
+                low[u] = min(low[u], disc[v])
+        
+        # 3. Check if u is the root of an SCC
+        if low[u] == disc[u]:
+            # Found an SCC
+            scc = set()
+            while True:
+                w = stack.pop()
+                on_stack[w] = False
+                scc.add(w)
+                if w == u:
+                    break
+            sccs.append(scc)
+
+    # Run DFS on all nodes to ensure all components are visited
+    for node in nodes:
+        if disc[node] == -1:
+            tarjan_dfs(node)
+            
+    return sccs
+
+# Example Usage:
+if __name__ == '__main__':
+    # Example 1: Standard SCC structure (Figure 1 example)
+    # Nodes 0, 1, 2, 3, 4, 5
+    graph1 = {
+        0: [1],
+        1: [2],
+        2: [0, 3],
+        3: [4],
+        4: [5, 3],
+        5: [4]
+    }
+    print("Graph 1 SCCs:", find_sccs(graph1)) # Expected: [{0, 1, 2}, {3, 4, 5}]
+
+    print("-" * 20)
+
+    # Example 2: Single Cycle (A simple ring)
+    graph2 = {
+        1: [2],
+        2: [3],
+        3: [1]
+    }
+    print("Graph 2 SCCs:", find_sccs(graph2)) # Expected: [{1, 2, 3}]
+
+    print("-" * 20)
+
+    # Example 3: Disconnected graph and single nodes
+    graph3 = {
+        'A': ['B'],
+        'B': ['A'],
+        'C': [],
+        'D': ['E'],
+        'E': ['F']
+    }
+    print("Graph 3 SCCs:", find_sccs(graph3)) # Expected: [{'A', 'B'}, {'C'}, {'E'}, {'D'}] 
+                                              # (Note: Order may vary, but contents must be correct)
+```

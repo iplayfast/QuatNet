@@ -1,0 +1,70 @@
+```python
+import re
+import collections
+import os
+
+def count_word_frequencies(file_path: str, top_n: int = 10) -> list:
+    """
+    Reads a text file, counts word frequencies, and returns the top N words.
+
+    Args:
+        file_path: The path to the text file.
+        top_n: The number of top words to return.
+
+    Returns:
+        A list of tuples containing the top words and their counts.
+        Returns an empty list if the file cannot be read.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            text = file.read()
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return []
+    except Exception as e:
+        print(f"An error occurred while reading the file: {e}")
+        return []
+
+    # 1. Clean and Tokenize: Convert to lowercase and remove punctuation/special chars.
+    # This regex replaces any sequence of non-word characters with a single space.
+    cleaned_text = re.sub(r'[^\w\s]', '', text).lower()
+
+    # 2. Split the text into words and filter out empty strings
+    words = [word for word in cleaned_text.split() if word]
+
+    # 3. Count frequencies
+    word_counts = collections.Counter(words)
+
+    # 4. Get the top N results
+    return word_counts.most_common(top_n)
+
+if __name__ == "__main__":
+    # --- SETUP: Create a dummy file for demonstration ---
+    FILE_NAME = "sample_text.txt"
+    SAMPLE_CONTENT = """
+    The quick brown fox jumps over the lazy dog. The dog was very lazy, 
+    and the fox was quick. Quick, quick! Python is an awesome, awesome language. 
+    We love python programming. This test contains multiple words, words, 
+    and more words.
+    """
+    try:
+        with open(FILE_NAME, 'w', encoding='utf-8') as f:
+            f.write(SAMPLE_CONTENT.strip())
+        print(f"--- Using dummy file: {FILE_NAME} ---")
+    except Exception as e:
+        print(f"Could not create sample file: {e}")
+
+    # --- EXECUTION ---
+    top_words = count_word_frequencies(FILE_NAME, top_n=10)
+
+    # --- OUTPUT ---
+    if top_words:
+        print("\nTop 10 Most Common Words:")
+        print("-" * 30)
+        for i, (word, count) in enumerate(top_words):
+            print(f"{i+1}. {word:<10} | Count: {count}")
+    
+    # Clean up the dummy file
+    if os.path.exists(FILE_NAME):
+        os.remove(FILE_NAME)
+```

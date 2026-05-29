@@ -1,0 +1,23 @@
+```python
+import socket
+
+def dns_resolver(domain):
+    # Split the domain into its parts
+    parts = domain.split('.')
+    
+    # Reverse the order of the parts to form the search order for DNS resolvers
+    parts.reverse()
+    
+    try:
+        # Use the gethostbyname function from the socket module to perform the lookup
+        hostname = '.'.join(parts)
+        ip_address = socket.gethostbyname(hostname)
+        
+        return f"The IP address for {domain} is: {ip_address}"
+    
+    except socket.gaierror as e:
+        return f"Error resolving domain {domain}: {e}"
+
+# Example usage
+print(dns_resolver("www.example.com"))
+```

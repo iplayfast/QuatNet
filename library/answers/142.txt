@@ -1,11 +1,33 @@
-import os, time
+```python
+import random
 
-def watch_file(path, callback, interval=0.5):
-    mtime = os.path.getmtime(path) if os.path.exists(path) else 0
-    while True:
-        time.sleep(interval)
-        if os.path.exists(path):
-            new_mtime = os.path.getmtime(path)
-            if new_mtime != mtime:
-                mtime = new_mtime
-                callback(path)
+def generate_multiplication_quiz(num_questions):
+    questions = []
+    for _ in range(num_questions):
+        num1 = random.randint(1, 10)
+        num2 = random.randint(1, 10)
+        correct_answer = num1 * num2
+        question = f"What is {num1} x {num2}? "
+        answers = [str(i) for i in range(1, correct_answer + 1)]
+        questions.append((question, correct_answer, answers))
+    return questions
+
+def display_multiplication_quiz(questions):
+    for question, answer, options in questions:
+        print(question)
+        for option in options:
+            print(option)
+        user_answer = input("Enter your answer: ")
+        if int(user_answer) == answer:
+            print("Correct!")
+        else:
+            print(f"Sorry, the correct answer was {answer}.")
+
+def main():
+    num_questions = 10
+    questions = generate_multiplication_quiz(num_questions)
+    display_multiplication_quiz(questions)
+
+if __name__ == "__main__":
+    main()
+```

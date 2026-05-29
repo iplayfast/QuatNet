@@ -1,1 +1,1 @@
-Write a function that serializes a binary tree to a string and deserializes it back to the tree.
+Write a class that implements a singly linked list with insert, delete, and search operations.

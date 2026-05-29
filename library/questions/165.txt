@@ -1,0 +1,1 @@
+96: Write a function that validates a string of parentheses, brackets, and braces is balanced.

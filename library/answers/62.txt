@@ -1,9 +1,37 @@
-def floyd_warshall(graph):
-    n = len(graph)
-    dist = [row[:] for row in graph]
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-                if dist[i][k] + dist[k][j] < dist[i][j]:
-                    dist[i][j] = dist[i][k] + dist[k][j]
-    return dist
+class VEB:
+    # van Emde Boas tree: O(log log U) for insert/delete/successor/predecessor
+    # Space: O(U) where U is universe size
+    def __init__(self,u):
+        self.u=u  # universe size (power of 2)
+        self.min=None; self.max=None
+        if u>2:
+            sqrt=int(u**0.5)
+            self.summary=VEB(sqrt)
+            self.cluster=[VEB(sqrt) for _ in range(sqrt)]
+    def _high(self,x): return x//int(self.u**0.5)
+    def _low(self,x): return x%int(self.u**0.5)
+    def _index(self,h,l): return h*int(self.u**0.5)+l
+    def insert(self,x):
+        if self.min is None:
+            self.min=self.max=x; return
+        if x<self.min:
+            x,self.min=self.min,x
+        if self.u>2:
+            h=self._high(x); l=self._low(x)
+            if self.cluster[h].min is None:
+                self.summary.insert(h)
+            self.cluster[h].insert(l)
+        if x>self.max: self.max=x
+    def successor(self,x):
+        if self.min is None or x>=self.max: return None
+        if x<self.min: return self.min
+        if self.u==2:
+            return self.max if x==0 else None
+        h=self._high(x); l=self._low(x)
+        if self.cluster[h].max is not None and l<self.cluster[h].max:
+            return self._index(h,self.cluster[h].successor(l))
+        h2=self.summary.successor(h)
+        if h2 is None: return None
+        return self._index(h2,self.cluster[h2].min)
+# vEB tree vs BST: vEB O(log log U) but O(U) space. BST O(log n) but O(n) space.
+# vEB wins when U is small relative to n. For large U, use hash table + BST hybrid.

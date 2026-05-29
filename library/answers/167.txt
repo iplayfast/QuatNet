@@ -1,0 +1,16 @@
+```python
+import random
+
+def reservoir_sampling(stream, k):
+    if k > len(stream):
+        raise ValueError("k cannot be greater than the number of elements in the stream")
+    
+    sample = list(stream[:k])  # Initialize the reservoir with the first k items
+    
+    for i in range(k, len(stream)):
+        j = random.randint(0, i)
+        if j < k:
+            sample[j] = stream[i]
+    
+    return sample
+```

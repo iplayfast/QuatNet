@@ -1,1 +1,1 @@
-Write functions for addition, subtraction, and multiplication of numbers represented as digit lists (big integer arithmetic).
+Write a function that reverses a list in place without creating a copy.

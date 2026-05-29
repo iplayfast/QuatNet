@@ -1,1 +1,1 @@
-Write a function that finds the k-th smallest element in an unsorted array in O(n) average time (quickselect).
+Write a program that simulates a bouncing ball inside a rectangular window.

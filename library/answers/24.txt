@@ -1,14 +1,7 @@
-class EventBus:
-    def __init__(self):
-        self.subs = {}
-
-    def subscribe(self, event, callback):
-        self.subs.setdefault(event, []).append(callback)
-
-    def unsubscribe(self, event, callback):
-        if event in self.subs:
-            self.subs[event] = [cb for cb in self.subs[event] if cb != callback]
-
-    def emit(self, event, *args, **kwargs):
-        for cb in self.subs.get(event, []):
-            cb(*args, **kwargs)
+def fib100():
+    a,b=1,1; r=[a,b]
+    for _ in range(98):
+        a,b=b,a+b; r.append(b)
+    return r
+# First 100: [1,1,2,3,5,8,13,21,34,55,89,144,...
+# Last few: ...218922995834555169026,354224848179261915075,573147844013817084101]

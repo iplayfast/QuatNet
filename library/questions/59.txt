@@ -1,1 +1,1 @@
-108: Write a function that computes the intersection and union of two sets without using the set data type.
+Write a program that plays Rock-Paper-Scissors against a human, adapting to their patterns.

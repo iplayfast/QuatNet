@@ -1,0 +1,51 @@
+```python
+def mandelbrot(x_min, x_max, y_min, y_max, width, height, max_iterations=100):
+    """
+    Computes the Mandelbrot set for a given region of the complex plane.
+    
+    Args:
+        x_min (float): Minimum x-coordinate (real part)
+        x_max (float): Maximum x-coordinate (real part)
+        y_min (float): Minimum y-coordinate (imaginary part)
+        y_max (float): Maximum y-coordinate (imaginary part)
+        width (int): Width of the output array (number of columns)
+        height (int): Number of rows in the output array
+        max_iterations (int): Maximum number of iterations to determine divergence
+    
+    Returns:
+        numpy.ndarray: 2D array of integers representing the number of iterations 
+                      before divergence (or max_iterations if not diverged)
+    """
+    import numpy as np
+    
+    # Create coordinate arrays
+    x = np.linspace(x_min, x_max, width)
+    y = np.linspace(y_min, y_max, height)
+    
+    # Create grid of complex numbers
+    c = x[np.newaxis, :] + 1j * y[:, np.newaxis]
+    
+    # Initialize arrays
+    z = np.zeros_like(c, dtype=complex)
+    mask = np.ones_like(c, dtype=bool)
+    iterations = np.zeros(c.shape, dtype=int)
+    
+    # Iterate for Mandelbrot computation
+    for i in range(max_iterations):
+        # Update z = z^2 + c only for points still in the set
+        z[mask] = z[mask] * z[mask] + c[mask]
+        
+        # Check for divergence (|z| > 2)
+        diverged = np.abs(z) > 2
+        
+        # Update mask to exclude already diverged points
+        mask = mask & ~diverged
+        
+        # Record iteration count for diverging points
+        iterations[diverged & (iterations == 0)] = i
+    
+    # Points that didn't diverge get max_iterations
+    iterations[mask] = max_iterations
+    
+    return iterations
+```

@@ -1,0 +1,19 @@
+```python
+import re
+from collections import Counter
+
+def read_file(file_path):
+    with open(file_path, 'r') as f:
+        return f.read()
+
+def count_words(text):
+    return Counter(re.findall(r'\b\w+\b', text.lower()))
+
+# Example usage:
+file_path = 'example.txt'  # Replace with your file path
+text = read_file(file_path)
+word_counts = count_words(text)
+
+for word, count in word_counts.most_common(10):
+    print(word, count)
+```

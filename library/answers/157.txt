@@ -1,0 +1,16 @@
+```python
+def find_ways():
+    def dfs(path, target):
+        if target == 0:
+            result.append(path)
+        if len(path) >= 3:
+            return
+        for i in range(10):
+            dfs(path + str(i), target - i)
+
+    result = []
+    dfs("", 100)
+    return [int("".join(x)) for x in result]
+
+print(find_ways())
+```

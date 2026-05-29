@@ -1,0 +1,55 @@
+```python
+import time
+import os
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+class WatchedFileHandler(FileSystemEventHandler):
+    def __init__(self, path, notify_on_change=True):
+        self.path = path
+        self.notify_on_change = notify_on_change
+        self.last_modified_time = None
+
+    def on_created(self, event):
+        if not self.notify_on_change:
+            return False
+        print(f"File {event.src_path} created")
+
+    def on_deleted(self, event):
+        if not self.notify_on_change:
+            return False
+        print(f"File {event.src_path} deleted")
+
+    def on_modified(self, event):
+        if self.last_modified_time is None or event.modification_time > self.last_modified_time:
+            if self.notify_on_change:
+                print(f"File {event.src_path} modified")
+            self.last_modified_time = event.modification_time
+
+    def on_moved(self, event):
+        if not self.notify_on_change:
+            return False
+        print(f"File {event.src_path} moved")
+
+    def on_deleted_dir(self, event):
+        if not self.notify_on_change:
+            return False
+        print(f"Directory {event.src_path} deleted")
+
+def watch_file(path):
+    handler = WatchedFileHandler(path)
+    observer = Observer()
+    observer.schedule(handler, path, recursive=True)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+
+if __name__ == "__main__":
+    watch_file("/path/to/your/watched/file/directory")
+```

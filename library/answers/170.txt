@@ -1,0 +1,58 @@
+```python
+class PPMImage:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.data = {}
+
+    def add_pixel(self, x, y, color):
+        if (x, y) not in self.data:
+            self.data[(x, y)] = []
+        self.data[(x, y)].append(color)
+
+class Renderer:
+    def __init__(self):
+        self.image = PPMImage(0, 0)
+        self.current_x = 0
+        self.current_y = 0
+
+    def start_image(self, width, height):
+        self.image.width = width
+        self.image.height = height
+        self.current_x = 0
+        self.current_y = 0
+
+    def set_pixel(self, color):
+        if self.current_x < self.image.width and self.current_y < self.image.height:
+            self.image.add_pixel(self.current_x, self.current_y, color)
+            self.current_x += 1
+            if self.current_x == self.image.width:
+                self.current_x = 0
+                self.current_y += 1
+
+    def end_image(self):
+        pass
+
+def render_ppm(image_data, filename='image.ppm'):
+    with open(filename, 'w') as f:
+        f.write('P3\n')
+        f.write(f'{image_data["width"]} {image_data["height"]} 255\n')
+        for row in image_data['pixels']:
+            for pixel_value in row:
+                f.write(str(pixel_value) + ' ')
+            f.write('\n')
+
+def main():
+    renderer = Renderer()
+    renderer.start_image(100, 50)
+    
+    # Sample usage
+    renderer.set_pixel((0, 255, 0))  # Green
+    renderer.set_pixel((0, 0, 0))  # Black
+    renderer.set_pixel((255, 0, 0))  # Red
+    
+    render_ppm(renderer.image.data, 'image.ppm')
+
+if __name__ == "__main__":
+    main()
+```
